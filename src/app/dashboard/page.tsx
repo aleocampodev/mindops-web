@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { DashboardHeader } from '@/components/dashboard/Header';
 import { RhythmChart } from '@/components/dashboard/RhythmChart';
 import { PerspectiveCard } from '@/components/dashboard/PerspectiveCard';
-import { ActionList } from '@/components/dashboard/ActionList'; // Necesitarás crear este también
+import { MomentumAnchor } from '@/components/dashboard/MomentumAnchor'; // Necesitarás crear este también
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
           />
 
           {/* El listado de acciones también debería ser su propio componente */}
-          <ActionList thoughts={thoughts || []} isProteccion={isProteccion} />
+          <MomentumAnchor thoughts={thoughts || []} isProteccion={isProteccion} />
         </div>
 
       </div>
