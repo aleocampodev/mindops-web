@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { generatePairingCode } from './actions'
 import { Heart, Send, Sparkles, RefreshCw, Smartphone } from 'lucide-react'
 import { redirect } from 'next/navigation'
+import {RealtimeRedirect} from '@/components/auth/RealtimeRedirect'
 
 export default async function PairingPage() {
   const supabase = await createClient()
@@ -23,6 +24,7 @@ export default async function PairingPage() {
 
   return (
     <main className="min-h-screen bg-[#FDFDFF] flex items-center justify-center p-6 relative overflow-hidden text-slate-900">
+      <RealtimeRedirect userId={user.id} />
       <div className="absolute top-[-10%] right-[-10%] w-[50rem] h-[50rem] bg-indigo-100/60 blur-[140px] rounded-full animate-pulse" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[50rem] h-[50rem] bg-fuchsia-100/40 blur-[140px] rounded-full" />
 
@@ -58,7 +60,7 @@ export default async function PairingPage() {
                     <Smartphone size={24} /> <span className="text-sm">Instrucción</span>
                  </div>
                  <p className="text-white text-lg font-medium leading-relaxed mb-8 opacity-90">Envía este mensaje exacto a tu bot:</p>
-                 <div className="cursor-pointer bg-white/10 backdrop-blur-xl p-7 rounded-3xl border border-white/20 text-white font-mono text-2xl font-black text-center hover:bg-white/20 transition-all select-all shadow-inner">
+                 <div className=" bg-white/10 backdrop-blur-xl p-7 rounded-3xl border border-white/20 text-white font-mono text-2xl font-black text-center hover:bg-white/20 transition-all select-all shadow-inner">
                     /vincular {currentCode}
                  </div>
                </div>

@@ -4,15 +4,17 @@ import { createClient } from '@/utils/supabase/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  // 'next' es a donde queremos ir después (dashboard)
+  const next = searchParams.get('next') ?? '/dashboard/pairing'
 
   if (code) {
     const supabase = await createClient()
-    
-    // Intercambio: Código de Google -> Sesión JWT real
+
+    // Este es el paso que está fallando: el intercambio de "código" por "sesión"
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    
+
     if (!error) {
-      // 1. Verificamos si este usuario ya pasó por Telegram alguna vez
+      // 🧠 Lógica Proactiva: ¿Ya está vinculado?
       const { data: { user } } = await supabase.auth.getUser()
       const { data: profile } = await supabase
         .from('profiles')
@@ -20,13 +22,10 @@ export async function GET(request: Request) {
         .eq('id', user?.id)
         .single()
 
-      // 2. Redirección Inteligente (UX Senior):
-      // Si ya tiene Telegram ID, va al Dashboard. Si no, a Vincular.
       const targetPath = profile?.telegram_id ? '/dashboard' : '/dashboard/pairing'
       return NextResponse.redirect(`${origin}${targetPath}`)
     }
   }
 
-  // Si hay un fallo crítico de Google o Supabase
   return NextResponse.redirect(`${origin}/login?error=auth-failure`)
 }
