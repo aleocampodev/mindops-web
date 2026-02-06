@@ -1,12 +1,14 @@
 {
   "name": "mindops-web",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "gcloud run deploy mindops-web --source . --region us-central1 --allow-unauthenticated"
   },
   "dependencies": {
     "@headlessui/tailwindcss": "^0.2.2",
