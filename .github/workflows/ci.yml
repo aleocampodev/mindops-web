@@ -22,7 +22,8 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        # Usamos npm install en lugar de ci para ser más permisivos con conflictos de peer deps (React 19 vs Tremor)
+        run: npm install --legacy-peer-deps
 
       - name: Run Linter
         run: npm run lint
@@ -30,7 +31,6 @@ jobs:
       - name: Build Project
         run: npm run build
         env:
-          # Si tienes variables de entorno necesarias para el build, agrégalas aquí o en los Secrets del repo
-          # NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          # NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           CI: true
