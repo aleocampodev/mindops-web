@@ -15,10 +15,21 @@ export default function LoginButton() {
   const handleLogin = async () => {
     setIsLoading(true)
     try {
+      const getURL = () => {
+        let url =
+          process?.env?.NEXT_PUBLIC_SITE_URL ?? // Configura esto en GCP como variable de entorno
+          process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Para previsualización
+          window.location.origin
+        // Asegurarse de incluir el protocolo y no tener slash al final
+        url = url.includes('http') ? url : `https://${url}`
+        url = url.charAt(url.length - 1) === '/' ? url.slice(0, -1) : url
+        return `${url}/auth/callback`
+      }
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { 
-          redirectTo: `${window.location.origin}/auth/callback` 
+          redirectTo: getURL()
         }
       })
 

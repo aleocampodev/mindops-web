@@ -14,7 +14,6 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
-      // 🧠 Lógica Proactiva: ¿Ya está vinculado?
       const { data: { user } } = await supabase.auth.getUser()
       const { data: profile } = await supabase
         .from('profiles')
@@ -23,9 +22,16 @@ export async function GET(request: Request) {
         .single()
 
       const targetPath = profile?.telegram_id ? '/dashboard' : '/dashboard/pairing'
-      return NextResponse.redirect(`${origin}${targetPath}`)
+
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
+      const redirectUrl = new URL(targetPath, baseUrl)
+
+      return NextResponse.redirect(redirectUrl)
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth-failure`)
+  // Si algo falla, volver al login
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
+  const errorUrl = new URL('/login?error=auth-failure', baseUrl)
+  return NextResponse.redirect(errorUrl)
 }

@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "deploy": "gcloud run deploy mindops-web --source . --region us-central1 --allow-unauthenticated"
+    "deploy": "gcloud builds submit --config cloudbuild.yaml --substitutions=_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL,_SUPABASE_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY . && gcloud run deploy mindops-web --image gcr.io/mindops-486323/mindops-web --region us-central1 --allow-unauthenticated --set-env-vars NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY"
   },
   "dependencies": {
     "@headlessui/tailwindcss": "^0.2.2",

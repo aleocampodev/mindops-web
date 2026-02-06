@@ -3,6 +3,7 @@ import { generatePairingCode } from './actions'
 import { Heart, Send, Sparkles, RefreshCw, Smartphone } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import {RealtimeRedirect} from '@/components/auth/RealtimeRedirect'
+import { PairingTimer } from '@/components/dashboard/PairingTimer'
 
 export default async function PairingPage() {
   const supabase = await createClient()
@@ -12,18 +13,24 @@ export default async function PairingPage() {
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
   if (profile?.telegram_id) redirect('/dashboard')
 
-  // Lógica proactiva: Generar código si Ale entra y no tiene uno
-  const currentCode = profile?.pairing_code
-  
-  // NOTE: Generar datos (escritura en DB) durante el renderizado es un anti-patrón en Next.js 
-  // y causa errores de pureza. Por ahora, si no hay código, mostramos un estado pendiente.
-  // TODO: Mover esta lógica a una Server Action iniciada por el usuario o al momento del registro.
+  let currentCode = profile?.pairing_code
+  let currentExpiresAt = profile?.pairing_code_expires_at
+
+  // Lógica Automática: Si no tiene código, lo generamos en el momento (Server-side)
   if (!currentCode) {
-    return (
-      <div className="p-8 text-center text-white/60">
-        <p>No tienes un código de emparejamiento. Contacta soporte.</p>
-      </div>
-    )
+    const autoCode = Math.floor(100000 + (Math.random() * 900000)).toString()
+    const expiresAt = new Date()
+    expiresAt.setMinutes(expiresAt.getMinutes() + 10)
+    const expiresAtStr = expiresAt.toISOString()
+
+    await supabase.from('profiles').upsert({ 
+      id: user.id, 
+      pairing_code: autoCode,
+      pairing_code_expires_at: expiresAtStr
+    }, { onConflict: 'id' })
+    
+    currentCode = autoCode
+    currentExpiresAt = expiresAtStr
   }
 
   const userName = profile?.first_name || user.user_metadata.full_name?.split(' ')[0] || 'Ale'
@@ -49,9 +56,16 @@ export default async function PairingPage() {
                 <Sparkles size={20} className="text-indigo-600" />
                 <span className="text-xs font-black uppercase tracking-[0.4em]">Llave de Identidad</span>
              </div>
-             <div className="text-7xl font-mono font-black tracking-[0.2em] text-slate-900 mb-12 py-6 border-y border-slate-200/50">
+             <div className="text-7xl font-mono font-black tracking-[0.2em] text-slate-900 mb-6 py-6 border-y border-slate-200/50">
                 {currentCode}
              </div>
+
+             {currentExpiresAt && (
+                <div className="mb-12">
+                   <PairingTimer expiresAt={currentExpiresAt} />
+                </div>
+             )}
+
              <form action={generatePairingCode}>
                 <button type="submit" className="cursor-pointer flex items-center gap-4 mx-auto bg-slate-900 text-white px-12 py-5 rounded-[2rem] font-black text-sm hover:bg-indigo-600 transition-all shadow-2xl active:scale-95">
                   <RefreshCw size={18} /> SOLICITAR NUEVO CÓDIGO
