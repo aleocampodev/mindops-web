@@ -5,8 +5,16 @@ import { completeThought } from '@/app/dashboard/actions';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@tremor/react';
 
+interface Thought {
+  id: string;
+  friccion: string | null;
+  accion_inmediata: string;
+  titulo_resumen: string;
+  status: string;
+}
+
 interface MomentumProps {
-  thoughts: any[];
+  thoughts: Thought[];
   isProteccion: boolean;
 }
 
@@ -93,7 +101,7 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
                 </h2>
                 
                 <p className="text-xl text-slate-400 font-medium italic">
-                  "{currentAnchor.titulo_resumen}"
+                  &quot;{currentAnchor.titulo_resumen}&quot;
                 </p>
               </div>
 

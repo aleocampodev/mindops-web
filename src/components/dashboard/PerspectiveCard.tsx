@@ -17,7 +17,7 @@ export function PerspectiveCard({ content, isProteccion }: { content: string, is
           </span>
         </p>
         <p className="text-lg font-medium leading-relaxed italic border-t border-white/10 pt-6">
-          "{content}"
+          &quot;{content}&quot;
         </p>
       </div>
       <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />

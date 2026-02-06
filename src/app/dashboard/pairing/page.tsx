@@ -9,15 +9,21 @@ export default async function PairingPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  let { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
   if (profile?.telegram_id) redirect('/dashboard')
 
   // Lógica proactiva: Generar código si Ale entra y no tiene uno
-  let currentCode = profile?.pairing_code
+  const currentCode = profile?.pairing_code
+  
+  // NOTE: Generar datos (escritura en DB) durante el renderizado es un anti-patrón en Next.js 
+  // y causa errores de pureza. Por ahora, si no hay código, mostramos un estado pendiente.
+  // TODO: Mover esta lógica a una Server Action iniciada por el usuario o al momento del registro.
   if (!currentCode) {
-    const autoCode = Math.floor(100000 + Math.random() * 900000).toString()
-    await supabase.from('profiles').upsert({ id: user.id, pairing_code: autoCode }, { onConflict: 'id' })
-    currentCode = autoCode
+    return (
+      <div className="p-8 text-center text-white/60">
+        <p>No tienes un código de emparejamiento. Contacta soporte.</p>
+      </div>
+    )
   }
 
   const userName = profile?.first_name || user.user_metadata.full_name?.split(' ')[0] || 'Ale'

@@ -2,7 +2,7 @@
 import { Card, AreaChart } from '@tremor/react';
 import { Info } from 'lucide-react';
 
-export function RhythmChart({ data, isProteccion }: { data: any[], isProteccion: boolean }) {
+export function RhythmChart({ data, isProteccion }: { data: Record<string, unknown>[], isProteccion: boolean }) {
   return (
     <Card className="lg:col-span-3 rounded-[3rem] border-none shadow-2xl bg-white/80 p-10 relative overflow-hidden group">
       <div className="mb-10 max-w-xl">

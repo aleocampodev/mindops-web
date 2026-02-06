@@ -1,4 +1,6 @@
 import colors from "tailwindcss/colors";
+import headlessui from "@headlessui/tailwindcss";
+import forms from "@tailwindcss/forms";
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -68,8 +70,8 @@ const config = {
     },
   ],
   plugins: [
-    require("@headlessui/tailwindcss"), 
-    require("@tailwindcss/forms")
+    headlessui,
+    forms
   ],
 };
 
