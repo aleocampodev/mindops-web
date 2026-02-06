@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 MindOps Web
 
-## Getting Started
+MindOps es una plataforma de **Ingeniería Mental** diseñada para optimizar tu rendimiento biológico y cognitivo. No es solo un gestor de tareas; es un sistema de monitoreo que traduce tus desahogos y patrones mentales en acciones accionables, ayudándote a mantener el "impulso" (Momentum) sin saturar tu "RAM" (capacidad cognitiva).
 
-First, run the development server:
+## 🚀 Características Principales
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Ancla de Impulso (Momentum Anchor):** Identifica tu "Acción Atómica" prioritaria para evitar la parálisis por análisis.
+- **Sincronización con Telegram:** Conecta tu mente en tiempo real mediante un bot. Envía tus pensamientos y el sistema los procesará.
+- **Ritmo de Calma:** Visualización de tu carga mental a lo largo del día para identificar picos de saturación.
+- **Perspectiva de IA:** Recibe interpretaciones profundas sobre tus propios patrones para ver con claridad a través del ruido.
+- **Protocolo de Pausa:** Detección automática de fatiga crítica para forzar un reset biológico cuando sea necesario.
+
+## 🛠 Tech Stack
+
+- **Framework:** [Next.js 15+](https://nextjs.org/) (App Router, Turbopack)
+- **Base de Datos & Auth:** [Supabase](https://supabase.com/) (SSR, Google OAuth)
+- **UI & Animaciones:** [Framer Motion](https://www.framer.com/motion/), [Tailwind CSS](https://tailwindcss.com/) & [Tremor](https://www.tremor.so/)
+- **Iconos:** [Lucide React](https://lucide.dev/)
+- **Infraestructura:** [Google Cloud Run](https://cloud.google.com/run) & [Docker](https://www.docker.com/)
+- **CI/CD:** GitHub Actions
+
+## ⚙️ Configuración (Variables de Entorno)
+
+Crea un archivo `.env` en la raíz del proyecto con las siguientes llaves:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_de_supabase
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📦 Despliegue (En Google Cloud Run)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Este proyecto **no utiliza Vercel**. Se despliega en infraestructura escalable de Google Cloud.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Despliegue Manual
+Si tienes configurado el SDK de Google Cloud (`gcloud`), puedes desplegar directamente con:
 
-## Learn More
+```bash
+npm run deploy
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Despliegue Automático (GitHub Actions)
+El proyecto incluye un pipeline completo configurado en `.github/workflows/`:
+1. **CI:** Verifica errores de linter y compilación en cada Push/PR.
+2. **CD:** Despliega automáticamente a Google Cloud Run al hacer merge en `main`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> *Nota: Requiere configurar los Secrets `GCP_SA_KEY`, `GCP_PROJECT_ID`, `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en el repositorio de GitHub.*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 💻 Desarrollo Local
 
-## Deploy on Vercel
+1. Instala las dependencias (usando legacy-peer-deps por compatibilidad con React 19):
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+2. Inicia el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+3. Limpia el código antes de subir cambios:
+   ```bash
+   npm run lint
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+Diseñado para la eficiencia. Construido para la mente. ⚡
