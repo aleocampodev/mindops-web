@@ -54,7 +54,7 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
         </div>
-        <span>Vigilancia Activa: Twilio monitorea tu inercia. Si te bloqueas, escucharemos tu voz.</span>
+        <span>Vigilancia Activa: Twilio monitorea tu inercia. Si te bloqueas, twilio te llamara.</span>
       </div>
 
       <header className="max-w-xl">

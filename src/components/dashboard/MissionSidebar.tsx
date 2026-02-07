@@ -144,8 +144,8 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         </div>
 
         {/* Elemntos decorativos */}
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/5 rounded-full blur-3xl" />
-        <div className="absolute top-0 right-0 p-4 opacity-10">
+        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
           <Target size={120} />
         </div>
       </motion.div>
@@ -158,7 +158,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
       >
         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
-          Vigilancia Activa: El sistema monitorea tu inercia. Si te bloqueas, escucharemos tu voz.
+          Vigilancia Activa: El sistema monitorea tu inercia. Si te bloqueas, twilio te llamara.
         </span>
       </motion.div>
 

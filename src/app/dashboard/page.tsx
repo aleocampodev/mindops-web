@@ -58,6 +58,11 @@ export default async function DashboardPage() {
               allThoughts={thoughts || []}
               firstName="Ale"
             />
+
+            <PerspectiveCard 
+                content={latestThought?.analisis_estrategico || "Habla con el bot para recibir perspectiva."}
+                isProteccion={isProteccion} 
+              />
           </div>
 
           {/* LADO DERECHO: MÉTRICAS Y ACCIONES */}
@@ -67,13 +72,7 @@ export default async function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <RhythmChart data={chartData || []} isProteccion={isProteccion} />
               
-              <PerspectiveCard 
-                content={latestThought?.analisis_estrategico || "Habla con el bot para recibir perspectiva."} 
-                isProteccion={isProteccion} 
-              />
             </div>
-
-            <MomentumAnchor thoughts={thoughts || []} isProteccion={isProteccion} />
             
             <ThoughtGallery thoughts={thoughts || []} />
           </div>
