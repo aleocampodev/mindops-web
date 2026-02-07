@@ -1,5 +1,5 @@
 'use client'
-import { Target, Shield, Zap, Star, ChevronRight, List, Eye } from 'lucide-react';
+import { Target, Shield, Zap, Star, ChevronRight, List, Eye, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -44,12 +44,16 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
               <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
                 <Target className="text-white" size={20} />
               </div>
-              <h3 className="text-sm font-black text-white uppercase tracking-widest italic">Misión de {firstName}</h3>
+              <h3 className="text-sm font-black text-white uppercase tracking-widest italic">Misión Operativa</h3>
             </div>
             {missionsWithPlan.length > 1 && (
               <button 
-                onClick={() => setShowRecent(!showRecent)}
-                className="p-2 hover:bg-white/10 rounded-xl transition-colors text-white/60 hover:text-white"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowRecent(!showRecent);
+                }}
+                className="relative z-20 p-2 hover:bg-white/10 rounded-xl transition-colors text-white/60 hover:text-white"
               >
                 <List size={18} />
               </button>
@@ -146,6 +150,18 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         </div>
       </motion.div>
 
+      {/* VIGILANCIA ACTIVA BAR */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/50 backdrop-blur-md border border-slate-100 p-4 rounded-3xl flex items-center justify-center gap-3"
+      >
+        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
+          Vigilancia Activa: El sistema monitorea tu inercia. Si te bloqueas, escucharemos tu voz.
+        </span>
+      </motion.div>
+
       {/* TU MIRADA */}
       <motion.div 
         initial={{ opacity: 0, x: -20 }}
@@ -155,7 +171,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
       >
         <div className="flex items-center gap-3">
            <div className={`p-2 rounded-xl ${isProteccion ? 'bg-amber-100 text-amber-600' : 'bg-indigo-100 text-indigo-600'}`}>
-             <Eye size={18} />
+             <Heart size={18} fill="currentColor" />
            </div>
            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-800">Tu Mirada</h4>
         </div>

@@ -15,7 +15,7 @@ export function DashboardHeader({ firstName, isProteccion, energyLevel }: Header
            <div className={`p-2 rounded-xl shadow-sm ${isProteccion ? 'bg-amber-500' : 'bg-indigo-600'}`}>
              <BrainCircuit className="text-white" size={20} />
            </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 italic">{firstName} // Dashboard</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 italic">MindOps // Dashboard</span>
         </div>
         <h1 className="text-3xl font-black tracking-tighter uppercase italic leading-none text-slate-900">
           Hola, {firstName}

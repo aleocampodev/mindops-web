@@ -39,7 +39,7 @@ export default async function DashboardPage() {
     }`}>
       <div className="max-w-[1600px] mx-auto p-6 md:p-12">
         <DashboardHeader 
-          firstName={profile.first_name || 'Ale'} 
+          firstName="Ale" 
           isProteccion={isProteccion} 
           energyLevel={energyLevel} 
         />
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
               isProteccion={isProteccion} 
               thoughtsCount={thoughts?.length || 0} 
               allThoughts={thoughts || []}
-              firstName={profile.first_name || 'Ale'}
+              firstName="Ale"
             />
           </div>
 

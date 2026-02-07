@@ -2,15 +2,18 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  // 'next' es a donde queremos ir después (dashboard)
-  const next = searchParams.get('next') ?? '/dashboard/pairing'
+  const requestUrl = new URL(request.url)
+  const code = requestUrl.searchParams.get('code')
+  // 'next' es a donde queremos ir después
+  const next = requestUrl.searchParams.get('next') ?? '/dashboard/pairing'
+
+  // 🧠 FIX: Detectamos el host real (Cloud Run/Proxy) para evitar el bug de 0.0.0.0:8080
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || requestUrl.host
+  const protocol = request.headers.get('x-forwarded-proto') || 'https'
+  const origin = `${protocol}://${host}`
 
   if (code) {
     const supabase = await createClient()
-
-    // Este es el paso que está fallando: el intercambio de "código" por "sesión"
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
@@ -22,16 +25,13 @@ export async function GET(request: Request) {
         .single()
 
       const targetPath = profile?.telegram_id ? '/dashboard' : '/dashboard/pairing'
-
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
-      const redirectUrl = new URL(targetPath, baseUrl)
+      const redirectUrl = new URL(targetPath, origin)
 
       return NextResponse.redirect(redirectUrl)
     }
   }
 
   // Si algo falla, volver al login
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
-  const errorUrl = new URL('/login?error=auth-failure', baseUrl)
+  const errorUrl = new URL('/login?error=auth-failure', origin)
   return NextResponse.redirect(errorUrl)
 }
