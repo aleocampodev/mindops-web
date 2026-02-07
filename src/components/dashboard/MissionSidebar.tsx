@@ -1,5 +1,5 @@
 'use client'
-import { Target, Shield, Zap, Star, ChevronRight, List } from 'lucide-react';
+import { Target, Shield, Zap, Star, ChevronRight, List, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -79,7 +79,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
                 </div>
 
                 {hasPlan && (
-                  <Link href={`/dashboard/mission/${latestThought.id}`}>
+                  <Link href={`/mission/${latestThought.id}`}>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -101,7 +101,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
               >
                 <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2">Misiones Recientes</p>
                 {missionsWithPlan.map((m) => (
-                  <Link key={m.id} href={`/dashboard/mission/${m.id}`}>
+                  <Link key={m.id} href={`/mission/${m.id}`}>
                     <div className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group flex items-center justify-between mb-2">
                        <p className="text-xs font-bold text-white max-w-[180px] truncate uppercase italic tracking-tighter">
                          {m.accion_inmediata}
@@ -146,7 +146,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         </div>
       </motion.div>
 
-      {/* ESTADO DEL SISTEMA */}
+      {/* TU MIRADA */}
       <motion.div 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -155,27 +155,24 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
       >
         <div className="flex items-center gap-3">
            <div className={`p-2 rounded-xl ${isProteccion ? 'bg-amber-100 text-amber-600' : 'bg-indigo-100 text-indigo-600'}`}>
-             <Shield size={18} />
+             <Eye size={18} />
            </div>
-           <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-800">Estado del Sistema</h4>
+           <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-800">Tu Mirada</h4>
         </div>
 
         <div className="space-y-4">
           <div className="flex justify-between items-center bg-white/50 p-4 rounded-3xl border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">IA Vigilancia</span>
-            <span className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black text-slate-800 uppercase italic">Online</span>
-            </span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Enfoque</span>
+            <span className="text-[10px] font-black text-slate-800 uppercase italic">{isProteccion ? 'Interior' : 'Agudo'}</span>
           </div>
           <div className="flex justify-between items-center bg-white/50 p-4 rounded-3xl border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nivel de RAM</span>
-            <span className="text-[10px] font-black text-slate-800 uppercase italic">{isProteccion ? '85% Saturado' : '15% Libre'}</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Claridad</span>
+            <span className="text-[10px] font-black text-slate-800 uppercase italic">{isProteccion ? 'En Proceso' : 'Alta'}</span>
           </div>
           <div className="flex justify-between items-center bg-white/50 p-4 rounded-3xl border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Protocolo</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Perspectiva</span>
             <span className={`text-[10px] font-black uppercase italic ${isProteccion ? 'text-amber-600' : 'text-indigo-600'}`}>
-              {isProteccion ? 'BIO-RECUPERACIÓN' : 'IMPULSO ALPHA'}
+              {isProteccion ? 'ESTRATÉGICA' : 'VITAL'}
             </span>
           </div>
         </div>

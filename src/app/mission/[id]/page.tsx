@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { notFound, redirect } from 'next/navigation';
-import { MissionView } from './MissionView';
+import { MissionView } from './MissionView'
 
 export default async function MissionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -18,7 +18,7 @@ export default async function MissionPage({ params }: { params: Promise<{ id: st
   if (!thought) notFound();
 
   // Si no hay un plan de acción, no podemos ejecutar la misión
-  if (!thought.plan_de_accion || !Array.isArray(thought.plan_de_accion)) {
+  if (!thought.plan_de_accion) {
     redirect('/dashboard');
   }
 

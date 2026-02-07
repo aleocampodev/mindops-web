@@ -2,18 +2,18 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Check, ArrowLeft, Loader2 } from 'lucide-react';
 import { useState, useTransition } from 'react';
-import { updateMissionStep } from '../../actions';
+import { updateMissionStep } from '@/app/dashboard/actions';
 
 export function MissionView({ thought }: any) {
   const [step, setStep] = useState(thought.current_step_index || 0);
   const [isPending, startTransition] = useTransition();
-
+  
   // Parsing robusto del plan por si viene como string
   let plan = thought.plan_de_accion;
   if (typeof plan === 'string') {
     try { plan = JSON.parse(plan); } catch (e) { plan = []; }
   }
-
+  
   const current = plan[step] || { tarea: 'Finalizado', hora: '' };
 
   const handleComplete = () => {
@@ -45,7 +45,7 @@ export function MissionView({ thought }: any) {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, x: -100, rotate: -5 }}
-            className="w-full bg-white/5 backdrop-blur-md border border-white/10 p-12 md:p-20 rounded-[4rem] text-center space-y-10 relative overflow-hidden"
+            className="w-full bg-white/5 backdrop-blur-3xl border border-white/10 p-12 md:p-20 rounded-[4rem] text-center space-y-10 relative overflow-hidden"
           >
             <div className="space-y-2">
               <span className="text-indigo-400 font-black text-xs uppercase tracking-[0.4em]">Paso {step + 1} de {plan.length}</span>
@@ -66,7 +66,7 @@ export function MissionView({ thought }: any) {
             {plan[step + 1] && (
               <div className="pt-10 border-t border-white/5 opacity-40">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Próximo paso en {plan[step+1].hora}</p>
-                <p className="text-lg font-bold uppercase italic">"{plan[step+1].tarea}"</p>
+                <p className="text-lg font-bold uppercase italic">{plan[step+1].tarea}</p>
               </div>
             )}
           </motion.div>
