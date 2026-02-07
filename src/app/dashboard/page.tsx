@@ -47,7 +47,11 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12">
           {/* LADO IZQUIERDO: MISIÓN Y ESTADO */}
           <div className="lg:col-span-3 space-y-8">
-            <MissionSidebar isProteccion={isProteccion} thoughtsCount={thoughts?.length || 0} />
+            <MissionSidebar 
+              isProteccion={isProteccion} 
+              thoughtsCount={thoughts?.length || 0} 
+              latestThought={latestThought}
+            />
           </div>
 
           {/* LADO DERECHO: MÉTRICAS Y ACCIONES */}

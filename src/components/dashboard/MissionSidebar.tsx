@@ -1,13 +1,22 @@
 'use client'
-import { Target, Shield, Zap, Star } from 'lucide-react';
+import { Target, Shield, Zap, Star, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface MissionSidebarProps {
   isProteccion: boolean;
   thoughtsCount: number;
+  latestThought?: any;
 }
 
-export function MissionSidebar({ isProteccion, thoughtsCount }: MissionSidebarProps) {
+export function MissionSidebar({ isProteccion, thoughtsCount, latestThought }: MissionSidebarProps) {
+  // Parsing robusto del plan por si viene como string
+  let plan = latestThought?.plan_de_accion;
+  if (typeof plan === 'string') {
+    try { plan = JSON.parse(plan); } catch (e) { plan = null; }
+  }
+  const hasPlan = plan && Array.isArray(plan) && plan.length > 0;
+
   return (
     <aside className="space-y-8">
       {/* CARD DE MISIÓN PRINCIPAL */}
@@ -40,6 +49,19 @@ export function MissionSidebar({ isProteccion, thoughtsCount }: MissionSidebarPr
                 : "La claridad es tu combustible. Mantén el ritmo y procesa cada pensamiento con intención."}
             </p>
           </div>
+
+          {hasPlan && (
+            <Link href={`/dashboard/mission/${latestThought.id}`}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full mt-4 bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-zinc-100 transition-colors shadow-xl"
+              >
+                Ejecutar Protocolo
+                <ChevronRight size={14} />
+              </motion.button>
+            </Link>
+          )}
 
           <div className="pt-4 border-t border-white/10">
             <div className="flex justify-between items-end">
