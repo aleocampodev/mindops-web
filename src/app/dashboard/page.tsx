@@ -5,6 +5,7 @@ import { RhythmChart } from '@/components/dashboard/RhythmChart';
 import { PerspectiveCard } from '@/components/dashboard/PerspectiveCard';
 import { MomentumAnchor } from '@/components/dashboard/MomentumAnchor';
 import { ThoughtGallery } from '@/components/dashboard/ThoughtGallery';
+import { QuickStats } from '@/components/dashboard/QuickStats';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -42,6 +43,8 @@ export default async function DashboardPage() {
           isProteccion={isProteccion} 
           energyLevel={energyLevel} 
         />
+
+        <QuickStats thoughts={thoughts || []} />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <RhythmChart data={chartData || []} isProteccion={isProteccion} />

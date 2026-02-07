@@ -12,6 +12,15 @@
   animation: gradient-x 5s ease infinite;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

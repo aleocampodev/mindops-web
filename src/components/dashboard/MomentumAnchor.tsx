@@ -24,27 +24,22 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
   // 1. Filtramos solo lo pendiente
   const pendingActions = thoughts.filter(t => t.status === 'pendiente');
   
-  // 2. Definimos el "Ancla": El único pensamiento en el que debes enfocarte
-  const currentAnchor = pendingActions[0];
-  const othersCount = pendingActions.length - 1;
-
-  // 3. Estado de Protección: Si Ale está mal, bloqueamos la ejecución
   if (isProteccion) {
     return (
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="lg:col-span-4 p-12 md:p-20 rounded-[4rem] bg-amber-50 border-2 border-dashed border-amber-200 text-center space-y-8"
+        className="lg:col-span-4 p-8 md:p-12 rounded-[3.5rem] bg-amber-50 border-2 border-dashed border-amber-200 text-center space-y-6"
       >
-        <div className="w-24 h-24 bg-amber-500 rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl shadow-amber-200 animate-pulse">
-          <Zap className="text-white" fill="white" size={40} />
+        <div className="w-16 h-16 bg-amber-500 rounded-[1.8rem] flex items-center justify-center mx-auto shadow-xl shadow-amber-200 animate-pulse">
+          <Zap className="text-white" fill="white" size={28} />
         </div>
-        <div className="space-y-4">
-          <h3 className="text-4xl font-black text-amber-900 uppercase tracking-tighter italic">
+        <div className="space-y-3">
+          <h3 className="text-2xl font-black text-amber-900 uppercase tracking-tighter italic">
             Protocolo de Pausa Activo
           </h3>
-          <p className="text-amber-800/70 max-w-xl mx-auto text-xl font-medium leading-relaxed">
-            Tu sistema detectó una carga crítica. <span className="font-bold text-amber-900">Hoy no hay tareas pendientes.</span> Tu única misión es el reset biológico que tienes en Telegram. El espacio de ejecución se abrirá cuando tu energía se estabilice.
+          <p className="text-amber-800/70 max-w-lg mx-auto text-sm font-medium leading-relaxed">
+            Tu sistema detectó una carga crítica. <span className="font-bold text-amber-900">Hoy no hay tareas pendientes.</span> Tu única misión es el reset biológico en Telegram.
           </p>
         </div>
       </motion.div>
@@ -52,105 +47,101 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
   }
 
   return (
-    <div className="lg:col-span-4 space-y-10">
-      {/* EXPLICACIÓN PEDAGÓGICA */}
+    <div className="lg:col-span-4 space-y-8">
+      {/* BANNER TWILIO */}
+      <div className="bg-slate-50 border border-slate-100 p-4 rounded-[2rem] flex items-center gap-3 text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+        <div className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </div>
+        <span>Vigilancia Activa: Twilio monitorea tu inercia. Si te bloqueas, escucharemos tu voz.</span>
+      </div>
+
       <header className="max-w-xl">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="bg-indigo-100 p-2 rounded-lg">
-            <Zap className="text-indigo-600" fill="currentColor" size={24} />
+        <div className="flex items-center gap-3 mb-2">
+          <div className="bg-indigo-50 p-1.5 rounded-lg text-indigo-600">
+            <Zap size={18} fill="currentColor" />
           </div>
-          <h3 className="text-3xl font-black tracking-tighter uppercase text-slate-800 italic">
+          <h3 className="text-xl font-black tracking-tighter uppercase text-slate-800 italic">
             Tu Ancla de Impulso
           </h3>
         </div>
-        <p className="text-slate-500 text-sm font-medium leading-relaxed">
-          Tu cerebro rinde mejor con un solo objetivo. Esta es la <span className="text-indigo-600 font-bold">Acción Atómica</span> prioritaria. No mires el resto, solo libera este hilo para recuperar tu impulso.
+        <p className="text-slate-400 text-[11px] font-medium leading-relaxed uppercase tracking-widest opacity-70">
+          Enfócate en la primera acción. El resto espera en la fila.
         </p>
       </header>
 
-      <AnimatePresence mode="wait">
-        {currentAnchor ? (
-          <motion.div 
-            key={currentAnchor.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="relative overflow-hidden bg-white border border-slate-100 rounded-[4.5rem] p-10 md:p-16 shadow-[0_50px_100px_-20px_rgba(79,70,229,0.12)] group"
-          >
-            <div className="flex flex-col md:flex-row items-center gap-12 relative z-10 text-left">
-              
-              {/* EMOJI GIGANTE */}
-              <div className="w-32 h-32 rounded-[2.8rem] bg-slate-50 flex items-center justify-center text-6xl shadow-inner border border-slate-100 transition-transform group-hover:scale-110 duration-700">
-                {currentAnchor.friccion ? currentAnchor.friccion.split(' ')[0] : '📍'}
-              </div>
-
-              <div className="flex-1 space-y-4">
-                <div className="flex items-center gap-3">
-                   <Badge color="indigo" size="xs" className="uppercase font-black px-4 py-1 rounded-full tracking-[0.2em]">
-                      Acción Prioritaria
-                   </Badge>
-                   {othersCount > 0 && (
-                     <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-full">
-                        +{othersCount} hilos en espera
-                     </span>
-                   )}
-                </div>
-                
-                <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-[0.95]">
-                  {currentAnchor.accion_inmediata}
-                </h2>
-                
-                <p className="text-xl text-slate-400 font-medium italic">
-                  &quot;{currentAnchor.titulo_resumen}&quot;
-                </p>
-              </div>
-
-              {/* BOTÓN DE LIBERACIÓN */}
-              <button 
-                type="button"
-                className={`cursor-pointer group/btn relative overflow-hidden px-16 py-8 rounded-[2.5rem] font-black text-sm transition-all uppercase tracking-[0.3em] shadow-2xl active:scale-95 flex items-center justify-center min-w-[220px] ${
-                  isPending ? 'bg-slate-200 text-slate-400' : 'bg-slate-900 text-white hover:bg-indigo-600 shadow-indigo-200'
+      <div className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide px-2 -mx-2">
+        <AnimatePresence mode="popLayout">
+          {pendingActions.length > 0 ? (
+            pendingActions.map((task, index) => (
+              <motion.div
+                key={task.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className={`relative flex-shrink-0 transition-all duration-500 ${
+                  index === 0 
+                    ? 'w-[350px] md:w-[600px] p-8 md:p-12 rounded-[4rem] bg-white border border-slate-100 shadow-[0_40px_80px_-20px_rgba(79,70,229,0.1)]' 
+                    : 'w-[280px] p-6 rounded-[3rem] bg-slate-50/50 border border-dashed border-slate-200 opacity-60 grayscale hover:grayscale-0 hover:opacity-100'
                 }`}
-                onClick={() => {
-                  startTransition(async () => {
-                    await completeThought(currentAnchor.id);
-                  });
-                }}
-                disabled={isPending}
               >
-                <span className="relative z-10 flex items-center gap-3 text-lg">
-                  {isPending ? (
-                    <>
-                      <Loader2 className="animate-spin" size={20} />
-                      PROCESANDO
-                    </>
-                  ) : (
-                    <>
-                      LIBERAR
-                      <ChevronRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </span>
-                {!isPending && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:animate-scan" />
-                )}
-              </button>
-            </div>
+                <div className="flex flex-col gap-6 relative z-10">
+                  <div className="flex justify-between items-start">
+                    <div className={`${index === 0 ? 'w-20 h-20 text-4xl' : 'w-12 h-12 text-2xl'} rounded-2xl bg-white shadow-sm flex items-center justify-center border border-slate-100`}>
+                      {task.friccion ? task.friccion.split(' ')[0] : '📍'}
+                    </div>
+                    {index === 0 && (
+                      <Badge color="indigo" size="xs" className="uppercase font-black px-4 py-1 rounded-full tracking-widest">
+                        Prioritario
+                      </Badge>
+                    )}
+                  </div>
 
-            {/* Decoración de fondo abstracta */}
-            <Zap className="absolute -bottom-16 -right-16 text-slate-50 size-80 -rotate-12 opacity-50 -z-0" fill="currentColor" />
-          </motion.div>
-        ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="py-24 text-center bg-white/50 rounded-[4rem] border-2 border-dashed border-slate-100 shadow-inner"
-          >
-            <Sparkles className="mx-auto mb-6 text-emerald-400 opacity-40" size={64} />
-            <p className="text-slate-400 font-black uppercase tracking-[0.4em] text-sm">Mente Despejada // RAM Libre</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  <div className="space-y-3">
+                    <h2 className={`${index === 0 ? 'text-2xl md:text-3xl' : 'text-lg'} font-black text-slate-900 tracking-tight leading-tight`}>
+                      {task.accion_inmediata}
+                    </h2>
+                    <p className={`${index === 0 ? 'text-sm' : 'text-xs'} text-slate-400 font-medium italic italic opacity-80`}>
+                      &quot;{task.titulo_resumen}&quot;
+                    </p>
+                  </div>
+
+                  {index === 0 && (
+                    <button 
+                      type="button"
+                      className={`w-full mt-4 cursor-pointer group/btn relative overflow-hidden py-5 rounded-2xl font-black text-[10px] transition-all uppercase tracking-[0.3em] active:scale-95 flex items-center justify-center gap-3 ${
+                        isPending ? 'bg-slate-100 text-slate-300' : 'bg-slate-900 text-white hover:bg-indigo-600'
+                      }`}
+                      onClick={() => {
+                        startTransition(async () => {
+                          await completeThought(task.id);
+                        });
+                      }}
+                      disabled={isPending}
+                    >
+                      {isPending ? <Loader2 className="animate-spin" size={16} /> : 'Liberar Hilo'}
+                      {!isPending && <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />}
+                    </button>
+                  )}
+                </div>
+                {index === 0 && (
+                  <Zap className="absolute -bottom-10 -right-10 text-slate-50 size-48 -rotate-12 opacity-50 -z-0" fill="currentColor" />
+                )}
+              </motion.div>
+            ))
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="w-full py-16 text-center bg-white/50 rounded-[3rem] border-2 border-dashed border-slate-100"
+            >
+              <Sparkles className="mx-auto mb-4 text-emerald-400 opacity-40" size={48} />
+              <p className="text-slate-300 font-black uppercase tracking-[0.4em] text-[10px]">Mente Despejada // RAM Libre</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
