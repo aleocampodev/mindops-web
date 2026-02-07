@@ -27,7 +27,12 @@ export default async function DashboardPage() {
   const isProteccion = latestThought?.modo_sistema === 'PROTECCION';
 
   const chartData = thoughts?.slice(0, 15).map(t => ({
-    hora: new Date(t.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    hora: new Date(t.created_at).toLocaleTimeString('es-CO', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      hour12: true, 
+      timeZone: 'America/Bogota' 
+    }),
     "Carga Mental": t.friccion.includes('🔴') ? 95 : t.friccion.includes('🟡') ? 50 : 20,
   })).reverse();
 
