@@ -37,7 +37,7 @@ export function RhythmChart({ data, isProteccion }: { data: Record<string, unkno
             </p>
           </div>
           
-          <div className="flex-1 min-h-[18rem]">
+          <div className="flex-1 min-h-[18rem] relative">
             <AreaChart
               className="h-full w-full min-h-[18rem]"
               data={data}
@@ -53,6 +53,10 @@ export function RhythmChart({ data, isProteccion }: { data: Record<string, unkno
               showTooltip={true}
               autoMinValue={true}
             />
+            {/* Indicador de Zona Crítica */}
+            <div className="absolute top-0 right-0 left-0 h-4 border-t border-dashed border-red-500/20 pointer-events-none">
+              <span className="absolute right-0 -top-2 text-[7px] font-black text-red-500 uppercase tracking-widest opacity-40">Zona de Saturación</span>
+            </div>
           </div>
 
           <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-6">

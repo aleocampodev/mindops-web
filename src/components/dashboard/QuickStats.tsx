@@ -29,20 +29,23 @@ export function QuickStats({ thoughts }: { thoughts: Thought[] }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <Card className="rounded-[2.5rem] border-none shadow-xl bg-white/80 backdrop-blur-md p-8 flex items-center justify-between">
+        <Card className="rounded-[2.5rem] border-none shadow-xl bg-white/80 backdrop-blur-md p-8 flex items-center justify-between group hover:bg-white transition-colors">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-indigo-600">
-              <ShieldCheck size={18} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Efficiency Score</span>
+              <ShieldCheck size={18} className="group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Resiliencia del Sistema</span>
             </div>
-            <h4 className="text-3xl font-black text-slate-900 tracking-tighter">92%</h4>
-            <p className="text-[10px] font-bold text-slate-400 uppercase leading-tight">
-              Desbloqueas crisis un <span className="text-emerald-500">20% más rápido</span> que ayer.
+            <h4 className="text-3xl font-black text-slate-900 tracking-tighter italic">OPTIMAL</h4>
+            <p className="text-[10px] font-bold text-slate-400 uppercase leading-tight max-w-[180px]">
+              Tu capacidad de <span className="text-indigo-600 italic">reset biológico</span> ha mejorado un <span className="text-emerald-500">14%</span> este mes.
             </p>
           </div>
-          <BadgeDelta deltaType="moderateIncrease" className="rounded-full px-4 py-1 font-black italic">
-            +12 pts
-          </BadgeDelta>
+          <div className="flex flex-col items-end gap-2">
+            <BadgeDelta deltaType="moderateIncrease" className="rounded-full px-4 py-1 font-black italic">
+              +5.2%
+            </BadgeDelta>
+            <span className="text-[8px] font-black text-slate-300 uppercase letter tracking-widest">vs Semana Anter.</span>
+          </div>
         </Card>
       </motion.div>
 

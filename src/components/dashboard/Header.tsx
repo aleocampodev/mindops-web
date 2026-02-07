@@ -34,11 +34,15 @@ export function DashboardHeader({ firstName, isProteccion, energyLevel }: Header
           isProteccion ? 'bg-amber-100/50 border-amber-200 text-amber-900' : 'bg-indigo-50/50 border-indigo-100 text-indigo-900'
         }`}>
           <div className="text-right">
-            <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">Tu Energía Actual</p>
-            <p className="font-black text-xs uppercase">{isProteccion ? '🛡️ Recargando' : '⚡ En Impulso'}</p>
+            <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">Status de Operación</p>
+            <p className="font-black text-[13px] uppercase tracking-tighter">
+              {energyLevel >= 80 ? '🚀 Flujo Máximo' : 
+               energyLevel >= 50 ? '⚖️ Carga Estable' : 
+               '⚠️ Agotamiento'}
+            </p>
           </div>
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-lg ${
-            isProteccion ? 'bg-amber-500' : 'bg-indigo-600'
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-sm shadow-xl transition-all ${
+            isProteccion ? 'bg-amber-500 scale-105 shadow-amber-200' : 'bg-indigo-600'
           }`}>
             {energyLevel}%
           </div>

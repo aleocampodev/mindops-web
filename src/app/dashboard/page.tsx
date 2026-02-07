@@ -6,6 +6,7 @@ import { PerspectiveCard } from '@/components/dashboard/PerspectiveCard';
 import { MomentumAnchor } from '@/components/dashboard/MomentumAnchor';
 import { ThoughtGallery } from '@/components/dashboard/ThoughtGallery';
 import { QuickStats } from '@/components/dashboard/QuickStats';
+import { MissionSidebar } from '@/components/dashboard/MissionSidebar';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -36,29 +37,37 @@ export default async function DashboardPage() {
     <main className={`min-h-screen transition-all duration-1000 ${
       isProteccion ? 'bg-[#FFF8F0]' : 'bg-[#FDFDFF]'
     }`}>
-      <div className="max-w-7xl mx-auto p-6 md:p-12 space-y-12">
-        
+      <div className="max-w-[1600px] mx-auto p-6 md:p-12">
         <DashboardHeader 
           firstName={profile.first_name || 'Ale'} 
           isProteccion={isProteccion} 
           energyLevel={energyLevel} 
         />
 
-        <QuickStats thoughts={thoughts || []} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12">
+          {/* LADO IZQUIERDO: MISIÓN Y ESTADO */}
+          <div className="lg:col-span-3 space-y-8">
+            <MissionSidebar isProteccion={isProteccion} thoughtsCount={thoughts?.length || 0} />
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          <RhythmChart data={chartData || []} isProteccion={isProteccion} />
-          
-          <PerspectiveCard 
-            content={latestThought?.analisis_estrategico || "Habla con el bot para recibir perspectiva."} 
-            isProteccion={isProteccion} 
-          />
+          {/* LADO DERECHO: MÉTRICAS Y ACCIONES */}
+          <div className="lg:col-span-9 space-y-12">
+            <QuickStats thoughts={thoughts || []} />
 
-          {/* El listado de acciones también debería ser su propio componente */}
-          <MomentumAnchor thoughts={thoughts || []} isProteccion={isProteccion} />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <RhythmChart data={chartData || []} isProteccion={isProteccion} />
+              
+              <PerspectiveCard 
+                content={latestThought?.analisis_estrategico || "Habla con el bot para recibir perspectiva."} 
+                isProteccion={isProteccion} 
+              />
+            </div>
+
+            <MomentumAnchor thoughts={thoughts || []} isProteccion={isProteccion} />
+            
+            <ThoughtGallery thoughts={thoughts || []} />
+          </div>
         </div>
-
-        <ThoughtGallery thoughts={thoughts || []} />
       </div>
     </main>
   );

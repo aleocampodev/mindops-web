@@ -1,6 +1,6 @@
 'use client'
 import { useTransition } from 'react';
-import { Zap, Loader2, Sparkles, ChevronRight } from 'lucide-react';
+import { Zap, Loader2, Sparkles, ChevronRight, Star } from 'lucide-react';
 import { completeThought } from '@/app/dashboard/actions';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@tremor/react';
@@ -132,12 +132,24 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
             ))
           ) : (
             <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="w-full py-16 text-center bg-white/50 rounded-[3rem] border-2 border-dashed border-slate-100"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full py-20 text-center bg-gradient-to-b from-white to-indigo-50/30 rounded-[3.5rem] border-2 border-dashed border-indigo-100 shadow-inner"
             >
-              <Sparkles className="mx-auto mb-4 text-emerald-400 opacity-40" size={48} />
-              <p className="text-slate-300 font-black uppercase tracking-[0.4em] text-[10px]">Mente Despejada // RAM Libre</p>
+              <div className="relative inline-block mb-6">
+                <Sparkles className="text-amber-400 animate-pulse" size={56} />
+                <motion.div 
+                   animate={{ rotate: 360 }} 
+                   transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                   className="absolute -top-4 -right-4"
+                >
+                   <Star className="text-indigo-200 fill-indigo-100" size={24} />
+                </motion.div>
+              </div>
+              <h4 className="text-xl font-black text-slate-800 uppercase tracking-tighter italic mb-2">¡Felicidades, Menté Libre!</h4>
+              <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[9px] max-w-xs mx-auto leading-relaxed">
+                Has procesado todo el ruido. Tu RAM biológica está lista para crear, no para gestionar.
+              </p>
             </motion.div>
           )}
         </AnimatePresence>
