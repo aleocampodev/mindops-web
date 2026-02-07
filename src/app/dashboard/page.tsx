@@ -50,7 +50,8 @@ export default async function DashboardPage() {
             <MissionSidebar 
               isProteccion={isProteccion} 
               thoughtsCount={thoughts?.length || 0} 
-              latestThought={latestThought}
+              allThoughts={thoughts || []}
+              firstName={profile.first_name || 'Ale'}
             />
           </div>
 

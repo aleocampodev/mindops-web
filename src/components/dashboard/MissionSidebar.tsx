@@ -1,21 +1,30 @@
 'use client'
-import { Target, Shield, Zap, Star, ChevronRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Target, Shield, Zap, Star, ChevronRight, List } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useState } from 'react';
 
 interface MissionSidebarProps {
   isProteccion: boolean;
   thoughtsCount: number;
-  latestThought?: any;
+  allThoughts: any[];
+  firstName: string;
 }
 
-export function MissionSidebar({ isProteccion, thoughtsCount, latestThought }: MissionSidebarProps) {
-  // Parsing robusto del plan por si viene como string
-  let plan = latestThought?.plan_de_accion;
-  if (typeof plan === 'string') {
-    try { plan = JSON.parse(plan); } catch (e) { plan = null; }
-  }
-  const hasPlan = plan && Array.isArray(plan) && plan.length > 0;
+export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, firstName }: MissionSidebarProps) {
+  const [showRecent, setShowRecent] = useState(false);
+
+  // Filtramos las misiones que tienen plan de acción y están pendientes
+  const missionsWithPlan = allThoughts.filter(t => {
+    let plan = t.plan_de_accion;
+    if (typeof plan === 'string') {
+      try { plan = JSON.parse(plan); } catch (e) { plan = null; }
+    }
+    return plan && Array.isArray(plan) && plan.length > 0 && t.status === 'pendiente';
+  }).slice(0, 3);
+
+  const latestThought = missionsWithPlan[0];
+  const hasPlan = missionsWithPlan.length > 0;
 
   return (
     <aside className="space-y-8">
@@ -30,38 +39,86 @@ export function MissionSidebar({ isProteccion, thoughtsCount, latestThought }: M
         }`}
       >
         <div className="relative z-10 space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-              <Target className="text-white" size={20} />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                <Target className="text-white" size={20} />
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-widest italic">Misión de {firstName}</h3>
             </div>
-            <h3 className="text-sm font-black text-white uppercase tracking-widest italic">Tu Misión</h3>
-          </div>
-
-          <div className="space-y-4">
-            <p className="text-xl font-black text-white leading-tight uppercase tracking-tighter italic">
-              {isProteccion 
-                ? "Recuperar la homeostasis biológica" 
-                : "Optimizar el flujo de ejecución estratégica"}
-            </p>
-            <p className="text-xs text-white/70 font-medium leading-relaxed uppercase tracking-wider">
-              {isProteccion 
-                ? "Tu sistema está en modo ahorro. No fuerces la máquina, el éxito hoy es el descanso."
-                : "La claridad es tu combustible. Mantén el ritmo y procesa cada pensamiento con intención."}
-            </p>
-          </div>
-
-          {hasPlan && (
-            <Link href={`/dashboard/mission/${latestThought.id}`}>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full mt-4 bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-zinc-100 transition-colors shadow-xl"
+            {missionsWithPlan.length > 1 && (
+              <button 
+                onClick={() => setShowRecent(!showRecent)}
+                className="p-2 hover:bg-white/10 rounded-xl transition-colors text-white/60 hover:text-white"
               >
-                Ejecutar Protocolo
-                <ChevronRight size={14} />
-              </motion.button>
-            </Link>
-          )}
+                <List size={18} />
+              </button>
+            )}
+          </div>
+
+          <AnimatePresence mode="wait">
+            {!showRecent ? (
+              <motion.div
+                key="latest"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-4"
+              >
+                <div className="space-y-4">
+                  <p className="text-xl font-black text-white leading-tight uppercase tracking-tighter italic">
+                    {isProteccion 
+                      ? "Recuperar la homeostasis biológica" 
+                      : (latestThought?.accion_inmediata || "Optimizar el flujo estratégico")}
+                  </p>
+                  <p className="text-xs text-white/70 font-medium leading-relaxed uppercase tracking-wider">
+                    {isProteccion 
+                      ? "Tu sistema está en modo ahorro. No fuerces la máquina, el éxito hoy es el descanso."
+                      : "La claridad es tu combustible. Mantén el ritmo y procesa cada pensamiento con intención."}
+                  </p>
+                </div>
+
+                {hasPlan && (
+                  <Link href={`/dashboard/mission/${latestThought.id}`}>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full mt-4 bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-zinc-100 transition-colors shadow-xl"
+                    >
+                      Ejecutar Protocolo
+                      <ChevronRight size={14} />
+                    </motion.button>
+                  </Link>
+                )}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="list"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-3"
+              >
+                <p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2">Misiones Recientes</p>
+                {missionsWithPlan.map((m) => (
+                  <Link key={m.id} href={`/dashboard/mission/${m.id}`}>
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group flex items-center justify-between mb-2">
+                       <p className="text-xs font-bold text-white max-w-[180px] truncate uppercase italic tracking-tighter">
+                         {m.accion_inmediata}
+                       </p>
+                       <ChevronRight size={12} className="text-white/40 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                    </div>
+                  </Link>
+                ))}
+                <button 
+                  onClick={() => setShowRecent(false)}
+                  className="w-full text-center text-[9px] font-black text-white/40 uppercase hover:text-white transition-colors"
+                >
+                  Volver a la Principal
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="pt-4 border-t border-white/10">
             <div className="flex justify-between items-end">
