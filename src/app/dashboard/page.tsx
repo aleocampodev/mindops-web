@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation';
 import { DashboardHeader } from '@/components/dashboard/Header';
 import { RhythmChart } from '@/components/dashboard/RhythmChart';
 import { PerspectiveCard } from '@/components/dashboard/PerspectiveCard';
-import { MomentumAnchor } from '@/components/dashboard/MomentumAnchor'; // Necesitarás crear este también
+import { MomentumAnchor } from '@/components/dashboard/MomentumAnchor';
+import { ThoughtGallery } from '@/components/dashboard/ThoughtGallery';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -54,6 +55,7 @@ export default async function DashboardPage() {
           <MomentumAnchor thoughts={thoughts || []} isProteccion={isProteccion} />
         </div>
 
+        <ThoughtGallery thoughts={thoughts || []} />
       </div>
     </main>
   );
