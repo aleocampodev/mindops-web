@@ -162,37 +162,6 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         </span>
       </motion.div>
 
-      {/* TU MIRADA */}
-      <motion.div 
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.1 }}
-        className="bg-white/40 backdrop-blur-xl border border-white/60 p-8 rounded-[3rem] shadow-xl space-y-6"
-      >
-        <div className="flex items-center gap-3">
-           <div className={`p-2 rounded-xl ${isProteccion ? 'bg-amber-100 text-amber-600' : 'bg-indigo-100 text-indigo-600'}`}>
-             <Heart size={18} fill="currentColor" />
-           </div>
-           <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-800">Tu Mirada</h4>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex justify-between items-center bg-white/50 p-4 rounded-3xl border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Enfoque</span>
-            <span className="text-[10px] font-black text-slate-800 uppercase italic">{isProteccion ? 'Interior' : 'Agudo'}</span>
-          </div>
-          <div className="flex justify-between items-center bg-white/50 p-4 rounded-3xl border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Claridad</span>
-            <span className="text-[10px] font-black text-slate-800 uppercase italic">{isProteccion ? 'En Proceso' : 'Alta'}</span>
-          </div>
-          <div className="flex justify-between items-center bg-white/50 p-4 rounded-3xl border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Perspectiva</span>
-            <span className={`text-[10px] font-black uppercase italic ${isProteccion ? 'text-amber-600' : 'text-indigo-600'}`}>
-              {isProteccion ? 'ESTRATÉGICA' : 'VITAL'}
-            </span>
-          </div>
-        </div>
-      </motion.div>
 
       {/* MINI TIP / MOTIVACIÓN */}
       <motion.div 
