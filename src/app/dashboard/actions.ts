@@ -45,6 +45,6 @@ export async function updateMissionStep(thoughtId: string, nextStep: number, isF
   }
 
   revalidatePath('/dashboard')
-  revalidatePath(`/dashboard/mission/${thoughtId}`)
+  revalidatePath(`/mission/${thoughtId}`)
   return { success: true }
 }

@@ -30,11 +30,21 @@ export function MissionView({ thought }: any) {
   };
 
   return (
-    <main className="min-h-screen bg-[#0A0A0B] text-white flex flex-col p-6 overflow-hidden">
+    <main className="min-h-screen bg-[#0A0A0B] text-white flex flex-col p-6 overflow-hidden relative">
+      {/* Botón Volver */}
+      <div className="absolute top-8 left-8 z-50">
+        <button 
+          onClick={() => window.location.href = '/dashboard'}
+          className="cursor-pointer flex items-center gap-3 text-zinc-500 hover:text-white transition-colors font-black text-[10px] uppercase tracking-[0.3em]"
+        >
+          <ArrowLeft size={16} /> VOLVER AL DASHBOARD
+        </button>
+      </div>
+
       {/* Indicador de Horizonte (Las tareas futuras) */}
-      <div className="flex justify-center gap-2 mb-12 opacity-20">
+      <div className="flex justify-center gap-2 mt-12 mb-12 opacity-20">
         {plan.map((_: any, i: number) => (
-          <div key={i} className={`h-1 w-8 rounded-full ${i === step ? 'bg-indigo-500 opacity-100' : 'bg-zinc-800'}`} />
+          <div key={i} className={`h-1 w-8 rounded-full ${i <= step ? 'bg-indigo-500 opacity-100' : 'bg-zinc-800'}`} />
         ))}
       </div>
 
@@ -45,7 +55,7 @@ export function MissionView({ thought }: any) {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, x: -100, rotate: -5 }}
-            className="w-full bg-white/5 backdrop-blur-3xl border border-white/10 p-12 md:p-20 rounded-[4rem] text-center space-y-10 relative overflow-hidden"
+            className="w-full bg-white/5 backdrop-blur-3xl border border-white/10 p-12 md:p-20 rounded-[4rem] text-center space-y-12 relative overflow-hidden"
           >
             <div className="space-y-2">
               <span className="text-indigo-400 font-black text-xs uppercase tracking-[0.4em]">Paso {step + 1} de {plan.length}</span>
