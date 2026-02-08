@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { notFound, redirect } from 'next/navigation';
-import { MissionView } from './MissionView'
+import { MissionView } from './MissionView';
 
 export default async function MissionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
