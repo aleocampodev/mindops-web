@@ -2,9 +2,9 @@ import { createClient } from '@/utils/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import { MissionManager } from './MissionManager'
 
-export default async function MissionPage({ params }: { params: { id: string } }) {
+export default async function MissionPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
-  const { id } = params
+  const { id } = await paramsPromise
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

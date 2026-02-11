@@ -58,13 +58,13 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
                 <Link href={`/mission/${mission.id}`}>
                   <div className={`group p-6 rounded-[2rem] border transition-all cursor-pointer relative overflow-hidden ${
                     idx === 0 
-                      ? 'bg-slate-900 border-slate-800 shadow-xl scale-[1.02]' 
+                      ? 'bg-gradient-to-br from-indigo-600 to-violet-700 border-indigo-400 shadow-xl scale-[1.02]' 
                       : 'bg-white border-slate-100 hover:border-indigo-200'
                   }`}>
                     <div className="relative z-10 flex flex-col gap-2">
                       <div className="flex justify-between items-center">
                         <span className={`text-[8px] font-black uppercase tracking-widest ${
-                          idx === 0 ? 'text-indigo-400' : 'text-slate-400'
+                          idx === 0 ? 'text-indigo-200' : 'text-slate-400'
                         }`}>
                           {idx === 0 ? 'Prioridad de Ejecución' : `Misión ${activeMissions.length - idx}`}
                         </span>
@@ -77,7 +77,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
                       </p>
                     </div>
                     {idx === 0 && (
-                      <div className="absolute -right-4 -bottom-4 opacity-5 pointer-events-none">
+                      <div className="absolute -right-4 -bottom-4 opacity-10 pointer-events-none">
                         <Target size={80} className="text-white" />
                       </div>
                     )}
@@ -95,14 +95,17 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         )}
 
         {/* Impacto y Rango (Simplificado) */}
-        <div className="px-6 py-4 bg-slate-50 rounded-[2rem] flex justify-between items-center border border-slate-100">
+        <div className="px-6 py-5 bg-gradient-to-br from-slate-50 to-white rounded-[2rem] flex justify-between items-center border border-slate-100 shadow-sm">
           <div>
-            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5">Impacto</p>
-            <span className="text-sm font-black italic text-slate-900">{thoughtsCount * 12} <span className="text-[10px] opacity-40">pts</span></span>
+            <p className="text-[8px] font-black text-indigo-400 uppercase mb-0.5 tracking-wider">Impacto en Bienestar</p>
+            <div className="flex items-baseline gap-1">
+                <span className="text-xl font-black italic text-slate-900">{thoughtsCount * 12}</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase">u. alivio</span>
+            </div>
           </div>
           <div className="text-right">
-            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5">Rango</p>
-            <span className="text-[10px] font-black text-indigo-600 uppercase italic">
+            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5 tracking-wider">Rango Actual</p>
+            <span className="text-[10px] font-black text-indigo-600 uppercase italic bg-indigo-50 px-3 py-1 rounded-full">
               {thoughtsCount > 10 ? 'ESTRATEGA' : 'OPERATIVO'}
             </span>
           </div>
