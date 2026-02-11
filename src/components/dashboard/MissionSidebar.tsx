@@ -1,5 +1,5 @@
 'use client'
-import { Target, Zap, Star, ChevronRight, List } from 'lucide-react';
+import { Target, Zap, Star, ChevronRight, List, Rocket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -22,93 +22,92 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
     return plan && Array.isArray(plan) && plan.length > 0;
   });
 
-  // Misión principal: la más reciente que no esté completada
-  const activeMission = allMissions.find(t => t.status !== 'completado');
-  const hasMissions = allMissions.length > 0;
+  // Misiones activas (no completadas)
+  const activeMissions = allMissions.filter(t => t.status !== 'completado');
+  const hasMissions = activeMissions.length > 0;
+  const displayMissions = activeMissions.slice(0, 3);
+  const remainingCount = Math.max(0, activeMissions.length - 3);
 
   return (
     <aside className="space-y-6">
-      {/* CARD DE MISIÓN PRINCIPAL */}
-      <motion.div 
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className={`p-8 rounded-[3rem] shadow-2xl relative overflow-hidden ${ 
-          isProteccion 
-            ? 'bg-gradient-to-br from-amber-500 to-orange-600' 
-            : 'bg-gradient-to-br from-indigo-900 to-indigo-950'
-        }`}
-      >
-        <div className="relative z-10 space-y-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-                <Target className="text-white" size={20} />
-              </div>
-              <h3 className="text-sm font-black text-white uppercase tracking-widest italic">Misión Operativa</h3>
-            </div>
-            {allMissions.length > 1 && (
-              <Link href="/missions">
-                <button className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl transition-colors">
-                  <List size={14} className="text-white" />
-                  <span className="text-[9px] font-black uppercase tracking-wider text-white">Ver Todas</span>
-                </button>
-              </Link>
-            )}
+      {/* SECCIÓN DE MISIONES ACTIVAS */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-2 text-slate-400">
+            <Target size={14} />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Misiones Activas</span>
           </div>
-
-          <div className="space-y-3">
-            <p className="text-xl font-black text-white leading-tight uppercase tracking-tighter italic">
-              {isProteccion 
-                ? "Recuperar la homeostasis biológica" 
-                : (activeMission?.accion_inmediata || "Sin misiones activas")}
-            </p>
-            <p className="text-xs text-white/70 font-medium leading-relaxed">
-              {isProteccion 
-                ? "Tu sistema está en modo ahorro. No fuerces la máquina, el éxito hoy es el descanso."
-                : hasMissions 
-                  ? "Ejecuta tu misión activa o explora todas tus misiones."
-                  : "Envía un mensaje al bot para generar tu primera misión."}
-            </p>
-          </div>
-
-          {activeMission && (
-            <Link href={`/mission/${activeMission.id}`}>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full mt-2 bg-white text-black py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-zinc-100 transition-colors shadow-xl cursor-pointer"
-              >
-                Ejecutar Protocolo
-                <ChevronRight size={14} />
-              </motion.button>
+          {activeMissions.length > 3 && (
+            <Link href="/mission">
+              <span className="text-[10px] font-black uppercase text-indigo-500 hover:text-indigo-400 cursor-pointer transition-colors">
+                Ver Todas (+{remainingCount})
+              </span>
             </Link>
           )}
+        </div>
 
-          <div className="pt-4 border-t border-white/10">
-            <div className="flex justify-between items-end">
-              <div>
-                <p className="text-[10px] font-black text-white/40 uppercase mb-1">Impacto Acumulado</p>
-                <div className="flex items-center gap-1.5">
-                  <Star className="text-amber-400 fill-amber-400" size={14} />
-                  <span className="text-2xl font-black text-white italic">{thoughtsCount * 12} <span className="text-xs opacity-50">pts</span></span>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] font-black text-white/40 uppercase mb-1">Rango</p>
-                <span className="text-xs font-black text-white uppercase italic tracking-widest bg-white/10 px-3 py-1 rounded-full border border-white/20">
-                  {thoughtsCount > 10 ? 'ESTRATEGA' : 'OPERATIVO'}
-                </span>
-              </div>
-            </div>
+        {hasMissions ? (
+          <div className="space-y-3">
+            {displayMissions.map((mission, idx) => (
+              <motion.div 
+                key={mission.id}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+              >
+                <Link href={`/mission/${mission.id}`}>
+                  <div className={`group p-6 rounded-[2rem] border transition-all cursor-pointer relative overflow-hidden ${
+                    idx === 0 
+                      ? 'bg-slate-900 border-slate-800 shadow-xl scale-[1.02]' 
+                      : 'bg-white border-slate-100 hover:border-indigo-200'
+                  }`}>
+                    <div className="relative z-10 flex flex-col gap-2">
+                      <div className="flex justify-between items-center">
+                        <span className={`text-[8px] font-black uppercase tracking-widest ${
+                          idx === 0 ? 'text-indigo-400' : 'text-slate-400'
+                        }`}>
+                          {idx === 0 ? 'Prioridad de Ejecución' : `Misión ${activeMissions.length - idx}`}
+                        </span>
+                        <Rocket size={14} className={`${idx === 0 ? 'text-white' : 'text-slate-300'} group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform`} />
+                      </div>
+                      <p className={`text-sm font-black italic uppercase leading-tight tracking-tighter ${
+                        idx === 0 ? 'text-white' : 'text-slate-900'
+                      }`}>
+                        {mission.accion_inmediata}
+                      </p>
+                    </div>
+                    {idx === 0 && (
+                      <div className="absolute -right-4 -bottom-4 opacity-5 pointer-events-none">
+                        <Target size={80} className="text-white" />
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 border border-dashed border-slate-200 rounded-[2rem] text-center">
+            <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">
+              No hay misiones activas
+            </p>
+          </div>
+        )}
+
+        {/* Impacto y Rango (Simplificado) */}
+        <div className="px-6 py-4 bg-slate-50 rounded-[2rem] flex justify-between items-center border border-slate-100">
+          <div>
+            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5">Impacto</p>
+            <span className="text-sm font-black italic text-slate-900">{thoughtsCount * 12} <span className="text-[10px] opacity-40">pts</span></span>
+          </div>
+          <div className="text-right">
+            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5">Rango</p>
+            <span className="text-[10px] font-black text-indigo-600 uppercase italic">
+              {thoughtsCount > 10 ? 'ESTRATEGA' : 'OPERATIVO'}
+            </span>
           </div>
         </div>
-
-        {/* Elementos decorativos */}
-        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-          <Target size={120} />
-        </div>
-      </motion.div>
+      </div>
 
       {/* VIGILANCIA ACTIVA BAR */}
       <motion.div 
@@ -118,7 +117,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
       >
         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
-          Vigilancia Activa: El sistema monitorea tu inercia.
+          Vigilancia Activa: Sistema operativo
         </span>
       </motion.div>
 
@@ -127,18 +126,18 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-slate-900 p-8 rounded-[3rem] shadow-2xl relative overflow-hidden"
+        className="bg-indigo-600 p-8 rounded-[3rem] shadow-2xl relative overflow-hidden group"
       >
-        <Zap className="absolute -top-6 -right-6 text-slate-800 size-24 rotate-12" />
+        <Zap className="absolute -top-6 -right-6 text-indigo-500 size-24 rotate-12 group-hover:rotate-45 transition-transform duration-700" />
         <div className="relative z-10 space-y-4">
-           <div className="flex items-center gap-2 text-amber-400">
+           <div className="flex items-center gap-2 text-indigo-200">
              <Zap size={14} fill="currentColor" />
-             <span className="text-[9px] font-black uppercase tracking-widest">Tip de Hoy</span>
+             <span className="text-[9px] font-black uppercase tracking-widest">Enfoque</span>
            </div>
            <p className="text-white text-sm font-medium italic opacity-90 leading-relaxed">
              {isProteccion 
-               ? "Cierra los ojos 5 minutos. Tu sistema procesará mejor el ruido en segundo plano." 
-               : "Si una acción toma menos de 2 minutos, libérala ahora para recuperar momentum."}
+               ? "Cierra los ojos 5 minutos. Tu sistema procesará mejor el ruido." 
+               : "Si toma menos de 2 minutos, libérala ahora."}
            </p>
         </div>
       </motion.div>

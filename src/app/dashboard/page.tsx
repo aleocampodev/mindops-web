@@ -43,13 +43,15 @@ export default async function DashboardPage() {
 
   const energyLevel = chartData?.length ? 100 - (chartData[chartData.length - 1]["Carga Mental"]) : 100;
 
+  const displayName = profile?.first_name || "Compañero";
+
   return (
     <main className={`min-h-screen transition-all duration-1000 ${
       isProteccion ? 'bg-[#FFF8F0]' : 'bg-[#FDFDFF]'
     }`}>
       <div className="max-w-[1600px] mx-auto p-6 md:p-12">
         <DashboardHeader 
-          firstName={profile?.first_name || "Compañero"} 
+          firstName={displayName} 
           isProteccion={isProteccion} 
           energyLevel={energyLevel} 
         />
@@ -61,7 +63,7 @@ export default async function DashboardPage() {
               isProteccion={isProteccion} 
               thoughtsCount={thoughts?.length || 0} 
               allThoughts={thoughts || []}
-              firstName={profile?.first_name || "Compañero"}
+              firstName={displayName}
             />
 
             <PerspectiveCard 

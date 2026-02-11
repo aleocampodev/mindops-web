@@ -1,26 +1,39 @@
-import { createClient } from '@/utils/supabase/server';
-import { notFound, redirect } from 'next/navigation';
-import { MissionView } from './MissionView';
+import { createClient } from '@/utils/supabase/server'
+import { notFound, redirect } from 'next/navigation'
+import { MissionManager } from './MissionManager'
 
-export default async function MissionPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const supabase = await createClient();
+export default async function MissionPage({ params }: { params: { id: string } }) {
+  const supabase = await createClient()
+  const { id } = params
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login');
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
-  const { data: thought } = await supabase
+  const { data: mission, error } = await supabase
     .from('thoughts')
     .select('*')
     .eq('id', id)
-    .single();
+    .single()
 
-  if (!thought) notFound();
+  if (error || !mission) notFound()
+  if (mission.status === 'completado') redirect('/dashboard')
 
-  // Si no hay un plan de acción, no podemos ejecutar la misión
-  if (!thought.plan_de_accion) {
-    redirect('/dashboard');
+  // Parsing JSON plan_de_accion
+  let plan = mission.plan_de_accion
+  if (typeof plan === 'string') {
+    try {
+      plan = JSON.parse(plan)
+    } catch (e) {
+      plan = []
+    }
   }
 
-  return <MissionView thought={thought} />;
+  return (
+    <MissionManager 
+      missionId={id}
+      initialStep={mission.current_step_index || 0}
+      plan={plan || []}
+      title={mission.titulo_resumen || mission.accion_inmediata || 'Misión Activa'}
+    />
+  )
 }

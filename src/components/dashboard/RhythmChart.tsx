@@ -69,7 +69,7 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
           </div>
           
           {/* Bar Chart */}
-          <div className="flex-1 min-h-[16rem]">
+          <div className="flex-1 min-h-[20rem]">
             {!hasData ? (
               <div className="h-full flex items-center justify-center">
                 <p className="text-slate-300 text-sm font-medium italic">
@@ -81,7 +81,7 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                 {/* Y-axis labels */}
                 <div className="flex-1 relative">
                   {/* Grid lines */}
-                  <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                  <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-50">
                     <div className="border-b border-dashed border-slate-100 relative">
                       <span className="absolute -left-1 -top-2 text-[8px] font-bold text-slate-300">100</span>
                     </div>
@@ -93,9 +93,24 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                     </div>
                   </div>
 
-                  {/* Bars */}
-                  <div className="absolute inset-0 flex items-end justify-center gap-1 sm:gap-2 pl-6 pr-1">
-                    {data.map((point, i) => {
+                  {/* Bars Container */}
+                  <div className="absolute inset-0 flex items-end justify-start gap-2 sm:gap-3 pl-6 pr-1">
+                    {/* Ghost Bars + Real Bars */}
+                    {Array.from({ length: 15 }).map((_, i) => {
+                      const point = data[i];
+                      const isGhost = !point;
+                      
+                      if (isGhost) {
+                        return (
+                          <div 
+                            key={`ghost-${i}`}
+                            className="flex-1 flex flex-col items-center justify-end h-full max-w-[3rem]"
+                          >
+                            <div className="w-full h-full bg-slate-50/40 rounded-t-xl border border-dashed border-slate-100/50" />
+                          </div>
+                        );
+                      }
+
                       const nivel = point.nivel || 'fluido';
                       const colors = BAR_COLORS[nivel];
                       const heightPercent = (point['Carga Mental'] / maxValue) * 100;
@@ -103,20 +118,20 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                       return (
                         <motion.div
                           key={`${point.hora}-${i}`}
-                          className="flex-1 flex flex-col items-center justify-end h-full max-w-[3.5rem] group/bar"
+                          className="flex-1 flex flex-col items-center justify-end h-full max-w-[3rem] group/bar"
                           initial={{ scaleY: 0 }}
                           animate={{ scaleY: 1 }}
                           transition={{ delay: 0.05 * i, duration: 0.4, ease: 'easeOut' }}
                           style={{ transformOrigin: 'bottom' }}
                         >
                           {/* Tooltip on hover */}
-                          <div className="opacity-0 group-hover/bar:opacity-100 transition-opacity mb-1 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold rounded-lg whitespace-nowrap pointer-events-none">
+                          <div className="opacity-0 group-hover/bar:opacity-100 transition-opacity mb-1 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold rounded-lg whitespace-nowrap pointer-events-none z-20">
                             {colors.label} · {point['Carga Mental']}%
                           </div>
                           
                           {/* Bar */}
                           <div 
-                            className={`w-full rounded-t-xl ${colors.bar} shadow-sm hover:shadow-lg hover:${colors.glow} transition-all duration-200 cursor-default min-h-[4px]`}
+                            className={`w-full rounded-t-xl ${colors.bar} shadow-sm hover:shadow-lg hover:${colors.glow} transition-all duration-200 cursor-default min-h-[4px] z-10`}
                             style={{ height: `${heightPercent}%` }}
                           />
                         </motion.div>
@@ -126,14 +141,17 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                 </div>
 
                 {/* X-axis labels */}
-                <div className="flex items-center justify-center gap-1 sm:gap-2 pl-6 pr-1 mt-2 border-t border-slate-100 pt-2">
-                  {data.map((point, i) => (
-                    <div key={`label-${i}`} className="flex-1 max-w-[3.5rem]">
-                      <p className="text-[7px] sm:text-[8px] font-bold text-slate-300 text-center truncate">
-                        {point.hora}
-                      </p>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-start gap-2 sm:gap-3 pl-6 pr-1 mt-2 border-t border-slate-100 pt-2">
+                  {Array.from({ length: 15 }).map((_, i) => {
+                    const point = data[i];
+                    return (
+                      <div key={`label-${i}`} className="flex-1 max-w-[3rem]">
+                        <p className="text-[7px] sm:text-[8px] font-bold text-slate-300 text-center truncate">
+                          {point ? point.hora : '--:--'}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}

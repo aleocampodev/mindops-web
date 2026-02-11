@@ -36,7 +36,7 @@ export function calculateResilienceMetric(thoughts: Thought[]): ResilienceMetric
       delta: 0,
       label: 'PENDING',
       trend: 'neutral',
-      description: 'Inicia tu primer desahogo para activar el monitoreo.'
+      description: 'Inicia tu primer desahogo para que pueda empezar a conocer tu ritmo.'
     };
   }
 
@@ -57,7 +57,7 @@ export function calculateResilienceMetric(thoughts: Thought[]): ResilienceMetric
       delta: 0,
       label: 'STABLE',
       trend: 'neutral',
-      description: 'Tu capacidad de reset biológico está en fase de calibración.'
+      description: 'Estamos aprendiendo de tus ritmos para darte mejores datos.'
     };
   }
 
@@ -76,15 +76,15 @@ export function calculateResilienceMetric(thoughts: Thought[]): ResilienceMetric
 
   // 4. Determinar Label y Descripción (UX Writing)
   let label: ResilienceMetric['label'] = 'STABLE';
-  let description = 'Tu ritmo de procesamiento se mantiene constante.';
+  let description = 'Tu nivel de calma se mantiene estable.';
   const trend: ResilienceMetric['trend'] = delta > 0 ? 'increase' : delta < 0 ? 'decrease' : 'neutral';
 
   if (delta >= 10) {
     label = 'OPTIMAL';
-    description = `Has mejorado tu reset biológico un ${delta}% este mes.`;
+    description = `Has mejorado tu capacidad de recuperación un ${delta}% este mes.`;
   } else if (delta <= -10) {
     label = 'VULNERABLE';
-    description = 'Detectamos un aumento en la inercia mental. Considera una pausa activa.';
+    description = 'Notamos que podrías estar acumulando cansancio. Considera una pausa activa.';
   } else if (avgFriccionCurrent <= 30) {
     label = 'OPTIMAL';
     description = 'Mantienes una carga cognitiva baja y fluida.';

@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import { ArrowLeft, Target, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Target, Clock, CheckCircle2, ChevronRight, Rocket } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -111,13 +111,14 @@ export default async function MissionsPage() {
                         )}
                       </div>
                       
-                      <div className="flex-shrink-0 pt-1">
-                        <div className="w-10 h-10 rounded-xl bg-slate-50 group-hover:bg-indigo-50 flex items-center justify-center transition-colors">
-                          <ChevronRight 
+                      <div className="flex-shrink-0 flex flex-col items-center justify-center gap-2">
+                        <div className="w-10 h-10 rounded-xl bg-slate-50 group-hover:bg-indigo-600 flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-indigo-200">
+                          <Rocket 
                             size={18} 
-                            className="text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all" 
+                            className="text-slate-400 group-hover:text-white group-hover:-translate-y-0.5 transition-all" 
                           />
                         </div>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-300 group-hover:text-indigo-600 transition-colors">Ejecutar</span>
                       </div>
                     </div>
                   </div>
