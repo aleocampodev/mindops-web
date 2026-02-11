@@ -50,44 +50,44 @@ export function MissionManager({ missionId, initialStep, plan, title }: MissionM
   }
 
   return (
-    <main className="min-h-screen bg-[#0A0A0B] text-white overflow-hidden flex flex-col items-center justify-center p-6 relative">
+    <main className="min-h-screen bg-[#FDFDFF] text-slate-900 overflow-hidden flex flex-col items-center justify-center p-6 relative">
       {/* Dynamic Background Glow */}
       <motion.div 
-        animate={{ backgroundColor: progress > 80 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(99, 102, 241, 0.1)' }}
+        animate={{ backgroundColor: progress > 80 ? 'rgba(16, 185, 129, 0.05)' : 'rgba(99, 102, 241, 0.05)' }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] pointer-events-none transition-colors duration-1000" 
       />
 
       {/* Header Info */}
       <div className="absolute top-12 left-12 right-12 flex justify-between items-center z-10">
-        <Link href="/dashboard" className="group flex items-center gap-3 text-slate-500 hover:text-white transition-colors">
+        <Link href="/dashboard" className="group flex items-center gap-3 text-slate-400 hover:text-indigo-600 transition-colors">
           <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Abortar Misión</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Cerrar Enfoque</span>
         </Link>
         <div className="text-right">
-          <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1 italic">Operación de Alivio</p>
-          <h2 className="text-xl font-black italic uppercase tracking-tighter">{title}</h2>
+          <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1 italic">Espacio de Alivio</p>
+          <h2 className="text-xl font-black italic uppercase tracking-tighter text-slate-900">{title}</h2>
         </div>
       </div>
 
       {/* Main Container */}
       <div className="w-full max-w-2xl flex flex-col items-center gap-12 relative z-10">
         
-        {/* RAM Metric */}
+        {/* Clarity Metric */}
         <div className="w-full space-y-4">
           <div className="flex justify-between items-end">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
-              <Cpu size={14} className="text-indigo-500" /> RAM MENTAL RECUPERADA
+              <Sparkles size={14} className="text-indigo-500" /> CLARIDAD LOGRADA
             </span>
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black italic tracking-tighter">{progress}</span>
-              <span className="text-xs font-black text-slate-500">%</span>
+              <span className="text-3xl font-black italic tracking-tighter text-slate-900">{progress}</span>
+              <span className="text-xs font-black text-slate-400">%</span>
             </div>
           </div>
-          <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5 p-[2px]">
+          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200/50 p-[2px]">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
-              className={`h-full rounded-full bg-gradient-to-r ${progressColor} shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all duration-1000`}
+              className={`h-full rounded-full bg-gradient-to-r ${progressColor} shadow-[0_4px_12px_rgba(99,102,241,0.2)] transition-all duration-1000`}
             />
           </div>
         </div>
@@ -101,20 +101,20 @@ export function MissionManager({ missionId, initialStep, plan, title }: MissionM
               animate={{ opacity: 1, y: 0, scale: 1, rotateY: 0 }}
               exit={{ opacity: 0, y: -120, x: 100, rotate: 10, scale: 0.9, filter: 'blur(10px)' }}
               transition={{ type: "spring", stiffness: 120, damping: 20 }}
-              className="w-full bg-white text-black p-14 rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center text-center gap-8 border-t-4 border-indigo-500"
+              className="w-full bg-white text-slate-900 p-14 rounded-[3.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center text-center gap-8 border border-slate-100 border-t-4 border-t-indigo-500"
             >
               <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center">
                 <Sparkles className="text-indigo-600" size={32} />
               </div>
               <div className="space-y-4">
-                <span className="text-[11px] font-black text-indigo-500 bg-indigo-50 px-5 py-2 rounded-full uppercase tracking-[0.2em]">Foco Actual</span>
+                <span className="text-[11px] font-black text-indigo-500 bg-indigo-50 px-5 py-2 rounded-full uppercase tracking-[0.2em]">Paso Presente</span>
                 <h1 className="text-4xl md:text-5xl font-black italic leading-[1.05] tracking-tighter text-slate-900">
                   {currentTask?.tarea}
                 </h1>
-                <div className="flex items-center justify-center gap-2 text-slate-400">
-                  <span className="h-[1px] w-8 bg-slate-200" />
-                  <p className="font-black uppercase tracking-widest text-[10px]">{currentTask?.hora}</p>
-                  <span className="h-[1px] w-8 bg-slate-200" />
+                <div className="flex items-center justify-center gap-2 text-slate-300">
+                  <span className="h-[1px] w-8 bg-slate-100" />
+                  <p className="font-black uppercase tracking-widest text-[10px] text-slate-400">{currentTask?.hora}</p>
+                  <span className="h-[1px] w-8 bg-slate-100" />
                 </div>
               </div>
             </motion.div>
@@ -123,22 +123,22 @@ export function MissionManager({ missionId, initialStep, plan, title }: MissionM
 
         {/* The Horizon (Next Steps) */}
         <div className="w-full space-y-5">
-          <p className="text-center text-[10px] font-black text-white/10 uppercase tracking-[0.5em]">Próximos en el horizonte</p>
+          <p className="text-center text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Tus próximos pasos</p>
           <div className="space-y-3">
             {nextTasks.length > 0 ? nextTasks.map((task, i) => (
               <div 
                 key={i} 
-                className="bg-white/5 backdrop-blur-md border border-white/5 p-6 rounded-3xl flex items-center justify-between opacity-30 grayscale blur-[1px] hover:blur-0 transition-all duration-500"
+                className="bg-white border border-slate-100 p-6 rounded-3xl flex items-center justify-between opacity-40 grayscale blur-[0.5px] hover:blur-0 transition-all duration-500 shadow-sm"
               >
                 <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 rounded-full bg-white/20" />
-                    <span className="text-sm font-bold italic text-white/70">{task.tarea}</span>
+                    <div className="w-2 h-2 rounded-full bg-slate-200" />
+                    <span className="text-sm font-bold italic text-slate-600">{task.tarea}</span>
                 </div>
-                <span className="text-[10px] font-black text-white/20 bg-white/5 px-4 py-1.5 rounded-xl uppercase">{task.hora}</span>
+                <span className="text-[10px] font-black text-slate-400 bg-slate-50 px-4 py-1.5 rounded-xl uppercase">{task.hora}</span>
               </div>
             )) : (
-                <div className="p-8 border border-dashed border-white/5 rounded-3xl text-center">
-                    <p className="text-[10px] font-black text-white/10 uppercase tracking-widest">Fin de la secuencia de pasos</p>
+                <div className="p-8 border border-dashed border-slate-200 rounded-3xl text-center">
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Misión completada pronto</p>
                 </div>
             )}
           </div>
@@ -150,16 +150,16 @@ export function MissionManager({ missionId, initialStep, plan, title }: MissionM
           whileTap={{ scale: 0.98 }}
           onClick={handleRelease}
           disabled={isLifting}
-          className="relative group w-full py-7 bg-indigo-700 rounded-[3rem] overflow-hidden shadow-[0_25px_50px_-12px_rgba(79,70,229,0.5)] disabled:opacity-50 transition-colors"
+          className="relative group w-full py-7 bg-indigo-600 rounded-[3rem] overflow-hidden shadow-[0_20px_40px_-10px_rgba(79,70,229,0.3)] disabled:opacity-50 transition-colors"
         >
-          {/* Neon Scan Effect */}
-          <div className="absolute inset-0 w-[30%] h-full bg-white/20 skew-x-[45deg] -translate-x-[200%] group-hover:animate-scan pointer-events-none" />
+          {/* Subtle Glow Effect */}
+          <div className="absolute inset-0 w-[30%] h-full bg-white/10 skew-x-[45deg] -translate-x-[200%] group-hover:animate-scan pointer-events-none" />
           
           <div className="relative z-10 flex items-center justify-center gap-4">
-            <span className="text-xl font-black italic tracking-[0.2em] uppercase">
-              {isLifting ? 'Sincronizando...' : 'LIBERAR CARGA'}
+            <span className="text-xl font-black text-white italic tracking-[0.2em] uppercase">
+              {isLifting ? 'Procesando...' : 'LIBERAR CARGA'}
             </span>
-            <CheckCircle2 size={24} className="group-hover:rotate-12 transition-transform" />
+            <CheckCircle2 size={24} className="text-white group-hover:rotate-12 transition-transform" />
           </div>
         </motion.button>
       </div>
