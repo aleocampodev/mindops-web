@@ -1,7 +1,8 @@
 'use client'
 import { Card, DonutChart, BadgeDelta } from '@tremor/react';
-import { Zap, Activity, ShieldCheck } from 'lucide-react';
+import { Activity, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
+import type { ResilienceMetric } from '@/lib/dashboard/analytics';
 
 interface Thought {
   id: string;
@@ -11,7 +12,12 @@ interface Thought {
   created_at: string;
 }
 
-export function QuickStats({ thoughts }: { thoughts: Thought[] }) {
+interface QuickStatsProps {
+  thoughts: Thought[];
+  resilience: ResilienceMetric;
+}
+
+export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
   // 1. Balance de Energía
   const total = thoughts.length || 1;
   const proteccion = thoughts.filter(t => t.modo_sistema === 'PROTECCION').length;
@@ -22,6 +28,21 @@ export function QuickStats({ thoughts }: { thoughts: Thought[] }) {
     { name: 'Protección', value: Math.round((proteccion / total) * 100) },
   ];
 
+  // Determinar el tipo de delta para Tremor
+  const deltaType = resilience.delta > 0 
+    ? 'moderateIncrease' 
+    : resilience.delta < 0 
+      ? 'moderateDecrease' 
+      : 'unchanged';
+
+  // Mapeo de colores para labels de resiliencia
+  const labelColors = {
+    OPTIMAL: 'text-emerald-500',
+    STABLE: 'text-indigo-600',
+    VULNERABLE: 'text-rose-500',
+    PENDING: 'text-slate-400'
+  };
+
   return (
     <div className="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 gap-6">
       <motion.div
@@ -29,22 +50,29 @@ export function QuickStats({ thoughts }: { thoughts: Thought[] }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <Card className="rounded-[2.5rem] border-none shadow-xl bg-white/80 backdrop-blur-md p-8 flex items-center justify-between group hover:bg-white transition-colors">
-          <div className="space-y-2">
+        <Card className="rounded-[2.5rem] border-none shadow-xl bg-white/80 backdrop-blur-md p-8 flex items-center justify-between group hover:bg-white transition-colors h-full">
+          <div className="space-y-2 flex-1">
             <div className="flex items-center gap-2 text-indigo-600">
               <ShieldCheck size={18} className="group-hover:scale-110 transition-transform" />
               <span className="text-[10px] font-black uppercase tracking-widest">Resiliencia del Sistema</span>
             </div>
-            <h4 className="text-3xl font-black text-slate-900 tracking-tighter italic">OPTIMAL</h4>
+            <h4 className={`text-3xl font-black tracking-tighter italic ${labelColors[resilience.label]}`}>
+              {resilience.label}
+            </h4>
             <p className="text-[10px] font-bold text-slate-400 uppercase leading-tight max-w-[180px]">
-              Tu capacidad de <span className="text-indigo-600 italic">reset biológico</span> ha mejorado un <span className="text-emerald-500">14%</span> este mes.
+              {resilience.description}
             </p>
           </div>
-          <div className="flex flex-col items-end gap-2">
-            <BadgeDelta deltaType="moderateIncrease" className="rounded-full px-4 py-1 font-black italic">
-              +5.2%
+          <div className="flex flex-col items-end justify-center gap-2 ml-4">
+            <BadgeDelta 
+              deltaType={deltaType} 
+              className="rounded-full px-4 py-1.5 font-black italic scale-110"
+            >
+              {resilience.delta > 0 ? '+' : ''}{resilience.delta}%
             </BadgeDelta>
-            <span className="text-[8px] font-black text-slate-300 uppercase letter tracking-widest">vs Semana Anter.</span>
+            <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest text-right leading-tight">
+              vs Ciclo <br/> Anterior
+            </span>
           </div>
         </Card>
       </motion.div>
@@ -54,7 +82,7 @@ export function QuickStats({ thoughts }: { thoughts: Thought[] }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <Card className="rounded-[2.5rem] border-none shadow-xl bg-white/80 backdrop-blur-md p-8 flex items-center gap-8">
+        <Card className="rounded-[2.5rem] border-none shadow-xl bg-white/80 backdrop-blur-md p-8 flex items-center gap-8 h-full">
           <div className="flex-1">
             <div className="flex items-center gap-2 text-slate-900 mb-4">
               <Activity size={18} />

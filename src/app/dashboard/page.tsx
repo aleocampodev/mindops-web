@@ -7,6 +7,7 @@ import { MomentumAnchor } from '@/components/dashboard/MomentumAnchor';
 import { ThoughtGallery } from '@/components/dashboard/ThoughtGallery';
 import { QuickStats } from '@/components/dashboard/QuickStats';
 import { MissionSidebar } from '@/components/dashboard/MissionSidebar';
+import { calculateResilienceMetric } from '@/lib/dashboard/analytics';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -25,6 +26,9 @@ export default async function DashboardPage() {
 
   const latestThought = thoughts?.[0];
   const isProteccion = latestThought?.modo_sistema === 'PROTECCION';
+
+  // 🧠 CALCULO DE MÉTRICAS DINÁMICAS
+  const resilience = calculateResilienceMetric(thoughts || []);
 
   const chartData = thoughts?.slice(0, 15).map(t => ({
     hora: new Date(t.created_at).toLocaleTimeString('es-CO', { 
@@ -68,7 +72,7 @@ export default async function DashboardPage() {
 
           {/* LADO DERECHO: MÉTRICAS Y ACCIONES */}
           <div className="lg:col-span-9 space-y-12">
-            <QuickStats thoughts={thoughts || []} />
+            <QuickStats thoughts={thoughts || []} resilience={resilience} />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <RhythmChart data={chartData || []} isProteccion={isProteccion} />
