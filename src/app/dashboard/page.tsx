@@ -34,6 +34,7 @@ export default async function DashboardPage() {
       timeZone: 'America/Bogota' 
     }),
     "Carga Mental": t.friccion.includes('🔴') ? 95 : t.friccion.includes('🟡') ? 50 : 20,
+    nivel: (t.friccion.includes('🔴') ? 'critico' : t.friccion.includes('🟡') ? 'denso' : 'fluido') as 'critico' | 'denso' | 'fluido',
   })).reverse();
 
   const energyLevel = chartData?.length ? 100 - (chartData[chartData.length - 1]["Carga Mental"]) : 100;
