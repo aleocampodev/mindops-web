@@ -30,24 +30,40 @@ export default async function PairingPage() {
   let currentCode = profile?.pairing_code
   let currentExpiresAt = profile?.pairing_code_expires_at
 
-  if (!currentCode) {
+  // 🧠 Si no hay código O el código ya expiró, generamos uno nuevo automáticamente
+  const isCodeExpired = currentExpiresAt && new Date(currentExpiresAt) < new Date()
+
+  if (!currentCode || isCodeExpired) {
     const autoCode = Math.floor(100000 + Math.random() * 900000).toString()
     const expiresAt = new Date()
     expiresAt.setMinutes(expiresAt.getMinutes() + 10)
     const expiresAtStr = expiresAt.toISOString()
 
+    // Obtenemos el nombre del usuario desde Google OAuth
+    const googleName = user.user_metadata?.full_name?.split(' ')[0] 
+      || user.user_metadata?.name?.split(' ')[0]
+      || user.email?.split('@')[0]
+      || 'Usuario'
+
     const { data: newProfile } = await supabase.from('profiles').upsert({ 
       id: user.id, 
       pairing_code: autoCode,
       pairing_code_expires_at: expiresAtStr,
-      first_name: user.user_metadata.full_name?.split(' ')[0] || 'Ale'
+      first_name: profile?.first_name || googleName
     }, { onConflict: 'id' }).select().single()
     
+    // Actualizamos profile con los datos frescos del upsert
+    if (newProfile) profile = newProfile
     currentCode = autoCode
     currentExpiresAt = expiresAtStr
   }
 
-  const userName = profile?.first_name || user.user_metadata.full_name?.split(' ')[0] || 'Ale'
+  // 🧠 Resolvemos el nombre: profile (DB) > Google metadata > email > fallback
+  const userName = profile?.first_name 
+    || user.user_metadata?.full_name?.split(' ')[0] 
+    || user.user_metadata?.name?.split(' ')[0]
+    || user.email?.split('@')[0]
+    || 'Usuario'
 
   return (
     <main className="min-h-screen bg-[#FDFDFF] flex items-center justify-center p-6 relative overflow-hidden text-slate-900 selection:bg-indigo-100">
