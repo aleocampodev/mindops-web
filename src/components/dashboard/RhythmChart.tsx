@@ -53,57 +53,28 @@ export function RhythmChart({ data, isProteccion }: { data: Record<string, unkno
               showTooltip={true}
               autoMinValue={true}
             />
-            {/* Indicador de Zona Crítica */}
-            <div className="absolute top-0 right-0 left-0 h-4 border-t border-dashed border-red-500/20 pointer-events-none">
-              <span className="absolute right-0 -top-2 text-[7px] font-black text-red-500 uppercase tracking-widest opacity-40">Zona de Saturación</span>
-            </div>
           </div>
 
-          {/* Leyenda de Niveles de Carga */}
-          <div className="mt-6 grid grid-cols-3 gap-3">
-            <div className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-red-50/80 border border-red-100">
+          {/* Leyenda minimalista en línea */}
+          <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-5">
+            <div className="flex items-center gap-5">
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                <span className="text-[10px] font-black uppercase tracking-wider text-red-600">Crítico</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Fluido 20</span>
               </div>
-              <span className="text-lg font-black text-red-700 italic">95</span>
-              <p className="text-[8px] font-bold text-red-400 uppercase tracking-wide text-center leading-tight">
-                Bloqueo mental o saturación total
-              </p>
-            </div>
-            <div className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-amber-50/80 border border-amber-100">
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-600">Denso</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Denso 50</span>
               </div>
-              <span className="text-lg font-black text-amber-700 italic">50</span>
-              <p className="text-[8px] font-bold text-amber-400 uppercase tracking-wide text-center leading-tight">
-                Desorden con tareas pendientes
-              </p>
-            </div>
-            <div className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-emerald-50/80 border border-emerald-100">
               <div className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600">Fluido</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Crítico 95</span>
               </div>
-              <span className="text-lg font-black text-emerald-700 italic">20</span>
-              <p className="text-[8px] font-bold text-emerald-400 uppercase tracking-wide text-center leading-tight">
-                Estado de flow y energía clara
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
-            <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">
-              <span className="flex items-center gap-1.5">
-                <div className={`w-2 h-2 rounded-full ${isProteccion ? 'bg-amber-500' : 'bg-indigo-500'}`} />
-                Nivel de Inercia
-              </span>
             </div>
             <div className="flex items-center gap-2 text-slate-400 group/info cursor-help">
               <Info size={14} className="transition-colors group-hover/info:text-indigo-500" />
               <span className="text-[9px] font-bold uppercase tracking-wider opacity-0 group-hover/info:opacity-100 transition-opacity">
-                Datos de las últimas 24h
+                Últimas 24h
               </span>
             </div>
           </div>
