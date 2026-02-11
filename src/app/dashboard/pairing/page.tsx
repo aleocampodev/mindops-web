@@ -1,76 +1,51 @@
-import { createClient } from '@/utils/supabase/server'
-import { generatePairingCode } from './actions'
-import { Heart, Send, Sparkles, RefreshCw, Smartphone, ShieldCheck } from 'lucide-react'
-import { redirect } from 'next/navigation'
-import { RealtimeRedirect } from '@/components/auth/RealtimeRedirect'
-import { PairingTimer } from '@/components/dashboard/PairingTimer'
+import { createClient } from '@/utils/supabase/server';
+import { generatePairingCode } from './actions';
+import { Heart, RefreshCw, Smartphone, ShieldCheck } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { RealtimeRedirect } from '@/components/auth/RealtimeRedirect';
+import { PairingTimer } from '@/components/dashboard/PairingTimer';
+import {
+  getUserDisplayName,
+  generatePairingCodeData,
+  isPairingCodeExpired,
+  isUserPaired,
+} from '@/lib/pairing/helpers';
+import type { Profile } from '@/lib/pairing/types';
 
 export default async function PairingPage() {
-  const supabase = await createClient()
-  
-  // 1. Verificación de sesión de Google
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const supabase = await createClient();
 
-  // 2. Intentar traer el perfil
-  let { data: profile } = await supabase
+  // 1. Verificar autenticación
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
+
+  // 2. Obtener perfil del usuario
+  const { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
-    .single()
+    .single();
 
-  // 3. 🧠 LÓGICA DE ACTIVACIÓN: Si Ale ya vinculó todo, al Dashboard.
-  // Si le falta el telegram_id o el phone_number, se queda aquí.
-  if (profile?.telegram_id && profile?.phone_number) {
-    redirect('/dashboard')
+  // 3. Si ya está vinculado, redirigir al dashboard
+  if (isUserPaired(profile)) {
+    redirect('/dashboard');
   }
 
-  // 4. 🛠 REGISTRO PROACTIVO: Si no hay fila en 'profiles', la creamos AHORA.
-  // Esto evita las filas vacías al hacer login. La fila nace solo cuando Ale quiere vincularse.
-  let currentCode = profile?.pairing_code
-  let currentExpiresAt = profile?.pairing_code_expires_at
+  // 4. Gestionar código de pairing
+  const pairingData = await ensureValidPairingCode(supabase, user, profile);
 
-  // 🧠 Si no hay código O el código ya expiró, generamos uno nuevo automáticamente
-  const isCodeExpired = currentExpiresAt && new Date(currentExpiresAt) < new Date()
-
-  if (!currentCode || isCodeExpired) {
-    const autoCode = Math.floor(100000 + Math.random() * 900000).toString()
-    const expiresAt = new Date()
-    expiresAt.setMinutes(expiresAt.getMinutes() + 10)
-    const expiresAtStr = expiresAt.toISOString()
-
-    // Obtenemos el nombre del usuario desde Google OAuth
-    const googleName = user.user_metadata?.full_name?.split(' ')[0] 
-      || user.user_metadata?.name?.split(' ')[0]
-      || user.email?.split('@')[0]
-      || 'Usuario'
-
-    const { data: newProfile } = await supabase.from('profiles').upsert({ 
-      id: user.id, 
-      pairing_code: autoCode,
-      pairing_code_expires_at: expiresAtStr,
-      first_name: profile?.first_name || googleName
-    }, { onConflict: 'id' }).select().single()
-    
-    // Actualizamos profile con los datos frescos del upsert
-    if (newProfile) profile = newProfile
-    currentCode = autoCode
-    currentExpiresAt = expiresAtStr
-  }
-
-  // 🧠 Resolvemos el nombre: profile (DB) > Google metadata > email > fallback
-  const userName = profile?.first_name 
-    || user.user_metadata?.full_name?.split(' ')[0] 
-    || user.user_metadata?.name?.split(' ')[0]
-    || user.email?.split('@')[0]
-    || 'Usuario'
+  // 5. Resolver nombre de usuario
+  const userName = getUserDisplayName(
+    pairingData.profile,
+    user.user_metadata,
+    user.email
+  );
 
   return (
     <main className="min-h-screen bg-[#FDFDFF] flex items-center justify-center p-6 relative overflow-hidden text-slate-900 selection:bg-indigo-100">
-      {/* Observador en tiempo real para redirigir cuando n8n termine el trabajo */}
       <RealtimeRedirect userId={user.id} />
 
-      {/* Fondos Dinámicos Vivid */}
+      {/* Fondos Dinámicos */}
       <div className="absolute top-[-10%] right-[-10%] w-[50rem] h-[50rem] bg-indigo-100/60 blur-[140px] rounded-full animate-pulse" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[50rem] h-[50rem] bg-fuchsia-100/40 blur-[140px] rounded-full" />
 
@@ -97,14 +72,12 @@ export default async function PairingPage() {
              </div>
              
              <div className="text-7xl font-mono font-black tracking-[0.2em] text-slate-900 mb-6 py-6 border-y border-slate-200/50 drop-shadow-sm">
-                {currentCode}
+                {pairingData.code}
              </div>
 
-             {currentExpiresAt && (
-                <div className="mb-10">
-                   <PairingTimer expiresAt={currentExpiresAt} />
-                </div>
-             )}
+             <div className="mb-10">
+                <PairingTimer expiresAt={pairingData.expiresAt} />
+             </div>
 
              <form action={generatePairingCode}>
                 <button 
@@ -128,7 +101,7 @@ export default async function PairingPage() {
                     Abre tu bot de MindOps y envía este mensaje exacto:
                  </p>
                  <div className="cursor-pointer bg-white/10 backdrop-blur-xl p-7 rounded-3xl border border-white/20 text-white font-mono text-2xl font-black text-center hover:bg-white/20 transition-all select-all shadow-inner">
-                    /vincular {currentCode}
+                    /vincular {pairingData.code}
                  </div>
                </div>
                <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl" />
@@ -141,5 +114,51 @@ export default async function PairingPage() {
         </p>
       </div>
     </main>
-  )
+  );
+}
+
+/**
+ * Asegura que el usuario tenga un código de pairing válido
+ * Genera uno nuevo si no existe o está expirado
+ */
+async function ensureValidPairingCode(
+  supabase: any,
+  user: any,
+  profile: Profile | null
+) {
+  const currentCode = profile?.pairing_code;
+  const currentExpiresAt = profile?.pairing_code_expires_at;
+
+  // Si el código existe y no ha expirado, usarlo
+  if (currentCode && !isPairingCodeExpired(currentExpiresAt)) {
+    return {
+      code: currentCode,
+      expiresAt: currentExpiresAt!,
+      profile,
+    };
+  }
+
+  // Generar nuevo código
+  const { code, expiresAt } = generatePairingCodeData();
+  const userName = getUserDisplayName(profile, user.user_metadata, user.email);
+
+  const { data: updatedProfile } = await supabase
+    .from('profiles')
+    .upsert(
+      {
+        id: user.id,
+        pairing_code: code,
+        pairing_code_expires_at: expiresAt,
+        first_name: profile?.first_name || userName,
+      },
+      { onConflict: 'id' }
+    )
+    .select()
+    .single();
+
+  return {
+    code,
+    expiresAt,
+    profile: updatedProfile || profile,
+  };
 }

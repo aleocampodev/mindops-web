@@ -1,7 +1,8 @@
 'use client'
-import { Target, Zap, Star, ChevronRight, Clock, CheckCircle2 } from 'lucide-react';
+import { Target, Zap, Star, ChevronRight, List } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useState } from 'react';
 
 interface MissionSidebarProps {
   isProteccion: boolean;
@@ -23,20 +24,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
 
   // Misión principal: la más reciente que no esté completada
   const activeMission = allMissions.find(t => t.status !== 'completado');
-  // Misiones recientes para la lista (máximo 5)
-  const recentMissions = allMissions.slice(0, 5);
   const hasMissions = allMissions.length > 0;
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'activado':
-        return { label: 'Activa', color: 'bg-emerald-500' };
-      case 'completado':
-        return { label: 'Hecha', color: 'bg-slate-400' };
-      default:
-        return { label: 'Nueva', color: 'bg-indigo-500' };
-    }
-  };
 
   return (
     <aside className="space-y-6">
@@ -51,11 +39,21 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         }`}
       >
         <div className="relative z-10 space-y-5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-              <Target className="text-white" size={20} />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                <Target className="text-white" size={20} />
+              </div>
+              <h3 className="text-sm font-black text-white uppercase tracking-widest italic">Misión Operativa</h3>
             </div>
-            <h3 className="text-sm font-black text-white uppercase tracking-widest italic">Misión Operativa</h3>
+            {allMissions.length > 1 && (
+              <Link href="/missions">
+                <button className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-xl transition-colors">
+                  <List size={14} className="text-white" />
+                  <span className="text-[9px] font-black uppercase tracking-wider text-white">Ver Todas</span>
+                </button>
+              </Link>
+            )}
           </div>
 
           <div className="space-y-3">
@@ -68,7 +66,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
               {isProteccion 
                 ? "Tu sistema está en modo ahorro. No fuerces la máquina, el éxito hoy es el descanso."
                 : hasMissions 
-                  ? "Toca una misión para ver su plan de acción completo."
+                  ? "Ejecuta tu misión activa o explora todas tus misiones."
                   : "Envía un mensaje al bot para generar tu primera misión."}
             </p>
           </div>
@@ -111,50 +109,6 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
           <Target size={120} />
         </div>
       </motion.div>
-
-      {/* LISTA DE MISIONES RECIENTES */}
-      {recentMissions.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white/80 backdrop-blur-md border border-slate-100 rounded-[2.5rem] p-6 shadow-lg"
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <Clock size={14} className="text-slate-400" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Últimas Misiones</span>
-          </div>
-          
-          <div className="space-y-2">
-            {recentMissions.map((m, i) => {
-              const badge = getStatusBadge(m.status);
-              return (
-                <Link key={m.id} href={`/mission/${m.id}`}>
-                  <motion.div 
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 * i }}
-                    className="p-3.5 rounded-2xl hover:bg-slate-50 transition-all group flex items-center justify-between cursor-pointer"
-                  >
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${badge.color}`} />
-                      <p className="text-xs font-bold text-slate-700 truncate group-hover:text-slate-900 transition-colors">
-                        {m.accion_inmediata}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                      <span className="text-[8px] font-black uppercase tracking-wider text-slate-300">
-                        {badge.label}
-                      </span>
-                      <ChevronRight size={12} className="text-slate-300 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                  </motion.div>
-                </Link>
-              );
-            })}
-          </div>
-        </motion.div>
-      )}
 
       {/* VIGILANCIA ACTIVA BAR */}
       <motion.div 
