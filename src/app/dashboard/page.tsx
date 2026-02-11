@@ -30,7 +30,7 @@ export default async function DashboardPage() {
   // 🧠 CALCULO DE MÉTRICAS DINÁMICAS
   const resilience = calculateResilienceMetric(thoughts || []);
 
-  const chartData = thoughts?.slice(0, 15).map(t => ({
+  const chartData = thoughts?.slice(0, 15).map((t: any) => ({
     hora: new Date(t.created_at).toLocaleTimeString('es-CO', { 
       hour: '2-digit', 
       minute: '2-digit', 
