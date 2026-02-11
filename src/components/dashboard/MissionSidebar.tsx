@@ -20,7 +20,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
     if (typeof plan === 'string') {
       try { plan = JSON.parse(plan); } catch (e) { plan = null; }
     }
-    return plan && Array.isArray(plan) && plan.length > 0 && t.status === 'pendiente';
+    return plan && Array.isArray(plan) && plan.length > 0 && t.status === 'propuesto';
   }).slice(0, 3);
 
   const latestThought = missionsWithPlan[0];
