@@ -17,7 +17,7 @@ export function DashboardHeader({ firstName, isProteccion, energyLevel }: Header
            </div>
             <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40 italic">MindOps // Dashboard</span>
         </div>
-        <h1 className="text-3xl font-black tracking-tighter uppercase italic leading-none text-slate-900">
+        <h1 className="text-3xl font-black tracking-tighter italic leading-none text-slate-900">
           Hola, {firstName}
         </h1>
       </div>
