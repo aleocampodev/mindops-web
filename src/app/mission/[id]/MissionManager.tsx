@@ -17,9 +17,18 @@ interface MissionManagerProps {
   initialStep: number
   plan: Step[]
   title: string
+  strategicAnalysis?: string
+  summaryTitle?: string
 }
 
-export function MissionManager({ missionId, initialStep, plan, title }: MissionManagerProps) {
+export function MissionManager({ 
+  missionId, 
+  initialStep, 
+  plan, 
+  title,
+  strategicAnalysis,
+  summaryTitle
+}: MissionManagerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialStep)
   const [isLifting, setIsLifting] = useState(false)
   const router = useRouter()
@@ -63,14 +72,16 @@ export function MissionManager({ missionId, initialStep, plan, title }: MissionM
           <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
           <span className="text-[10px] font-black uppercase tracking-[0.3em]">Cerrar Enfoque</span>
         </Link>
-        <div className="text-right">
+        <div className="text-right max-w-md">
           <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1 italic">Espacio de Alivio</p>
-          <h2 className="text-xl font-black italic uppercase tracking-tighter text-slate-900">{title}</h2>
+          <h2 className="text-xl font-black italic uppercase tracking-tighter text-slate-900 leading-tight">
+            {summaryTitle || title}
+          </h2>
         </div>
       </div>
 
       {/* Main Container */}
-      <div className="w-full max-w-2xl flex flex-col items-center gap-12 relative z-10">
+      <div className="w-full max-w-2xl flex flex-col items-center gap-8 relative z-10">
         
         {/* Clarity Metric */}
         <div className="w-full space-y-4">
@@ -92,8 +103,22 @@ export function MissionManager({ missionId, initialStep, plan, title }: MissionM
           </div>
         </div>
 
+        {/* Strategic Analysis - PERSPECTIVE */}
+        {strategicAnalysis && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full bg-indigo-50/50 border border-indigo-100/50 p-6 rounded-[2rem] text-center"
+          >
+            <p className="text-[8px] font-black text-indigo-400 uppercase tracking-widest mb-2">Perspectiva Estratégica</p>
+            <p className="text-sm font-medium italic text-indigo-900/70 leading-relaxed">
+              "{strategicAnalysis}"
+            </p>
+          </motion.div>
+        )}
+
         {/* The Tunnel View (Cards) */}
-        <div className="w-full relative min-h-[420px] flex items-center justify-center">
+        <div className="w-full relative min-h-[400px] flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}

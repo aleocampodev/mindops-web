@@ -20,7 +20,7 @@ export default async function MissionsPage() {
     .order('created_at', { ascending: false });
 
   // Filtramos todas las misiones que tienen plan de acción
-  const allMissions = thoughts?.filter(t => {
+  const allMissions = thoughts?.filter((t: any) => {
     let plan = t.plan_de_accion;
     if (typeof plan === 'string') {
       try { plan = JSON.parse(plan); } catch (e) { plan = null; }
@@ -76,7 +76,7 @@ export default async function MissionsPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {allMissions.map((mission, index) => {
+            {allMissions.map((mission: any, index: number) => {
               const badge = getStatusBadge(mission.status);
               const Icon = badge.icon;
               
@@ -101,7 +101,7 @@ export default async function MissionsPage() {
                         </div>
                         
                         <h3 className="text-lg font-black text-slate-900 mb-2 uppercase italic tracking-tight group-hover:text-indigo-600 transition-colors">
-                          {mission.accion_inmediata}
+                          {mission.titulo_resumen || mission.accion_inmediata}
                         </h3>
                         
                         {mission.analisis_estrategico && (
