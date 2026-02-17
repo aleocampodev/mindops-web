@@ -4,10 +4,10 @@ import { createClient } from '@/utils/supabase/server'
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
-  // 'next' es a donde queremos ir después
+  // 'next' is where we want to go after
   const next = requestUrl.searchParams.get('next') ?? '/dashboard/pairing'
 
-  // 🧠 FIX: Detectamos el host real (Cloud Run/Proxy) para evitar el bug de 0.0.0.0:8080
+  // 🧠 FIX: Detect the real host (Cloud Run/Proxy) to avoid the 0.0.0.0:8080 bug
   const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || requestUrl.host
   const protocol = request.headers.get('x-forwarded-proto') || 'https'
   const origin = `${protocol}://${host}`

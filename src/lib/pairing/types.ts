@@ -1,5 +1,5 @@
 /**
- * Tipos TypeScript para el flujo de pairing
+ * TypeScript types for the pairing flow
  */
 
 export interface Profile {

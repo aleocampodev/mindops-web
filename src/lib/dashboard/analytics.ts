@@ -1,5 +1,5 @@
 /**
- * Utilidades de análisis para el Dashboard de MindOps
+ * Analysis utilities for the MindOps Dashboard
  */
 
 export interface Thought {
@@ -17,10 +17,10 @@ export interface ResilienceMetric {
 }
 
 /**
- * Convierte un emoji de fricción en un valor numérico (0-100)
+ * Converts a friction emoji into a numeric value (0-100)
  */
 export function friccionToValue(friccion: string | null): number {
-  if (!friccion) return 20; // Default a fluido
+  if (!friccion) return 20; // Default to fluid
   if (friccion.includes('🔴')) return 95;
   if (friccion.includes('🟡')) return 50;
   if (friccion.includes('🟢')) return 20;
@@ -28,7 +28,7 @@ export function friccionToValue(friccion: string | null): number {
 }
 
 /**
- * Calcula la métrica de resiliencia comparando la semana actual vs la anterior
+ * Calculates the resilience metric comparing the current week vs the previous one
  */
 export function calculateResilienceMetric(thoughts: Thought[]): ResilienceMetric {
   if (!thoughts || thoughts.length === 0) {
@@ -44,14 +44,14 @@ export function calculateResilienceMetric(thoughts: Thought[]): ResilienceMetric
   const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
 
-  // 1. Agrupar pensamientos por semana
+  // 1. Group thoughts by week
   const currentWeekThoughts = thoughts.filter(t => new Date(t.created_at) >= oneWeekAgo);
   const previousWeekThoughts = thoughts.filter(t => {
     const date = new Date(t.created_at);
     return date >= twoWeeksAgo && date < oneWeekAgo;
   });
 
-  // Si no hay datos previos para comparar, retornamos un estado base optimista
+  // If there is no previous data to compare, return an optimistic base state
   if (previousWeekThoughts.length === 0) {
     return {
       delta: 0,
@@ -61,16 +61,16 @@ export function calculateResilienceMetric(thoughts: Thought[]): ResilienceMetric
     };
   }
 
-  // 2. Calcular promedios de fricción
-  // Nota: Menor fricción = mayor resiliencia
+  // 2. Calculate friction averages
+  // Note: Lower friction = higher resilience
   const avgFriccionCurrent = currentWeekThoughts.length > 0
     ? currentWeekThoughts.reduce((acc, t) => acc + friccionToValue(t.friccion), 0) / currentWeekThoughts.length
-    : 20; // Si no hay datos esta semana, asumimos calma para el cálculo
+    : 20; // If no data this week, assume calm for calculation
 
   const avgFriccionPrev = previousWeekThoughts.reduce((acc, t) => acc + friccionToValue(t.friccion), 0) / previousWeekThoughts.length;
 
-  // 3. Calcular Delta de Resiliencia
-  // Si la fricción baja, la resiliencia sube.
+  // 3. Calculate Resilience Delta
+  // If friction goes down, resilience goes up.
   // Ejemplo: Antes 80, ahora 40. Mejora = ((80 - 40) / 80) * 100 = +50%
   const delta = Math.round(((avgFriccionPrev - avgFriccionCurrent) / avgFriccionPrev) * 100);
 

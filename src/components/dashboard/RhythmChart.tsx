@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 
 interface ChartDataPoint {
   hora: string;
-  'Carga Mental': number;
+  'Mental Load': number;
   nivel: 'fluido' | 'denso' | 'critico';
 }
 
 const BAR_COLORS = {
-  fluido:  { bar: 'bg-emerald-400', glow: 'shadow-emerald-200', label: 'Fluido' },
-  denso:   { bar: 'bg-amber-400',   glow: 'shadow-amber-200',   label: 'Denso' },
-  critico: { bar: 'bg-rose-400',    glow: 'shadow-rose-200',    label: 'Crítico' },
+  fluido:  { bar: 'bg-emerald-400', glow: 'shadow-emerald-200', label: 'Fluid' },
+  denso:   { bar: 'bg-amber-400',   glow: 'shadow-amber-200',   label: 'Dense' },
+  critico: { bar: 'bg-rose-400',    glow: 'shadow-rose-200',    label: 'Critical' },
 };
 
 export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], isProteccion: boolean }) {
@@ -20,8 +20,8 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
   const hasData = data.length > 0;
   
   // Tendencia: compara último vs promedio
-  const lastValue = hasData ? data[data.length - 1]['Carga Mental'] : 0;
-  const avgValue = hasData ? Math.round(data.reduce((sum, d) => sum + d['Carga Mental'], 0) / data.length) : 0;
+  const lastValue = hasData ? data[data.length - 1]['Mental Load'] : 0;
+  const avgValue = hasData ? Math.round(data.reduce((sum, d) => sum + d['Mental Load'], 0) / data.length) : 0;
   const trending = lastValue <= avgValue ? 'mejorando' : 'subiendo';
 
   return (
@@ -48,7 +48,7 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                   <Activity size={20} />
                 </div>
                 <h3 className="text-[1.1rem] font-black tracking-widest uppercase italic bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500">
-                  Tu Ritmo de Calma
+                  Your Calm Rhythm
                 </h3>
               </div>
               {hasData && (
@@ -58,13 +58,13 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                     : 'bg-rose-50 text-rose-600'
                 }`}>
                   {trending === 'mejorando' ? <TrendingDown size={12} /> : <TrendingUp size={12} />}
-                  {trending === 'mejorando' ? 'Bajando' : 'Subiendo'}
+                  {trending === 'mejorando' ? 'Decreasing' : 'Increasing'}
                 </div>
               )}
             </div>
             <p className="text-slate-400 text-xs leading-relaxed font-medium max-w-md">
-              Cada barra muestra el nivel de fricción mental de cada registro. 
-              <span className="text-slate-600 font-bold"> Barras más bajas = mayor calma.</span>
+              Each bar shows the mental friction level of each log. 
+              <span className="text-slate-600 font-bold"> Lower bars = greater calm.</span>
             </p>
           </div>
           
@@ -73,7 +73,7 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
             {!hasData ? (
               <div className="h-full flex items-center justify-center">
                 <p className="text-slate-300 text-sm font-medium italic">
-                  Envía un mensaje al bot para ver tu primer registro.
+                  Send a message to the bot to see your first log.
                 </p>
               </div>
             ) : (
@@ -113,7 +113,7 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
 
                       const nivel = point.nivel || 'fluido';
                       const colors = BAR_COLORS[nivel];
-                      const heightPercent = (point['Carga Mental'] / maxValue) * 100;
+                      const heightPercent = (point['Mental Load'] / maxValue) * 100;
                       
                       return (
                         <motion.div
@@ -126,7 +126,7 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                         >
                           {/* Tooltip on hover */}
                           <div className="opacity-0 group-hover/bar:opacity-100 transition-opacity mb-1 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold rounded-lg whitespace-nowrap pointer-events-none z-20">
-                            {colors.label} · {point['Carga Mental']}%
+                            {colors.label} · {point['Mental Load']}%
                           </div>
                           
                           {/* Bar */}
@@ -162,19 +162,19 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-sm bg-emerald-400" />
-                <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400">Fluido</span>
+                <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400">Fluid</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-sm bg-amber-400" />
-                <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400">Denso</span>
+                <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400">Dense</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-sm bg-rose-400" />
-                <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400">Crítico</span>
+                <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400">Critical</span>
               </div>
             </div>
             <span className="text-[8px] font-bold uppercase tracking-wider text-slate-300">
-              {data.length} registros
+              {data.length} logs
             </span>
           </div>
         </div>

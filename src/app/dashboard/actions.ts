@@ -6,7 +6,7 @@ export async function completeThought(thoughtId: string) {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('No autorizado')
+  if (!user) throw new Error('Unauthorized')
 
   const { error } = await supabase
     .from('thoughts')
@@ -14,7 +14,7 @@ export async function completeThought(thoughtId: string) {
     .eq('id', thoughtId)
 
   if (error) {
-    console.error("Error al completar:", error.message)
+    console.error("Error completing:", error.message)
     return { success: false }
   }
 
@@ -27,7 +27,7 @@ export async function updateMissionStep(thoughtId: string, nextStep: number, isF
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('No autorizado')
+  if (!user) throw new Error('Unauthorized')
 
   const updateData: any = { current_step_index: nextStep }
   if (isFinal) {
@@ -40,7 +40,7 @@ export async function updateMissionStep(thoughtId: string, nextStep: number, isF
     .eq('id', thoughtId)
 
   if (error) {
-    console.error("Error al actualizar paso:", error.message)
+    console.error("Error updating step:", error.message)
     return { success: false }
   }
 

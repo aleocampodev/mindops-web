@@ -13,7 +13,7 @@ export function Hero() {
         animate={{ opacity: 1, y: 0 }}
         className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-6 py-2 rounded-full text-[10px] font-black mb-12 border border-indigo-100 tracking-[0.3em] uppercase"
       >
-        <Zap size={12} fill="currentColor" /> Ingeniería de Rendimiento Mental
+        <Zap size={12} fill="currentColor" /> Mental Performance Engineering
       </motion.div>
       
       <motion.h1 
@@ -26,18 +26,18 @@ export function Hero() {
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="max-w-3xl mx-auto">
         <h2 className="text-2xl md:text-4xl font-bold text-slate-800 mb-8 tracking-tight leading-tight">
-          Diseñado para <span className="text-indigo-600">mentes dinámicas</span> <br/> 
-          que necesitan recuperar su poder de ejecución.
+          Designed for <span className="text-indigo-600">dynamic minds</span> <br/> 
+          needing to reclaim their execution power.
         </h2>
         <p className="text-lg md:text-xl text-slate-500 mb-12 leading-relaxed max-w-2xl mx-auto font-medium">
-          MindOps es la <span className="text-slate-900 font-bold">capa operacional</span> que detecta cuando tu rumiación, ansiedad o tristeza sobrecargan tu sistema, interviniendo para devolverte al presente.
+          MindOps is the <span className="text-slate-900 font-bold">operational layer</span> that detects when rumination, anxiety, or sadness overload your system, intervening to bring you back to the present.
         </p>
 
         <button
           onClick={() => router.push('/login')}
           className="cursor-pointer bg-slate-900 text-white px-12 py-5 rounded-2xl font-black text-lg shadow-2xl hover:bg-indigo-600 transition-all flex items-center gap-4 mx-auto"
         >
-          ACTIVAR PROTOCOLO <ArrowRight size={22} />
+          ACTIVATE PROTOCOL <ArrowRight size={22} />
         </button>
       </motion.div>
     </section>

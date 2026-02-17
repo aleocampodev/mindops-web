@@ -31,11 +31,11 @@ export default async function MissionsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'activado':
-        return { label: 'Activa', color: 'bg-emerald-500', icon: Clock };
+        return { label: 'Active', color: 'bg-emerald-500', icon: Clock };
       case 'completado':
-        return { label: 'Completada', color: 'bg-slate-400', icon: CheckCircle2 };
+        return { label: 'Completed', color: 'bg-slate-400', icon: CheckCircle2 };
       default:
-        return { label: 'Nueva', color: 'bg-indigo-500', icon: Target };
+        return { label: 'New', color: 'bg-indigo-500', icon: Target };
     }
   };
 
@@ -54,14 +54,14 @@ export default async function MissionsPage() {
             className="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors mb-6 group"
           >
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-bold uppercase tracking-wider">Volver al Dashboard</span>
+            <span className="text-sm font-bold uppercase tracking-wider">Back to Dashboard</span>
           </Link>
           
           <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase italic mb-3">
-            Todas tus Misiones
+            All Your Missions
           </h1>
           <p className="text-slate-500 font-medium">
-            {allMissions.length} {allMissions.length === 1 ? 'misión' : 'misiones'} en total
+            {allMissions.length} {allMissions.length === 1 ? 'mission' : 'missions'} in total
           </p>
         </div>
 
@@ -70,8 +70,8 @@ export default async function MissionsPage() {
           <div className="bg-white/80 backdrop-blur-md border border-slate-100 rounded-[2.5rem] p-12 text-center">
             <Target size={48} className="text-slate-300 mx-auto mb-4" />
             <p className="text-slate-400 font-medium">
-              No tienes misiones todavía. <br/>
-              Envía un mensaje al bot para generar tu primera misión.
+              You don't have any missions yet. <br/>
+              Send a message to the bot to generate your first mission.
             </p>
           </div>
         ) : (
@@ -91,7 +91,7 @@ export default async function MissionsPage() {
                             {badge.label}
                           </span>
                           <span className="text-[9px] font-medium text-slate-300">
-                            {new Date(mission.created_at).toLocaleDateString('es-CO', { 
+                            {new Date(mission.created_at).toLocaleDateString('en-US', { 
                               day: 'numeric', 
                               month: 'short',
                               hour: '2-digit',
@@ -118,7 +118,7 @@ export default async function MissionsPage() {
                             className="text-slate-400 group-hover:text-white group-hover:-translate-y-0.5 transition-all" 
                           />
                         </div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-300 group-hover:text-indigo-600 transition-colors">Ejecutar</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-slate-300 group-hover:text-indigo-600 transition-colors">Execute</span>
                       </div>
                     </div>
                   </div>

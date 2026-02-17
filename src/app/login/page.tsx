@@ -51,8 +51,8 @@ export default function LoginPage() {
 
           <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-3 uppercase italic">MindOps</h1>
           <p className="text-slate-500 mb-12 font-medium leading-relaxed">
-            Sincroniza tu cuenta para gestionar tu <br/> 
-            <span className="text-indigo-600 font-bold">Carga Cognitiva.</span>
+            Synchronize your account to manage your <br/> 
+            <span className="text-indigo-600 font-bold">Cognitive Load.</span>
           </p>
 
           <div className="space-y-4">
@@ -64,7 +64,7 @@ export default function LoginPage() {
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-scan" />
               
               <img src="https://www.google.com/favicon.ico" className="w-5 h-5 brightness-200" alt="G" />
-              ENTRAR CON GOOGLE
+              LOGIN WITH GOOGLE
             </button>
 
             <div className="flex items-center justify-center gap-4 pt-6 opacity-60">
@@ -79,7 +79,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-slate-400 mt-10 text-[10px] font-bold tracking-[0.3em] uppercase">
-          Soporte Ejecutivo para Mentes Dinámicas
+          Executive Support for Dynamic Minds
         </p>
       </motion.div>
     </main>

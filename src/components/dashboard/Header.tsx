@@ -20,7 +20,7 @@ export function DashboardHeader({ firstName, isProteccion, energyLevel }: Header
         <h1 
           className="text-3xl font-black tracking-tighter normal-case italic leading-none text-slate-900"
         >
-          Hola, {firstName}
+          Hello, {firstName}
         </h1>
       </div>
 
@@ -28,7 +28,7 @@ export function DashboardHeader({ firstName, isProteccion, energyLevel }: Header
         <form action={logout}>
           <button type="submit" className="cursor-pointer group flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-30 hover:opacity-100 hover:text-rose-600 transition-all">
             <LogOut size={12} className="group-hover:-translate-x-1 transition-transform" />
-            Desconectar
+            Logout
           </button>
         </form>
 
@@ -36,11 +36,11 @@ export function DashboardHeader({ firstName, isProteccion, energyLevel }: Header
           isProteccion ? 'bg-amber-100/50 border-amber-200 text-amber-900' : 'bg-indigo-50/50 border-indigo-100 text-indigo-900'
         }`}>
           <div className="text-right">
-            <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">Status de Operación</p>
+            <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">Operation Status</p>
             <p className="font-black text-[13px] uppercase tracking-tighter">
-              {energyLevel >= 80 ? '🚀 Flujo Máximo' : 
-               energyLevel >= 50 ? '⚖️ Carga Estable' : 
-               '⚠️ Agotamiento'}
+              {energyLevel >= 80 ? '🚀 Maximum Flow' : 
+               energyLevel >= 50 ? '⚖️ Stable Load' : 
+               '⚠️ Exhaustion'}
             </p>
           </div>
           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-sm shadow-xl transition-all ${

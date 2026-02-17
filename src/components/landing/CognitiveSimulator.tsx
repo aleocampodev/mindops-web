@@ -25,17 +25,17 @@ export function CognitiveSimulator() {
         <div className="space-y-12">
           <div className="space-y-6 text-left">
             <h3 className="text-5xl font-black tracking-tighter leading-none text-slate-900 uppercase italic">
-              Gestión de <br/> <span className="text-indigo-600">Carga Cognitiva.</span>
+              Cognitive Load <br/> <span className="text-indigo-600">Management.</span>
             </h3>
             <p className="text-xl text-slate-500 leading-relaxed font-medium">
-              Tu mente es un procesador de alto impacto. Cuando los procesos en segundo plano (ansiedad/tristeza) consumen tu mente, la ejecución se detiene.
+              Your mind is a high-impact processor. When background processes (anxiety/sadness) consume your mind, execution stops.
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-6">
             {[
-              { icon: <Gauge />, t: "Monitoreo de Fricción", d: "Cuantificamos el peso de tus pensamientos para predecir bloqueos." },
-              { icon: <Zap />, t: "Vaciado de Memoria", d: "Externaliza el ruido mental y libera hilos de procesamiento de forma segura." }
+              { icon: <Gauge key="gauge" />, t: "Friction Monitoring", d: "We quantify the weight of your thoughts to predict blockages." },
+              { icon: <Zap key="zap" />, t: "Memory Dump", d: "Externalize mental noise and safely free up processing threads." }
             ].map((f, i) => (
               <div key={i} className={`flex items-start gap-6 p-8 rounded-[2.5rem] border transition-all duration-700 ${
                 isCrisis ? 'bg-amber-100/30 border-amber-200' : 'bg-slate-50 border-slate-100'
@@ -59,7 +59,7 @@ export function CognitiveSimulator() {
             className="absolute -top-10 left-1/2 -translate-x-1/2 z-30 cursor-pointer bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-xs shadow-2xl border border-white/20 uppercase tracking-widest flex items-center gap-3 hover:scale-105 active:scale-95 transition-all"
           >
             <MousePointerClick size={16} />
-            {isCrisis ? "Resetear Sistema" : "Simular Sobrecarga"}
+            {isCrisis ? "Reset System" : "Simulate Overload"}
           </button>
 
           <div className={`relative p-12 rounded-[5rem] border transition-all duration-1000 shadow-2xl bg-white ${
@@ -83,9 +83,9 @@ export function CognitiveSimulator() {
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="p-8 rounded-[3rem] bg-gradient-to-br from-amber-500 to-rose-600 text-white shadow-2xl text-left">
                   <div className="flex items-center gap-3 mb-2">
                     <ShieldAlert size={20} className="animate-pulse" />
-                    <span className="font-black uppercase tracking-widest text-[10px]">Protocolo de Rescate</span>
+                    <span className="font-black uppercase tracking-widest text-[10px]">Rescue Protocol</span>
                   </div>
-                  <p className="font-bold text-sm leading-tight">Iniciando llamada de Twilio para interrupción de patrón.</p>
+                  <p className="font-bold text-sm leading-tight">Initiating Twilio call for pattern interruption.</p>
                 </motion.div>
               )}
             </AnimatePresence>

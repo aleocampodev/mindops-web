@@ -2,8 +2,8 @@
 import { motion } from 'framer-motion';
 
 const words = [
-  "Rumiación", "Bloqueo", "Parálisis", "Caos Mental", "Ansiedad", 
-  "Procrastinación", "Ruido", "Loop Infinito", "Duda", "Niebla"
+  "Rumination", "Blockage", "Paralysis", "Mental Chaos", "Anxiety", 
+  "Procrastination", "Noise", "Infinite Loop", "Doubt", "Fog"
 ];
 
 // ⚠️ FIX: Quitamos el 'default' para que sea un Named Export

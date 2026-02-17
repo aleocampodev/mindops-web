@@ -24,8 +24,8 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
   const ejecucion = thoughts.filter(t => t.modo_sistema === 'EJECUCION').length;
   
   const energyData = [
-    { name: 'Ejecución', value: Math.round((ejecucion / total) * 100) },
-    { name: 'Protección', value: Math.round((proteccion / total) * 100) },
+    { name: 'Execution', value: Math.round((ejecucion / total) * 100) },
+    { name: 'Protection', value: Math.round((proteccion / total) * 100) },
   ];
 
   // Determinar el tipo de delta para Tremor
@@ -54,7 +54,7 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
           <div className="space-y-2 flex-1">
             <div className="flex items-center gap-2 text-indigo-600">
               <ShieldCheck size={18} className="group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Resiliencia del Sistema</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">System Resilience</span>
             </div>
             <h4 className={`text-3xl font-black tracking-tighter italic ${labelColors[resilience.label]}`}>
               {resilience.label}
@@ -71,7 +71,7 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
               {resilience.delta > 0 ? '+' : ''}{resilience.delta}%
             </BadgeDelta>
             <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest text-right leading-tight">
-              vs Ciclo <br/> Anterior
+              vs Previous <br/> Cycle
             </span>
           </div>
         </Card>
@@ -86,7 +86,7 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
           <div className="flex-1">
             <div className="flex items-center gap-2 text-slate-900 mb-4">
               <Activity size={18} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Balance de Energía</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Energy Balance</span>
             </div>
             <div className="space-y-3">
                {energyData.map((item) => (

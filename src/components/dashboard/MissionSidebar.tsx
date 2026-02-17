@@ -35,12 +35,12 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center gap-2 text-slate-400">
             <Target size={14} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Misiones Activas</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Active Missions</span>
           </div>
           {activeMissions.length > 3 && (
             <Link href="/mission">
               <span className="text-[10px] font-black uppercase text-indigo-500 hover:text-indigo-400 cursor-pointer transition-colors">
-                Ver Todas (+{remainingCount})
+                See All (+{remainingCount})
               </span>
             </Link>
           )}
@@ -66,7 +66,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
                         <span className={`text-[8px] font-black uppercase tracking-widest ${
                           idx === 0 ? 'text-indigo-200' : 'text-slate-400'
                         }`}>
-                          {idx === 0 ? 'Prioridad de Ejecución' : `Misión ${activeMissions.length - idx}`}
+                          {idx === 0 ? 'Execution Priority' : `Mission ${activeMissions.length - idx}`}
                         </span>
                         <Rocket size={14} className={`${idx === 0 ? 'text-white' : 'text-slate-300'} group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform`} />
                       </div>
@@ -89,7 +89,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         ) : (
           <div className="p-8 border border-dashed border-slate-200 rounded-[2rem] text-center">
             <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">
-              No hay misiones activas
+              No active missions
             </p>
           </div>
         )}
@@ -97,16 +97,16 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         {/* Impacto y Rango (Simplificado) */}
         <div className="px-6 py-5 bg-gradient-to-br from-slate-50 to-white rounded-[2rem] flex justify-between items-center border border-slate-100 shadow-sm">
           <div>
-            <p className="text-[8px] font-black text-indigo-400 uppercase mb-0.5 tracking-wider">Impacto en Bienestar</p>
+            <p className="text-[8px] font-black text-indigo-400 uppercase mb-0.5 tracking-wider">Wellness Impact</p>
             <div className="flex items-baseline gap-1">
                 <span className="text-xl font-black italic text-slate-900">{thoughtsCount * 12}</span>
-                <span className="text-[10px] font-bold text-slate-400 uppercase">u. alivio</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase">u. relief</span>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5 tracking-wider">Rango Actual</p>
+            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5 tracking-wider">Current Rank</p>
             <span className="text-[10px] font-black text-indigo-600 uppercase italic bg-indigo-50 px-3 py-1 rounded-full">
-              {thoughtsCount > 10 ? 'ESTRATEGA' : 'OPERATIVO'}
+              {thoughtsCount > 10 ? 'STRATEGIST' : 'OPERATIVE'}
             </span>
           </div>
         </div>
@@ -120,7 +120,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
       >
         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
-          Vigilancia Activa: Sistema operativo
+          Active Surveillance: System operative
         </span>
       </motion.div>
 
@@ -135,12 +135,12 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         <div className="relative z-10 space-y-4">
            <div className="flex items-center gap-2 text-indigo-200">
              <Zap size={14} fill="currentColor" />
-             <span className="text-[9px] font-black uppercase tracking-widest">Enfoque</span>
+             <span className="text-[9px] font-black uppercase tracking-widest">Focus</span>
            </div>
            <p className="text-white text-sm font-medium italic opacity-90 leading-relaxed">
              {isProteccion 
-               ? "Cierra los ojos 5 minutos. Tu sistema procesará mejor el ruido." 
-               : "Si toma menos de 2 minutos, libérala ahora."}
+               ? "Close your eyes for 5 minutes. Your system will better process the noise." 
+               : "If it takes less than 2 minutes, release it now."}
            </p>
         </div>
       </motion.div>

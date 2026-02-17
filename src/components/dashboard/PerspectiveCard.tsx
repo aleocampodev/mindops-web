@@ -8,14 +8,14 @@ export function PerspectiveCard({ content, isProteccion }: { content: string, is
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-8">
           <Heart size={28} className="text-white/80" fill="currentColor" />
-          <h3 className="text-2xl font-black uppercase tracking-tight italic text-white leading-none">Tu Mirada</h3>
+          <h3 className="text-2xl font-black uppercase tracking-tight italic text-white leading-none">Your Perspective</h3>
         </div>
         
         <div className="space-y-8">
           <div className="space-y-2">
-            <p className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em]">ES TU REFLEJO:</p>
+            <p className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em]">IT&apos;S YOUR REFLECTION:</p>
             <p className="text-xs text-white/70 font-medium leading-relaxed max-w-[280px]">
-              Es la interpretación del sistema sobre tus patrones. Te ayuda a ver con claridad cuando estás atrapado en el ruido.
+              It is the system&apos;s interpretation of your patterns. It helps you see clearly when you are trapped in the noise.
             </p>
           </div>
 

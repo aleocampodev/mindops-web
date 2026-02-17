@@ -57,18 +57,18 @@ export default async function PairingPage() {
               <Heart size={44} className="text-white" fill="white" />
             </div>
             <h1 className="text-5xl font-black tracking-tight text-slate-900 uppercase italic leading-none mb-4">
-              Conectar <br/> mi Espacio
+              Connect <br/> my Space
             </h1>
             <p className="text-slate-500 font-medium text-xl leading-relaxed">
-              Hola, <span className="text-indigo-600 font-bold">{userName}</span>. <br/>
-              Vincula tu cuenta para gestionar tu carga cognitiva.
+              Hello, <span className="text-indigo-600 font-bold">{userName}</span>. <br/>
+              Link your account to manage your cognitive load.
             </p>
           </header>
 
           <section className="bg-slate-50/80 rounded-[3.5rem] p-12 border border-slate-100 shadow-inner relative">
              <div className="flex items-center justify-center gap-3 mb-8 opacity-40">
                 <ShieldCheck size={18} className="text-indigo-600" />
-                <span className="text-xs font-black uppercase tracking-[0.4em]">Llave de Seguridad Única</span>
+                <span className="text-xs font-black uppercase tracking-[0.4em]">Unique Security Key</span>
              </div>
              
              <div className="text-7xl font-mono font-black tracking-[0.2em] text-slate-900 mb-6 py-6 border-y border-slate-200/50 drop-shadow-sm">
@@ -85,7 +85,7 @@ export default async function PairingPage() {
                   className="cursor-pointer flex items-center gap-4 mx-auto bg-slate-900 text-white px-12 py-5 rounded-[2rem] font-black text-sm hover:bg-indigo-600 transition-all shadow-2xl active:scale-95"
                 >
                   <RefreshCw size={18} />
-                  SOLICITAR NUEVO CÓDIGO
+                  REQUEST NEW CODE
                 </button>
              </form>
           </section>
@@ -95,10 +95,10 @@ export default async function PairingPage() {
                <div className="relative z-10 text-white">
                  <div className="flex items-center gap-3 mb-6 font-black">
                     <Smartphone size={24} />
-                    <span className="text-sm font-black uppercase tracking-widest text-white">Instrucción para Telegram</span>
+                    <span className="text-sm font-black uppercase tracking-widest text-white">Telegram Instruction</span>
                  </div>
                  <p className="text-white text-lg font-medium leading-relaxed mb-8 opacity-90">
-                    Abre tu bot de MindOps y envía este mensaje exacto:
+                    Open your MindOps bot and send this exact message:
                  </p>
                  <div className="cursor-pointer bg-white/10 backdrop-blur-xl p-7 rounded-3xl border border-white/20 text-white font-mono text-2xl font-black text-center hover:bg-white/20 transition-all select-all shadow-inner">
                     /vincular {pairingData.code}
@@ -110,7 +110,7 @@ export default async function PairingPage() {
         </div>
 
         <p className="text-center text-slate-400 mt-10 text-[11px] font-black tracking-[0.6em] uppercase">
-          MindOps // Gestión de Carga Cognitiva
+          MindOps // Cognitive Load Management
         </p>
       </div>
     </main>

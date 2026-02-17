@@ -12,4 +12,4 @@ export const PAIRING_CODE = {
 export const PAIRING_CODE_EXPIRATION_MINUTES = 10;
 
 // Mensajes por defecto
-export const DEFAULT_USER_NAME = 'Usuario';
+export const DEFAULT_USER_NAME = 'User';

@@ -33,7 +33,7 @@ export default async function MissionPage({ params: paramsPromise }: { params: P
       missionId={id}
       initialStep={mission.current_step_index || 0}
       plan={plan || []}
-      title={mission.titulo_resumen || mission.accion_inmediata || 'Misión Activa'}
+      title={mission.titulo_resumen || mission.accion_inmediata || 'Active Mission'}
       strategicAnalysis={mission.analisis_estrategico}
       summaryTitle={mission.titulo_resumen}
     />

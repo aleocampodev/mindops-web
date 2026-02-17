@@ -25,7 +25,7 @@ export function ThoughtGallery({ thoughts }: { thoughts: Thought[] }) {
           <History size={20} />
         </div>
         <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tighter italic">
-          Caja Negra: Pensamientos Sincronizados
+          Black Box: Synchronized Thoughts
         </h3>
       </div>
 
@@ -58,7 +58,7 @@ export function ThoughtGallery({ thoughts }: { thoughts: Thought[] }) {
             </div>
 
             <div className="pt-4 border-t border-slate-100 mt-4">
-              <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Impacto de la Acción:</p>
+              <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Action Impact:</p>
               <p className="text-xs font-bold text-slate-700">{t.accion_inmediata}</p>
             </div>
           </motion.div>

@@ -31,19 +31,19 @@ export default async function DashboardPage() {
   const resilience = calculateResilienceMetric(thoughts || []);
 
   const chartData = thoughts?.slice(0, 15).map((t: any) => ({
-    hora: new Date(t.created_at).toLocaleTimeString('es-CO', { 
+    hora: new Date(t.created_at).toLocaleTimeString('en-US', { 
       hour: '2-digit', 
       minute: '2-digit', 
       hour12: true, 
-      timeZone: 'America/Bogota' 
+      timeZone: 'America/New_York' 
     }),
-    "Carga Mental": t.friccion.includes('🔴') ? 95 : t.friccion.includes('🟡') ? 50 : 20,
+    "Mental Load": t.friccion.includes('🔴') ? 95 : t.friccion.includes('🟡') ? 50 : 20,
     nivel: (t.friccion.includes('🔴') ? 'critico' : t.friccion.includes('🟡') ? 'denso' : 'fluido') as 'critico' | 'denso' | 'fluido',
   })).reverse();
 
-  const energyLevel = chartData?.length ? 100 - (chartData[chartData.length - 1]["Carga Mental"]) : 100;
+  const energyLevel = chartData?.length ? 100 - (chartData[chartData.length - 1]["Mental Load"]) : 100;
 
-  const displayName = profile?.first_name || "Compañero";
+  const displayName = profile?.first_name || "Partner";
 
   return (
     <main className={`min-h-screen transition-all duration-1000 ${
@@ -67,7 +67,7 @@ export default async function DashboardPage() {
             />
 
             <PerspectiveCard 
-                content={latestThought?.analisis_estrategico || "Habla con el bot para recibir perspectiva."}
+                content={latestThought?.analisis_estrategico || "Talk to the bot to receive perspective."}
                 isProteccion={isProteccion} 
               />
           </div>

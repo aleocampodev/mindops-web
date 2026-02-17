@@ -55,12 +55,12 @@ export function PairingTimer({ expiresAt, onExpire }: PairingTimerProps) {
       <div className="flex items-center justify-between mb-2 px-1">
         <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors ${isExpiringSoon ? 'text-rose-500 animate-pulse' : 'text-slate-400'}`}>
           <Timer size={12} />
-          <span>EXPIRA EN: {formatTime(timeLeft)}</span>
+          <span>EXPIRES IN: {formatTime(timeLeft)}</span>
         </div>
         {isExpiringSoon && (
           <div className="flex items-center gap-1 text-[9px] font-black text-rose-500 uppercase tracking-tighter">
             <AlertCircle size={10} />
-            Acción requerida
+            Action required
           </div>
         )}
       </div>
@@ -86,7 +86,7 @@ export function PairingTimer({ expiresAt, onExpire }: PairingTimerProps) {
       </div>
       
       <p className="mt-2 text-[9px] font-medium text-slate-300 uppercase tracking-[0.3em] text-center">
-        Sincronización de seguridad activa
+        Active security synchronization
       </p>
     </div>
   )

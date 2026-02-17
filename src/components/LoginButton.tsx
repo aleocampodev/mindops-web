@@ -37,7 +37,7 @@ export default function LoginButton() {
     } catch (error) {
       console.error('Error de autenticación:', error)
       setIsLoading(false)
-      alert("Error al conectar con Google. Reintenta.")
+      alert("Error connecting to Google. Please retry.")
     }
   }
 
@@ -63,12 +63,12 @@ export default function LoginButton() {
       {isLoading ? (
         <>
           <Loader2 className="animate-spin" size={18} />
-          SINCRONIZANDO...
+          SYNCHRONIZING...
         </>
       ) : (
         <>
           <img src="https://www.google.com/favicon.ico" className="w-4 h-4" alt="G" />
-          ENTRAR CON GOOGLE
+          LOGIN WITH GOOGLE
         </>
       )}
     </motion.button>
