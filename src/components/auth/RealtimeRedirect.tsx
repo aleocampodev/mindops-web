@@ -1,14 +1,10 @@
-'use client'
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 export function RealtimeRedirect({ userId }: { userId: string }) {
   const router = useRouter()
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = useMemo(() => createClient(), [])
 
   useEffect(() => {
     const channel = supabase
@@ -17,7 +13,7 @@ export function RealtimeRedirect({ userId }: { userId: string }) {
         'postgres_changes',
         {
           event: 'UPDATE',
-          schema: 'public',
+          schema: 'mindops',
           table: 'profiles',
           filter: `id=eq.${userId}`,
         },

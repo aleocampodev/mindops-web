@@ -1,16 +1,13 @@
 'use client'
 import { useState } from 'react' // 🧠 Para el estado de la UI (no de los datos)
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/utils/supabase/client'
 import { Loader2, LogIn } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 export default function LoginButton() {
   const [isLoading, setIsLoading] = useState(false)
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = createClient()
 
   const handleLogin = async () => {
     setIsLoading(true)
