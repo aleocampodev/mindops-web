@@ -16,6 +16,9 @@ export async function createClient() {
     url,
     key,
     {
+      db: {
+        schema: 'mindops',
+      },
       cookies: {
         getAll() { return cookieStore.getAll() },
         setAll(payload) {
