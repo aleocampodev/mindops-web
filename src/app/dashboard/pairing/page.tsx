@@ -156,6 +156,7 @@ async function ensureValidPairingCode(
         pairing_code: code,
         pairing_code_expires_at: expiresAt,
         first_name: profile?.first_name || userName,
+        onboarding_state: 'PENDING_LINK',
       },
       { onConflict: 'id' }
     )

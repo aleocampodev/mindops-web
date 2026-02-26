@@ -19,7 +19,8 @@ export async function generatePairingCode() {
     .upsert({
       id: user.id,
       pairing_code: newCode,
-      pairing_code_expires_at: date.toISOString()
+      pairing_code_expires_at: date.toISOString(),
+      onboarding_state: 'PENDING_LINK'
     }, { onConflict: 'id' })
 
   revalidatePath('/dashboard/pairing')
