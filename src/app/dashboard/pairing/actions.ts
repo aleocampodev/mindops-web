@@ -14,6 +14,7 @@ export async function generatePairingCode() {
   date.setMinutes(date.getMinutes() + 10);
 
   await supabase
+    .schema('mindops')
     .from('profiles')
     .upsert({
       id: user.id,

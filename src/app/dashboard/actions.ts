@@ -9,6 +9,7 @@ export async function completeThought(thoughtId: string) {
   if (!user) throw new Error('Unauthorized')
 
   const { error } = await supabase
+    .schema('mindops')
     .from('thoughts')
     .update({ status: 'completado' })
     .eq('id', thoughtId)
@@ -35,6 +36,7 @@ export async function updateMissionStep(thoughtId: string, nextStep: number, isF
   }
 
   const { error } = await supabase
+    .schema('mindops')
     .from('thoughts')
     .update(updateData)
     .eq('id', thoughtId)

@@ -19,6 +19,7 @@ export async function GET(request: Request) {
     if (!error) {
       const { data: { user } } = await supabase.auth.getUser()
       const { data: profile } = await supabase
+        .schema('mindops')
         .from('profiles')
         .select('telegram_id')
         .eq('id', user?.id)

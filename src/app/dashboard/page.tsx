@@ -15,10 +15,11 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+  const { data: profile } = await supabase.schema('mindops').from('profiles').select('*').eq('id', user.id).single();
   if (!profile?.telegram_id) redirect('/dashboard/pairing');
 
   const { data: thoughts } = await supabase
+    .schema('mindops')
     .from('thoughts')
     .select('*')
     .eq('telegram_id', profile.telegram_id)

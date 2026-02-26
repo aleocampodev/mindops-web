@@ -10,6 +10,7 @@ export async function advanceMissionStep(missionId: string, currentIndex: number
   if (nextIndex >= totalSteps) {
     // Mission Complete
     const { error } = await supabase
+      .schema('mindops')
       .from('thoughts')
       .update({
         current_step_index: nextIndex,
@@ -25,6 +26,7 @@ export async function advanceMissionStep(missionId: string, currentIndex: number
   } else {
     // Advance Step
     const { error } = await supabase
+      .schema('mindops')
       .from('thoughts')
       .update({ current_step_index: nextIndex })
       .eq('id', missionId)

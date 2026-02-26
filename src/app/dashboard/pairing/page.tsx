@@ -20,11 +20,16 @@ export default async function PairingPage() {
   if (!user) redirect('/login');
 
   // 2. Obtener perfil del usuario
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
+    .schema('mindops')
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single();
+
+  if (profileError && profileError.code !== 'PGRST116') { // PGRST116 is "no rows found"
+    console.error('Error fetching profile:', profileError);
+  }
 
   // 3. Si ya está vinculado, redirigir al dashboard
   if (isUserPaired(profile)) {
@@ -142,7 +147,8 @@ async function ensureValidPairingCode(
   const { code, expiresAt } = generatePairingCodeData();
   const userName = getUserDisplayName(profile, user.user_metadata, user.email);
 
-  const { data: updatedProfile } = await supabase
+  const { data: updatedProfile, error: upsertError } = await supabase
+    .schema('mindops')
     .from('profiles')
     .upsert(
       {
@@ -155,6 +161,10 @@ async function ensureValidPairingCode(
     )
     .select()
     .single();
+
+  if (upsertError) {
+    console.error('Error upserting pairing code:', upsertError);
+  }
 
   return {
     code,

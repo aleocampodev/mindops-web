@@ -10,6 +10,7 @@ export default async function MissionPage({ params: paramsPromise }: { params: P
   if (!user) redirect('/login')
 
   const { data: mission, error } = await supabase
+    .schema('mindops')
     .from('thoughts')
     .select('*')
     .eq('id', id)
