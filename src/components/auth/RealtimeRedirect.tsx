@@ -18,10 +18,13 @@ export function RealtimeRedirect({ userId }: { userId: string }) {
           table: 'profiles',
           filter: `id=eq.${userId}`,
         },
-        (payload) => {
-          if (payload.new.telegram_id) {
-            router.refresh() 
-            router.push('/dashboard') 
+        (payload: { new: Record<string, unknown> }) => {
+          if (payload.new.phone_number) {
+            // Pairing completo: telegram_id + phone_number → ir al dashboard
+            router.push('/dashboard')
+          } else if (payload.new.telegram_id) {
+            // Código aceptado por Telegram, pero aún falta el contacto
+            router.refresh()
           }
         }
       )
@@ -32,5 +35,5 @@ export function RealtimeRedirect({ userId }: { userId: string }) {
     }
   }, [userId, supabase, router])
 
-  return null 
+  return null
 }

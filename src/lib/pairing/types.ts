@@ -8,7 +8,7 @@ export interface Profile {
   phone_number?: string | null;
   pairing_code?: string | null;
   pairing_code_expires_at?: string | null;
-  onboarding_state?: 'NEW' | 'PENDING_LINK' | 'READY' | null;
+  onboarding_state?: 'NEW' | 'PENDING_LINK' | 'PENDING_CONTACT' | 'READY' | null;
   first_name?: string | null;
 }
 

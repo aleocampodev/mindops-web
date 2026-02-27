@@ -53,3 +53,11 @@ export function isPairingCodeExpired(expiresAt: string | null | undefined): bool
 export function isUserPaired(profile: Profile | null): boolean {
   return Boolean(profile?.telegram_id && profile?.phone_number);
 }
+
+/**
+ * Verifica si el usuario está esperando compartir su contacto de Telegram
+ * (ya envió el código exitosamente pero aún no ha compartido su número)
+ */
+export function isUserPendingContact(profile: Profile | null): boolean {
+  return Boolean(profile?.telegram_id && !profile?.phone_number);
+}
