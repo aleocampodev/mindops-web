@@ -28,7 +28,7 @@ export default async function DashboardPage() {
   const latestThought = thoughts?.[0];
   const isProteccion = latestThought?.modo_sistema === 'PROTECCION';
 
-  // 🧠 CALCULO DE MÉTRICAS DINÁMICAS
+  // Dynamic metric calculation
   const resilience = calculateResilienceMetric(thoughts || []);
 
   const chartData = thoughts?.slice(0, 15).map((t: any) => ({
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
       timeZone: 'America/New_York' 
     }),
     "Mental Load": t.friccion.includes('🔴') ? 95 : t.friccion.includes('🟡') ? 50 : 20,
-    nivel: (t.friccion.includes('🔴') ? 'critico' : t.friccion.includes('🟡') ? 'denso' : 'fluido') as 'critico' | 'denso' | 'fluido',
+    nivel: (t.friccion.includes('🔴') ? 'critical' : t.friccion.includes('🟡') ? 'dense' : 'fluid') as 'critical' | 'dense' | 'fluid',
   })).reverse();
 
   const energyLevel = chartData?.length ? 100 - (chartData[chartData.length - 1]["Mental Load"]) : 100;
@@ -47,8 +47,8 @@ export default async function DashboardPage() {
   const displayName = profile?.first_name || "Partner";
 
   return (
-    <main className={`min-h-screen transition-all duration-1000 ${
-      isProteccion ? 'bg-[#FFF8F0]' : 'bg-[#FDFDFF]'
+    <main className={`min-h-screen transition-colors duration-700 ${
+      isProteccion ? 'bg-[var(--color-surface-warm)]' : 'bg-[var(--color-surface)]'
     }`}>
       <div className="max-w-[1600px] mx-auto p-6 md:p-12">
         <DashboardHeader 
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12">
-          {/* LADO IZQUIERDO: MISIÓN Y ESTADO */}
+          {/* Left column: Sidebar + Perspective */}
           <div className="lg:col-span-3 space-y-8">
             <MissionSidebar 
               isProteccion={isProteccion} 
@@ -73,7 +73,7 @@ export default async function DashboardPage() {
               />
           </div>
 
-          {/* LADO DERECHO: MÉTRICAS Y ACCIONES */}
+          {/* Right column: Stats + Chart + Gallery */}
           <div className="lg:col-span-9 space-y-12">
             <QuickStats thoughts={thoughts || []} resilience={resilience} />
 

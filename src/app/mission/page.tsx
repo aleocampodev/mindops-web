@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { ArrowLeft, Target, Clock, CheckCircle2, ChevronRight, Rocket } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { MissionStatus } from '@/lib/constants/mission-status';
 
 export default async function MissionsPage() {
   const supabase = await createClient();
@@ -20,7 +21,7 @@ export default async function MissionsPage() {
     .eq('telegram_id', profile.telegram_id)
     .order('created_at', { ascending: false });
 
-  // Filtramos todas las misiones que tienen plan de acción
+  // Filter missions with a valid action plan
   const allMissions = thoughts?.filter((t: any) => {
     let plan = t.plan_de_accion;
     if (typeof plan === 'string') {
@@ -31,9 +32,9 @@ export default async function MissionsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'activado':
+      case MissionStatus.INPROGRESS:
         return { label: 'Active', color: 'bg-emerald-500', icon: Clock };
-      case 'completado':
+      case MissionStatus.COMMITTED:
         return { label: 'Completed', color: 'bg-slate-400', icon: CheckCircle2 };
       default:
         return { label: 'New', color: 'bg-indigo-500', icon: Target };

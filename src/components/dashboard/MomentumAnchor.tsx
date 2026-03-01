@@ -4,6 +4,7 @@ import { Zap, Loader2, Sparkles, ChevronRight, Star } from 'lucide-react';
 import { completeThought } from '@/app/dashboard/actions';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@tremor/react';
+import { MissionStatus } from '@/lib/constants/mission-status';
 
 interface Thought {
   id: string;
@@ -21,8 +22,8 @@ interface MomentumProps {
 export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
   const [isPending, startTransition] = useTransition();
 
-  // 1. Filtramos solo lo pendiente
-  const pendingActions = thoughts.filter(t => t.status === 'pendiente');
+  // Filter only in-progress thoughts for the momentum anchor
+  const pendingActions = thoughts.filter(t => t.status === MissionStatus.INPROGRESS);
   
   if (isProteccion) {
     return (

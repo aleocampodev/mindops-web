@@ -1,6 +1,7 @@
 'use server'
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { MissionStatus } from '@/lib/constants/mission-status'
 
 export async function completeThought(thoughtId: string) {
   const supabase = await createClient()
@@ -11,7 +12,7 @@ export async function completeThought(thoughtId: string) {
   const { error } = await supabase
     .schema('mindops')
     .from('thoughts')
-    .update({ status: 'completado' })
+    .update({ status: MissionStatus.COMMITTED })
     .eq('id', thoughtId)
 
   if (error) {
@@ -19,7 +20,7 @@ export async function completeThought(thoughtId: string) {
     return { success: false }
   }
 
-  // Esto refresca el Dashboard automáticamente
+  // Revalidate dashboard cache after mutation
   revalidatePath('/dashboard')
   return { success: true }
 }
@@ -30,9 +31,9 @@ export async function updateMissionStep(thoughtId: string, nextStep: number, isF
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
 
-  const updateData: any = { current_step_index: nextStep }
+  const updateData: { current_step_index: number; status?: string } = { current_step_index: nextStep }
   if (isFinal) {
-    updateData.status = 'completado'
+    updateData.status = MissionStatus.COMMITTED
   }
 
   const { error } = await supabase

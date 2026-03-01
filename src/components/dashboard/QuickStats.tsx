@@ -18,7 +18,7 @@ interface QuickStatsProps {
 }
 
 export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
-  // 1. Balance de Energía
+  // Energy balance split by system mode
   const total = thoughts.length || 1;
   const proteccion = thoughts.filter(t => t.modo_sistema === 'PROTECCION').length;
   const ejecucion = thoughts.filter(t => t.modo_sistema === 'EJECUCION').length;
@@ -28,14 +28,14 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
     { name: 'Protection', value: Math.round((proteccion / total) * 100) },
   ];
 
-  // Determinar el tipo de delta para Tremor
+  // Determine Tremor delta type for the badge
   const deltaType = resilience.delta > 0 
     ? 'moderateIncrease' 
     : resilience.delta < 0 
       ? 'moderateDecrease' 
       : 'unchanged';
 
-  // Mapeo de colores para labels de resiliencia
+  // Resilience label color map
   const labelColors = {
     OPTIMAL: 'text-emerald-500',
     STABLE: 'text-indigo-600',
@@ -64,9 +64,9 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
             </p>
           </div>
           <div className="flex flex-col items-end justify-center gap-2 ml-4">
-            <BadgeDelta 
-              deltaType={deltaType} 
-              className="rounded-full px-4 py-1.5 font-black italic scale-110"
+            <BadgeDelta
+              deltaType={deltaType}
+              className="rounded-full px-4 py-1.5 font-black italic scale-110 tabular"
             >
               {resilience.delta > 0 ? '+' : ''}{resilience.delta}%
             </BadgeDelta>

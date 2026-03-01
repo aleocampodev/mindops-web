@@ -1,5 +1,7 @@
-export type Friccion = '🔴 ALTA (Bloqueo)' | '🟡 MEDIA (Vago)' | '🟢 BAJA (Claro)';
-export type ModoSistema = 'PROTECCION' | 'EJECUCION';
+import type { MissionStatusValue } from '@/lib/constants/mission-status';
+
+export type FrictionLevel = '🔴 ALTA (Bloqueo)' | '🟡 MEDIA (Vago)' | '🟢 BAJA (Claro)';
+export type SystemMode = 'PROTECCION' | 'EJECUCION';
 
 export interface Thought {
   id: string;
@@ -7,9 +9,9 @@ export interface Thought {
   content: string;
   titulo_resumen: string;
   accion_inmediata: string;
-  friccion: Friccion;
-  modo_sistema: ModoSistema;
+  friccion: FrictionLevel;
+  modo_sistema: SystemMode;
   analisis_estrategico: string;
   created_at: string;
-  status: 'pendiente' | 'completado';
+  status: MissionStatusValue;
 }

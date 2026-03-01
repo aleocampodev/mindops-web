@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import { MissionManager } from './MissionManager'
+import { MissionStatus } from '@/lib/constants/mission-status'
 
 export default async function MissionPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
@@ -17,9 +18,9 @@ export default async function MissionPage({ params: paramsPromise }: { params: P
     .single()
 
   if (error || !mission) notFound()
-  if (mission.status === 'completado') redirect('/dashboard')
+  if (mission.status === MissionStatus.COMMITTED) redirect('/dashboard')
 
-  // Parsing JSON plan_de_accion
+  // Parse JSON plan_de_accion field
   let plan = mission.plan_de_accion
   if (typeof plan === 'string') {
     try {

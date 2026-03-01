@@ -3,6 +3,7 @@ import { Target, Zap, Star, ChevronRight, List, Rocket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
+import { MissionStatus } from '@/lib/constants/mission-status';
 
 interface MissionSidebarProps {
   isProteccion: boolean;
@@ -13,7 +14,7 @@ interface MissionSidebarProps {
 
 export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, firstName }: MissionSidebarProps) {
 
-  // Filtramos todas las misiones que tienen plan de acción (sin importar status)
+  // Filter missions with an action plan, regardless of status
   const allMissions = allThoughts.filter(t => {
     let plan = t.plan_de_accion;
     if (typeof plan === 'string') {
@@ -22,8 +23,8 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
     return plan && Array.isArray(plan) && plan.length > 0;
   });
 
-  // Misiones activas (no completadas)
-  const activeMissions = allMissions.filter(t => t.status !== 'completado');
+  // Active missions (not yet completed)
+  const activeMissions = allMissions.filter(t => t.status !== MissionStatus.COMMITTED);
   const hasMissions = activeMissions.length > 0;
   const displayMissions = activeMissions.slice(0, 3);
   const remainingCount = Math.max(0, activeMissions.length - 3);

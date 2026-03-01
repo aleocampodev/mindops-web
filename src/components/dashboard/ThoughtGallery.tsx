@@ -1,6 +1,7 @@
 'use client'
 import { motion } from 'framer-motion';
 import { Calendar, History } from 'lucide-react';
+import { MissionStatus } from '@/lib/constants/mission-status';
 
 interface Thought {
   id: string;
@@ -13,8 +14,8 @@ interface Thought {
 }
 
 export function ThoughtGallery({ thoughts }: { thoughts: Thought[] }) {
-  // Solo mostramos los pensamientos que ya fueron "liberados" (status: completado)
-  const history = thoughts.filter(t => t.status === 'completado');
+  // Show only committed (released) thoughts in the history gallery
+  const history = thoughts.filter(t => t.status === MissionStatus.COMMITTED);
 
   if (history.length === 0) return null;
 
@@ -51,7 +52,7 @@ export function ThoughtGallery({ thoughts }: { thoughts: Thought[] }) {
                 {t.titulo_resumen}
               </h4>
               
-              {/* El "Caos original" en una caja colapsable o discreta */}
+              {/* Original raw thought content */}
               <p className="text-slate-500 text-sm italic line-clamp-3 mb-4 transition-all group-hover:line-clamp-none">
                 "{t.content}"
               </p>
