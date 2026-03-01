@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent skills (external - restored via: npx skills add vercel-labs/agent-skills)
+.agents/
