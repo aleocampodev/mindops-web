@@ -15,15 +15,14 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const { data: profile } = await supabase.schema('mindops').from('profiles').select('*').eq('id', user.id).single();
-  if (!profile?.telegram_id) redirect('/dashboard/pairing');
+  // Parallelize independent queries for better performance
+  const [profileResult, thoughtsResult] = await Promise.all([
+    supabase.schema('mindops').from('profiles').select('*').eq('id', user.id).single(),
+    supabase.schema('mindops').from('thoughts').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+  ]);
 
-  const { data: thoughts } = await supabase
-    .schema('mindops')
-    .from('thoughts')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+  const profile = profileResult.data;
+  const thoughts = thoughtsResult.data;
 
   const latestThought = thoughts?.[0];
   const isProteccion = latestThought?.system_mode === 'PROTECCION';
@@ -33,9 +32,11 @@ export default async function DashboardPage() {
     ? latestThought.friction_score
     : 0;
 
+  if (!profile?.telegram_id) redirect('/dashboard/pairing');
+
   // Trend: compare latest vs average of all sessions
   const avgFriction = thoughts?.length
-    ? Math.round(thoughts.reduce((s: number, t: any) => s + (typeof t.friction_score === 'number' ? t.friction_score : 20), 0) / thoughts.length)
+    ? Math.round(thoughts.reduce((s: number, t: { friction_score?: number }) => s + (typeof t.friction_score === 'number' ? t.friction_score : 20), 0) / thoughts.length)
     : 0;
   const frictionTrend = thoughts?.length ? currentFriction - avgFriction : 0;
 
@@ -43,7 +44,7 @@ export default async function DashboardPage() {
   const resilience = calculateResilienceMetric(thoughts || []);
 
   // Chart data — last 20 sessions, oldest first
-  const chartData = thoughts?.slice(0, 20).map((t: any) => {
+  const chartData = thoughts?.slice(0, 20).map((t: { friction_score?: number; created_at: string }) => {
     const score: number = typeof t.friction_score === 'number' ? t.friction_score : 20;
     const nivel: 'fluido' | 'denso' | 'critico' = score >= 70 ? 'critico' : score >= 35 ? 'denso' : 'fluido';
     return {

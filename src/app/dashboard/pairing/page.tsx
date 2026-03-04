@@ -261,8 +261,8 @@ export default async function PairingPage() {
 }
 
 async function ensureValidPairingCode(
-  supabase: any,
-  user: any,
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  user: { id: string; user_metadata: Record<string, string>; email?: string },
   profile: Profile | null
 ) {
   const currentCode = profile?.pairing_code;

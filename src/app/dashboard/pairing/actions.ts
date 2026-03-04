@@ -3,25 +3,33 @@ import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function generatePairingCode() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
 
-  const newCode = Math.floor(100000 + Math.random() * 900000).toString()
+    const newCode = Math.floor(100000 + Math.random() * 900000).toString()
 
-  // El código expira en 10 minutos
-  const date = new Date();
-  date.setMinutes(date.getMinutes() + 10);
+    const date = new Date()
+    date.setMinutes(date.getMinutes() + 10)
 
-  await supabase
-    .schema('mindops')
-    .from('profiles')
-    .upsert({
-      id: user.id,
-      pairing_code: newCode,
-      pairing_code_expires_at: date.toISOString(),
-      onboarding_state: 'PENDING_LINK'
-    }, { onConflict: 'id' })
+    const { error } = await supabase
+      .schema('mindops')
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        pairing_code: newCode,
+        pairing_code_expires_at: date.toISOString(),
+        onboarding_state: 'PENDING_LINK'
+      }, { onConflict: 'id' })
 
-  revalidatePath('/dashboard/pairing')
+    if (error) {
+      console.error('Error generating pairing code:', error.message)
+      return
+    }
+
+    revalidatePath('/dashboard/pairing')
+  } catch (err) {
+    console.error('Unexpected error in generatePairingCode:', err instanceof Error ? err.message : err)
+  }
 }

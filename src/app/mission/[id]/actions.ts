@@ -3,43 +3,57 @@
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { MissionStatus } from '@/lib/constants/mission-status'
+import { z } from 'zod'
+
+const advanceMissionStepSchema = z.object({
+  missionId: z.string().uuid(),
+  currentIndex: z.number().int().min(0),
+  totalSteps: z.number().int().min(1),
+})
 
 export async function advanceMissionStep(missionId: string, currentIndex: number, totalSteps: number) {
-  const supabase = await createClient()
+  try {
+    const input = advanceMissionStepSchema.parse({ missionId, currentIndex, totalSteps })
 
-  // Auth guard — verify user owns this mission before mutating
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { completed: false, error: 'Unauthorized' }
 
-  const nextIndex = currentIndex + 1
+    const nextIndex = input.currentIndex + 1
 
-  if (nextIndex >= totalSteps) {
-    // Mission Complete
-    const { error } = await supabase
-      .schema('mindops')
-      .from('thoughts')
-      .update({
-        current_step_index: nextIndex,
-        status: MissionStatus.COMMITTED
-      })
-      .eq('id', missionId)
+    if (nextIndex >= input.totalSteps) {
+      // Mission Complete
+      const { error } = await supabase
+        .schema('mindops')
+        .from('thoughts')
+        .update({
+          current_step_index: nextIndex,
+          status: MissionStatus.COMMITTED
+        })
+        .eq('id', input.missionId)
 
-    if (error) throw new Error(error.message)
+      if (error) return { completed: false, error: error.message }
 
-    revalidatePath('/dashboard')
-    revalidatePath(`/mission/${missionId}`)
-    return { completed: true }
-  } else {
-    // Advance Step
-    const { error } = await supabase
-      .schema('mindops')
-      .from('thoughts')
-      .update({ current_step_index: nextIndex })
-      .eq('id', missionId)
+      revalidatePath('/dashboard')
+      revalidatePath(`/mission/${input.missionId}`)
+      return { completed: true }
+    } else {
+      // Advance Step
+      const { error } = await supabase
+        .schema('mindops')
+        .from('thoughts')
+        .update({ current_step_index: nextIndex })
+        .eq('id', input.missionId)
 
-    if (error) throw new Error(error.message)
+      if (error) return { completed: false, error: error.message }
 
-    revalidatePath(`/mission/${missionId}`)
-    return { completed: false }
+      revalidatePath(`/mission/${input.missionId}`)
+      return { completed: false }
+    }
+  } catch (err: unknown) {
+    const message = err instanceof z.ZodError
+      ? `Validation error: ${err.issues.map(e => e.message).join(', ')}`
+      : err instanceof Error ? err.message : 'Unknown error'
+    return { completed: false, error: message }
   }
 }

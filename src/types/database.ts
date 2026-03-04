@@ -2,6 +2,11 @@ import type { MissionStatusValue } from '@/lib/constants/mission-status';
 
 export type SystemMode = 'PROTECCION' | 'EJECUCION';
 
+export interface ActionPlanStep {
+  task: string;
+  hora?: string;
+}
+
 export interface Thought {
   id: string;
   user_id: string;
@@ -11,7 +16,7 @@ export interface Thought {
   friction_tag: string;         // e.g. "High Anxiety & Rumination"
   system_mode: SystemMode;
   strategic_insight: string;
-  action_plan: any[];           // jsonb array, items have { task: string }
+  action_plan: ActionPlanStep[];
   voice_script: string;
   current_step_index: number;
   created_at: string;
