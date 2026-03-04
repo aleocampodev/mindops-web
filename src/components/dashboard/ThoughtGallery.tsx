@@ -1,0 +1,69 @@
+'use client'
+import { motion } from 'framer-motion';
+import { Calendar, History } from 'lucide-react';
+import { MissionStatus } from '@/lib/constants/mission-status';
+
+interface Thought {
+  id: string;
+  friction_tag: string | null;
+  summary_title: string;
+  raw_content: string;
+  status: string;
+  created_at: string;
+}
+
+export function ThoughtGallery({ thoughts }: { thoughts: Thought[] }) {
+  // Show only committed (released) thoughts in the history gallery
+  const history = thoughts.filter(t => t.status === MissionStatus.COMMITTED);
+
+  if (history.length === 0) return null;
+
+  return (
+    <section className="lg:col-span-4 mt-12 space-y-8">
+      <div className="flex items-center gap-3">
+        <div className="bg-slate-100 p-2 rounded-lg text-slate-400">
+          <History size={20} />
+        </div>
+        <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tighter italic">
+          Black Box: Synchronized Thoughts
+        </h3>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {history.map((t) => (
+          <motion.div
+            key={t.id}
+            whileHover={{ y: -5 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white/50 backdrop-blur-md border border-slate-100 p-6 rounded-[2.5rem] shadow-lg flex flex-col justify-between group"
+          >
+            <div>
+              <div className="flex justify-between items-start mb-4">
+                <span className="text-2xl">💭</span>
+                <span className="text-xs font-bold text-slate-300 uppercase tracking-widest flex items-center gap-1">
+                  <Calendar size={10} /> {new Date(t.created_at).toLocaleDateString()}
+                </span>
+              </div>
+              
+              <h4 className="font-black text-slate-900 text-lg leading-tight mb-2 uppercase tracking-tight">
+                {t.summary_title}
+              </h4>
+              
+              {/* Original raw thought content */}
+              <p className="text-slate-500 text-sm italic line-clamp-3 mb-4 transition-all group-hover:line-clamp-none">
+                "{t.raw_content}"
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-slate-100 mt-4">
+              <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Action Impact:</p>
+              <p className="text-xs font-bold text-slate-700">{t.summary_title}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}

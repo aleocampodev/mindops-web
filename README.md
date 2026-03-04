@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 MindOps Web
 
-## Getting Started
+MindOps is a **Mental Engineering** platform designed to optimize your biological and cognitive performance. It is not just a task manager; it is a monitoring system that translates your vents and mental patterns into actionable items, helping you maintain "Momentum" without saturating your "RAM" (cognitive capacity).
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Momentum Anchor:** Identifies your "Atomic Action" priority to avoid analysis paralysis.
+- **Telegram Synchronization:** Connect your mind in real-time via a bot. Send your thoughts and the system will process them.
+- **Calm Rhythm:** Visualization of your mental load throughout the day to identify saturation peaks.
+- **AI Perspective:** Receive deep interpretations of your own patterns to see clearly through the noise.
+- **Pause Protocol:** Automatic detection of critical fatigue to force a biological reset when necessary.
+
+## 🛠 Tech Stack
+
+- **Framework:** [Next.js 15+](https://nextjs.org/) (App Router, Turbopack)
+- **Database & Auth:** [Supabase](https://supabase.com/) (SSR, Google OAuth)
+- **UI & Animations:** [Framer Motion](https://www.framer.com/motion/), [Tailwind CSS](https://tailwindcss.com/) & [Tremor](https://www.tremor.so/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Infrastructure:** [Google Cloud Run](https://cloud.google.com/run) & [Docker](https://www.docker.com/)
+- **CI/CD:** GitHub Actions
+
+## ⚙️ Configuration (Environment Variables)
+
+Create a `.env` file in the project root with the following keys:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📦 Deployment (On Google Cloud Run)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project **does not use Vercel**. It is deployed on scalable Google Cloud infrastructure.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Manual Deployment
+If you have the Google Cloud SDK (`gcloud`) configured, you can deploy directly with:
 
-## Learn More
+```bash
+npm run deploy
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Automatic Deployment (GitHub Actions)
+The project includes a complete pipeline configured in `.github/workflows/`:
+1. **CI:** Checks for linter and build errors on every Push/PR.
+2. **CD:** Automatically deploys to Google Cloud Run when merging into `main`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> *Note: Requires configuring `GCP_SA_KEY`, `GCP_PROJECT_ID`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY` Secrets in the GitHub repository.*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 💻 Local Development
 
-## Deploy on Vercel
+1. Install dependencies (using legacy-peer-deps for React 19 compatibility):
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+3. Clean code before pushing changes:
+   ```bash
+   npm run lint
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+Designed for efficiency. Built for the mind. ⚡
