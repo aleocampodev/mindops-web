@@ -1,6 +1,6 @@
 import type { MissionStatusValue } from '@/lib/constants/mission-status';
 
-export type SystemMode = 'PROTECCION' | 'EJECUCION';
+export type SystemMode = 'PROTECTION' | 'EXECUTION';
 
 export interface ActionPlanStep {
   task: string;

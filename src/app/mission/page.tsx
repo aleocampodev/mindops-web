@@ -42,7 +42,7 @@ export default async function MissionsPage() {
   };
 
   const latestThought = thoughts?.[0];
-  const isProteccion = latestThought?.system_mode === 'PROTECCION';
+  const isProteccion = latestThought?.system_mode === 'PROTECTION';
 
   return (
     <main className={`min-h-screen transition-all duration-1000 ${

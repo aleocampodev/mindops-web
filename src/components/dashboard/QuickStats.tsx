@@ -20,8 +20,8 @@ interface QuickStatsProps {
 export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
   // Energy balance split by system mode
   const total = thoughts.length || 1;
-  const proteccion = thoughts.filter(t => t.system_mode === 'PROTECCION').length;
-  const ejecucion = thoughts.filter(t => t.system_mode === 'EJECUCION').length;
+  const proteccion = thoughts.filter(t => t.system_mode === 'PROTECTION').length;
+  const ejecucion = thoughts.filter(t => t.system_mode === 'EXECUTION').length;
   
   const energyData = [
     { name: 'Execution', value: Math.round((ejecucion / total) * 100) },

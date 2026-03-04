@@ -33,7 +33,7 @@ export default async function DashboardPage() {
   const thoughts = thoughtsResult.data;
 
   const latestThought = thoughts?.[0];
-  const isProteccion = latestThought?.system_mode === 'PROTECCION';
+  const isProteccion = latestThought?.system_mode === 'PROTECTION';
 
   // Current friction score (latest session)
   const currentFriction: number = typeof latestThought?.friction_score === 'number'
