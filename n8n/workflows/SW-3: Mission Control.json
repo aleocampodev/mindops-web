@@ -1,0 +1,1287 @@
+{
+  "updatedAt": "2026-03-05T00:09:09.498Z",
+  "createdAt": "2026-02-22T02:03:15.790Z",
+  "id": "QciYupwAd2AZ6IEf",
+  "name": "SW-3: Mission Control",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "telegram_id"
+            },
+            {
+              "name": "chat_id"
+            },
+            {
+              "name": "callback_data"
+            },
+            {
+              "name": "message_id"
+            },
+            {
+              "name": "markup_type"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -960,
+        80
+      ],
+      "id": "84bc28a4-ff13-46f1-aef6-73a56599a318",
+      "name": "Strict Entry (Mission)"
+    },
+    {
+      "parameters": {
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Mission)').item.json.telegram_id }}&select=id",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpMultipleHeadersAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept-Profile",
+              "value": "mindops"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -464,
+        64
+      ],
+      "id": "62f8fa38-2076-455e-b571-5be12b9d81ef",
+      "name": "Get Profile UUID",
+      "alwaysOutputData": true,
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "9KY2AHXMXRxyjGim",
+          "name": "Supabase"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get Profile UUID').item.json.id }}&status=eq.PROPOSED",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpMultipleHeadersAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "mindops"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"ACTIVE\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        96,
+        -64
+      ],
+      "id": "18eecd37-abd5-413f-b32f-548a5cc8976b",
+      "name": "Set DB to ACTIVE",
+      "retryOnFail": false,
+      "alwaysOutputData": true,
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "9KY2AHXMXRxyjGim",
+          "name": "Supabase"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get Profile UUID').item.json.id }}&status=eq.PROPOSED",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpMultipleHeadersAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "mindops"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"IDLE\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        112,
+        128
+      ],
+      "id": "e9a3d6c4-eb14-47e8-95a1-733ddeef65a6",
+      "name": "Set DB to IDLE",
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "9KY2AHXMXRxyjGim",
+          "name": "Supabase"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zZYZA8aKwUckaap4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+          "cachedResultName": "SW-5:Message telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "=={{\"Protocol Synced! 🚀🛡️\\n\\nI've loaded your sequence into your mental biometrics. Proactive monitoring is now ACTIVE. If the system detects you've stalled, the Momentum Protocol will reach out by voice.\\n\\n⚡ ENTER FOCUS MODE:\\nhttps://mindops-web-43822856294.us-central1.run.app/mission/\" +  $('Set DB to ACTIVE').first().json.id }}",
+            "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
+            "markup_type": "={{ $('Strict Entry (Mission)').item.json.markup_type }}",
+            "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "markup_type",
+              "displayName": "markup_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        -272
+      ],
+      "id": "e8a2b83f-3f70-4826-b691-582c00249fc2",
+      "name": "Send Active Msg"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zZYZA8aKwUckaap4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+          "cachedResultName": "SW-5:Message telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "Understood. The system is ready to rethink. 🔄  Which part of the plan doesn't match your current energy? (Too many tasks? Unrealistic times?)  Tell me in a short audio or text and I'll recalibrate the sequence for you.",
+            "markup_type": "={{ $('Strict Entry (Mission)').item.json.markup_type }}",
+            "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}",
+            "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "markup_type",
+              "displayName": "markup_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        448,
+        32
+      ],
+      "id": "91a03851-d5d2-4d7f-ab09-23a583a8fa0d",
+      "name": "Send Recalibrate Msg"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Strict Entry (Mission)').item.json.callback_data }}",
+                    "rightValue": "plan_ok",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "02655fc3-ad83-472b-bbe5-f6fee9553938"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Plan Ok"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "bb3f8b99-dcf7-4d00-9974-e7ac3a435749",
+                    "leftValue": "={{ $('Strict Entry (Mission)').item.json.callback_data }}",
+                    "rightValue": "plan_error",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Plan Error"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -128,
+        64
+      ],
+      "id": "5cf2de66-34a1-4f6f-9857-14b8b867a6ce",
+      "name": "Validation Callback Data"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zZYZA8aKwUckaap4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+          "cachedResultName": "SW-5:Message telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
+            "markup_type": "removeInline",
+            "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "markup_type",
+              "displayName": "markup_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -720,
+        48
+      ],
+      "id": "6a3d4d1d-4ea5-428d-b11f-a4cc2768c157",
+      "name": "Clear Mission Buttons"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zZYZA8aKwUckaap4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+          "cachedResultName": "SW-5:Message telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
+            "text": "⚠️ System Error — The Core couldn't process your request. Please retry or reach out to your operator."
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "markup_type",
+              "displayName": "markup_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        592,
+        384
+      ],
+      "id": "c4246460-6503-4705-8819-9e2f66a6ba4c",
+      "name": "Error Message"
+    }
+  ],
+  "connections": {
+    "Strict Entry (Mission)": {
+      "main": [
+        [
+          {
+            "node": "Clear Mission Buttons",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Profile UUID": {
+      "main": [
+        [
+          {
+            "node": "Validation Callback Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set DB to ACTIVE": {
+      "main": [
+        [
+          {
+            "node": "Send Active Msg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set DB to IDLE": {
+      "main": [
+        [
+          {
+            "node": "Send Recalibrate Msg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation Callback Data": {
+      "main": [
+        [
+          {
+            "node": "Set DB to ACTIVE",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set DB to IDLE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Active Msg": {
+      "main": [
+        []
+      ]
+    },
+    "Send Recalibrate Msg": {
+      "main": [
+        []
+      ]
+    },
+    "Clear Mission Buttons": {
+      "main": [
+        [
+          {
+            "node": "Get Profile UUID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "2dd8e72f-a4c3-42d6-bbc4-075c1f661eb0",
+  "activeVersionId": "4d4264a6-31b5-4810-a945-798b5b4ee6df",
+  "versionCounter": 303,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-02-22T02:03:15.790Z",
+      "createdAt": "2026-02-22T02:03:15.790Z",
+      "role": "workflow:owner",
+      "workflowId": "QciYupwAd2AZ6IEf",
+      "projectId": "uSxWyMEZpzEBFQnV",
+      "project": {
+        "updatedAt": "2026-02-17T23:50:57.643Z",
+        "createdAt": "2026-02-17T21:35:40.605Z",
+        "id": "uSxWyMEZpzEBFQnV",
+        "name": "Alejandra Ocampo <omaaleoca@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-03-03T17:52:16.722Z",
+    "createdAt": "2026-03-03T17:50:01.835Z",
+    "versionId": "4d4264a6-31b5-4810-a945-798b5b4ee6df",
+    "workflowId": "QciYupwAd2AZ6IEf",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "telegram_id"
+              },
+              {
+                "name": "chat_id"
+              },
+              {
+                "name": "callback_data"
+              },
+              {
+                "name": "message_id"
+              },
+              {
+                "name": "markup_type"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -960,
+          80
+        ],
+        "id": "84bc28a4-ff13-46f1-aef6-73a56599a318",
+        "name": "Strict Entry (Mission)"
+      },
+      {
+        "parameters": {
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Mission)').item.json.telegram_id }}&select=id",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "httpMultipleHeadersAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept-Profile",
+                "value": "mindops"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          -464,
+          64
+        ],
+        "id": "62f8fa38-2076-455e-b571-5be12b9d81ef",
+        "name": "Get Profile UUID",
+        "alwaysOutputData": true,
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "9KY2AHXMXRxyjGim",
+            "name": "Supabase"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get Profile UUID').item.json.id }}&status=eq.PROPOSED",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "httpMultipleHeadersAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Profile",
+                "value": "mindops"
+              },
+              {
+                "name": "Prefer",
+                "value": "return=representation"
+              },
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"status\": \"ACTIVE\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          96,
+          -64
+        ],
+        "id": "18eecd37-abd5-413f-b32f-548a5cc8976b",
+        "name": "Set DB to ACTIVE",
+        "retryOnFail": false,
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "9KY2AHXMXRxyjGim",
+            "name": "Supabase"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "method": "PATCH",
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get Profile UUID').item.json.id }}&status=eq.PROPOSED",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "httpMultipleHeadersAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Profile",
+                "value": "mindops"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"status\": \"IDLE\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          112,
+          128
+        ],
+        "id": "e9a3d6c4-eb14-47e8-95a1-733ddeef65a6",
+        "name": "Set DB to IDLE",
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "9KY2AHXMXRxyjGim",
+            "name": "Supabase"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "text": "=={{\"Protocol Synced! 🚀🛡️\\n\\nI've loaded your sequence into your mental biometrics. Proactive monitoring is now ACTIVE. If the system detects you've stalled, the Momentum Protocol will reach out by voice.\\n\\n⚡ ENTER FOCUS MODE:\\nhttps://mindops-web-43822856294.us-central1.run.app/mission/\" +  $('Set DB to ACTIVE').first().json.id }}",
+              "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
+              "markup_type": "={{ $('Strict Entry (Mission)').item.json.markup_type }}",
+              "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          368,
+          -272
+        ],
+        "id": "e8a2b83f-3f70-4826-b691-582c00249fc2",
+        "name": "Send Active Msg"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "text": "Understood. The system is ready to rethink. 🔄  Which part of the plan doesn't match your current energy? (Too many tasks? Unrealistic times?)  Tell me in a short audio or text and I'll recalibrate the sequence for you.",
+              "markup_type": "={{ $('Strict Entry (Mission)').item.json.markup_type }}",
+              "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}",
+              "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          448,
+          32
+        ],
+        "id": "91a03851-d5d2-4d7f-ab09-23a583a8fa0d",
+        "name": "Send Recalibrate Msg"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $('Strict Entry (Mission)').item.json.callback_data }}",
+                      "rightValue": "plan_ok",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "02655fc3-ad83-472b-bbe5-f6fee9553938"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Plan Ok"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "id": "bb3f8b99-dcf7-4d00-9974-e7ac3a435749",
+                      "leftValue": "={{ $('Strict Entry (Mission)').item.json.callback_data }}",
+                      "rightValue": "plan_error",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Plan Error"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.4,
+        "position": [
+          -128,
+          64
+        ],
+        "id": "5cf2de66-34a1-4f6f-9857-14b8b867a6ce",
+        "name": "Validation Callback Data"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
+              "markup_type": "removeInline",
+              "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {
+            "waitForSubWorkflow": false
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          -720,
+          48
+        ],
+        "id": "6a3d4d1d-4ea5-428d-b11f-a4cc2768c157",
+        "name": "Clear Mission Buttons"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
+              "text": "⚠️ System Error — The Core couldn't process your request. Please retry or reach out to your operator."
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          576,
+          448
+        ],
+        "id": "c4246460-6503-4705-8819-9e2f66a6ba4c",
+        "name": "Error Message"
+      }
+    ],
+    "connections": {
+      "Strict Entry (Mission)": {
+        "main": [
+          [
+            {
+              "node": "Clear Mission Buttons",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Profile UUID": {
+        "main": [
+          [
+            {
+              "node": "Validation Callback Data",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set DB to ACTIVE": {
+        "main": [
+          [
+            {
+              "node": "Send Active Msg",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set DB to IDLE": {
+        "main": [
+          [
+            {
+              "node": "Send Recalibrate Msg",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validation Callback Data": {
+        "main": [
+          [
+            {
+              "node": "Set DB to ACTIVE",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Set DB to IDLE",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send Active Msg": {
+        "main": [
+          []
+        ]
+      },
+      "Send Recalibrate Msg": {
+        "main": [
+          []
+        ]
+      },
+      "Clear Mission Buttons": {
+        "main": [
+          [
+            {
+              "node": "Get Profile UUID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Alejandra Ocampo",
+    "name": "Version 4d4264a6",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-03-03T17:52:16.551Z",
+        "id": 80,
+        "workflowId": "QciYupwAd2AZ6IEf",
+        "versionId": "4d4264a6-31b5-4810-a945-798b5b4ee6df",
+        "event": "activated",
+        "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
+      }
+    ]
+  },
+  "error": {
+    "message": "404 - \"{\\\"message\\\":\\\"Not Found\\\",\\\"documentation_url\\\":\\\"https://docs.github.com/rest/repos/contents#get-repository-content\\\",\\\"status\\\":\\\"404\\\"}\"",
+    "name": "AxiosError",
+    "stack": "AxiosError: Request failed with status code 404\n    at settle (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/axios@1.12.0/node_modules/axios/lib/core/settle.js:19:12)\n    at RedirectableRequest.handleResponse (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/axios@1.12.0/node_modules/axios/lib/adapters/http.js:565:9)\n    at RedirectableRequest.emit (node:events:531:35)\n    at RedirectableRequest._processResponse (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/follow-redirects@1.15.11/node_modules/follow-redirects/index.js:409:10)\n    at ClientRequest.RedirectableRequest._onNativeResponse (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/follow-redirects@1.15.11/node_modules/follow-redirects/index.js:102:12)\n    at Object.onceWrapper (node:events:634:26)\n    at ClientRequest.emit (node:events:519:28)\n    at HTTPParser.parserOnIncomingClient (node:_http_client:772:27)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:122:17)\n    at TLSSocket.socketOnData (node:_http_client:614:22)\n    at Axios.request (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/axios@1.12.0/node_modules/axios/lib/core/Axios.js:45:41)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at invokeAxios (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_@opentelemetry+api@1.9.0_@opentelemetry+exporter-trace-otlp_4dbefa9881a7c57a9e05a20ce4387c10/node_modules/n8n-core/src/execution-engine/node-execution-context/utils/request-helper-functions.ts:291:10)\n    at proxyRequestToAxios (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_@opentelemetry+api@1.9.0_@opentelemetry+exporter-trace-otlp_4dbefa9881a7c57a9e05a20ce4387c10/node_modules/n8n-core/src/execution-engine/node-execution-context/utils/request-helper-functions.ts:672:20)\n    at Object.request (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_@opentelemetry+api@1.9.0_@opentelemetry+exporter-trace-otlp_4dbefa9881a7c57a9e05a20ce4387c10/node_modules/n8n-core/src/execution-engine/node-execution-context/utils/request-helper-functions.ts:1822:4)",
+    "code": "ERR_BAD_REQUEST",
+    "status": 404
+  }
+}
