@@ -104,3 +104,91 @@ export function findBestDay(thoughts: ThoughtTimestamp[]): string | null {
   const best = activeDays.reduce((a, b) => a.avgFriction <= b.avgFriction ? a : b)
   return DAY_NAMES[DAY_LABELS.indexOf(best.label)]
 }
+
+// ── Session-level data for WeeklyTimeline ────────────────────
+
+interface ThoughtWithId extends ThoughtTimestamp {
+  id: string
+}
+
+export interface SessionPoint {
+  id: string
+  score: number
+  timestamp: string
+  dayLabel: string
+  timeLabel: string
+}
+
+export interface DaySummary {
+  label: string
+  date: string
+  sessions: number
+  avgScore: number
+  isToday: boolean
+}
+
+export function buildSessionPoints(thoughts: ThoughtWithId[]): SessionPoint[] {
+  const weekStart = getStartOfWeek(0)
+  const weekEnd = new Date(weekStart)
+  weekEnd.setDate(weekStart.getDate() + 7)
+
+  return thoughts
+    .filter(t => {
+      const d = new Date(t.created_at)
+      return d >= weekStart && d < weekEnd
+    })
+    .map(t => ({
+      id: t.id,
+      score: typeof t.friction_score === 'number' ? t.friction_score : 20,
+      timestamp: t.created_at,
+      dayLabel: DAY_LABELS[new Date(t.created_at).getDay()],
+      timeLabel: new Date(t.created_at).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/Bogota',
+      }),
+    }))
+    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+}
+
+export function buildDaySummaries(thoughts: ThoughtTimestamp[]): DaySummary[] {
+  const weekStart = getStartOfWeek(0)
+  const today = new Date()
+
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(weekStart)
+    date.setDate(weekStart.getDate() + i)
+
+    const dayThoughts = thoughts.filter(t => {
+      const d = new Date(t.created_at)
+      return d.getFullYear() === date.getFullYear()
+        && d.getMonth() === date.getMonth()
+        && d.getDate() === date.getDate()
+    })
+
+    const scores = dayThoughts
+      .map(t => typeof t.friction_score === 'number' ? t.friction_score : null)
+      .filter((s): s is number => s !== null)
+
+    return {
+      label: DAY_LABELS[date.getDay()],
+      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      sessions: dayThoughts.length,
+      avgScore: scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0,
+      isToday: date.toDateString() === today.toDateString(),
+    }
+  })
+}
+
+export function findPeakSession(sessions: SessionPoint[]): { score: number; label: string } | null {
+  if (!sessions.length) return null
+  const peak = sessions.reduce((a, b) => a.score >= b.score ? a : b)
+  return { score: peak.score, label: `${peak.dayLabel} ${peak.timeLabel}` }
+}
+
+export function findLowestSession(sessions: SessionPoint[]): { score: number; label: string } | null {
+  if (!sessions.length) return null
+  const lowest = sessions.reduce((a, b) => a.score <= b.score ? a : b)
+  return { score: lowest.score, label: `${lowest.dayLabel} ${lowest.timeLabel}` }
+}

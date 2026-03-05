@@ -1,20 +1,20 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { DashboardHeader } from '@/components/dashboard/Header';
-import { RhythmChart } from '@/components/dashboard/RhythmChart';
 import { PerspectiveCard } from '@/components/dashboard/PerspectiveCard';
 import { ThoughtGallery } from '@/components/dashboard/ThoughtGallery';
 import { QuickStats } from '@/components/dashboard/QuickStats';
 import { MissionSidebar } from '@/components/dashboard/MissionSidebar';
 import { FrictionHero } from '@/components/dashboard/FrictionHero';
-import { WeeklyInsights } from '@/components/dashboard/WeeklyInsights';
+import { WeeklyTimeline } from '@/components/dashboard/WeeklyTimeline';
 import { calculateResilienceMetric } from '@/lib/dashboard/analytics';
 import {
-  buildWeeklyData,
   computeWeeklyAvg,
-  countWeekSessions,
   countActiveDays,
-  findBestDay,
+  buildSessionPoints,
+  buildDaySummaries,
+  findPeakSession,
+  findLowestSession,
 } from '@/lib/dashboard/weekly';
 
 export default async function DashboardPage() {
@@ -23,7 +23,7 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  // Parallelize independent queries for better performance
+  // Parallelize independent queries (async-parallel rule)
   const [profileResult, thoughtsResult] = await Promise.all([
     supabase.schema('mindops').from('profiles').select('*').eq('id', user.id).single(),
     supabase.schema('mindops').from('thoughts').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
@@ -51,21 +51,15 @@ export default async function DashboardPage() {
   // Resilience metric
   const resilience = calculateResilienceMetric(thoughts || []);
 
-  // Chart data — last 20 sessions, oldest first
-  const chartData = thoughts?.slice(0, 20).map((t: { friction_score?: number; created_at: string }) => {
-    const score: number = typeof t.friction_score === 'number' ? t.friction_score : 20;
-    const nivel: 'fluido' | 'denso' | 'critico' = score >= 70 ? 'critico' : score >= 35 ? 'denso' : 'fluido';
-    return {
-      hora: new Date(t.created_at).toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'America/New_York',
-      }),
-      'Mental Load': score,
-      nivel,
-    };
-  }).reverse() ?? [];
+  // Weekly timeline data (server-serialization — only send primitives to client)
+  const allThoughts = thoughts || [];
+  const sessionPoints = buildSessionPoints(allThoughts as { id: string; friction_score?: number; created_at: string }[]);
+  const daySummaries = buildDaySummaries(allThoughts);
+  const weeklyAvg = computeWeeklyAvg(allThoughts, 0);
+  const prevWeekAvg = computeWeeklyAvg(allThoughts, 1);
+  const peakSession = findPeakSession(sessionPoints);
+  const lowestSession = findLowestSession(sessionPoints);
+  const activeDays = countActiveDays(allThoughts, 0);
 
   const displayName = profile?.first_name || 'Partner';
 
@@ -87,15 +81,17 @@ export default async function DashboardPage() {
           />
         </div>
 
-        {/* ── Weekly Insights — full width ────────────────────── */}
+        {/* ── Weekly Timeline — full width ────────────────────── */}
         <div className="mt-6">
-          <WeeklyInsights
-            days={buildWeeklyData(thoughts || [])}
-            weeklyAvg={computeWeeklyAvg(thoughts || [], 0)}
-            prevWeekAvg={computeWeeklyAvg(thoughts || [], 1)}
-            totalSessions={countWeekSessions(thoughts || [], 0)}
-            activeDays={countActiveDays(thoughts || [], 0)}
-            bestDay={findBestDay(thoughts || [])}
+          <WeeklyTimeline
+            sessions={sessionPoints}
+            days={daySummaries}
+            weeklyAvg={weeklyAvg}
+            prevWeekAvg={prevWeekAvg}
+            peakSession={peakSession}
+            lowestSession={lowestSession}
+            totalSessions={sessionPoints.length}
+            activeDays={activeDays}
           />
         </div>
 
@@ -112,10 +108,8 @@ export default async function DashboardPage() {
             />
           </div>
 
-          {/* Right column: Chart → Stats → Perspective → Gallery */}
+          {/* Right column: Energy Balance → Perspective → Gallery */}
           <div className="lg:col-span-8 space-y-8">
-            <RhythmChart data={chartData} isProteccion={isProteccion} />
-
             <QuickStats thoughts={thoughts || []} resilience={resilience} />
 
             <PerspectiveCard
