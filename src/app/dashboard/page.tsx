@@ -6,15 +6,12 @@ import { ThoughtGallery } from '@/components/dashboard/ThoughtGallery';
 import { QuickStats } from '@/components/dashboard/QuickStats';
 import { MissionSidebar } from '@/components/dashboard/MissionSidebar';
 import { FrictionHero } from '@/components/dashboard/FrictionHero';
-import { WeeklyTimeline } from '@/components/dashboard/WeeklyTimeline';
+import { WeeklySummary } from '@/components/dashboard/WeeklySummary';
 import { calculateResilienceMetric } from '@/lib/dashboard/analytics';
 import {
   computeWeeklyAvg,
   countActiveDays,
-  buildSessionPoints,
   buildDaySummaries,
-  findPeakSession,
-  findLowestSession,
 } from '@/lib/dashboard/weekly';
 
 export default async function DashboardPage() {
@@ -23,7 +20,7 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  // Parallelize independent queries (async-parallel rule)
+  // Parallelize independent queries
   const [profileResult, thoughtsResult] = await Promise.all([
     supabase.schema('mindops').from('profiles').select('*').eq('id', user.id).single(),
     supabase.schema('mindops').from('thoughts').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
@@ -35,31 +32,27 @@ export default async function DashboardPage() {
   const latestThought = thoughts?.[0];
   const isProteccion = latestThought?.system_mode === 'PROTECTION';
 
-  // Current friction score (latest session)
   const currentFriction: number = typeof latestThought?.friction_score === 'number'
     ? latestThought.friction_score
     : 0;
 
   if (!profile?.telegram_id) redirect('/dashboard/pairing');
 
-  // Trend: compare latest vs average of all sessions
+  // Trend
   const avgFriction = thoughts?.length
     ? Math.round(thoughts.reduce((s: number, t: { friction_score?: number }) => s + (typeof t.friction_score === 'number' ? t.friction_score : 20), 0) / thoughts.length)
     : 0;
   const frictionTrend = thoughts?.length ? currentFriction - avgFriction : 0;
 
-  // Resilience metric
+  // Resilience
   const resilience = calculateResilienceMetric(thoughts || []);
 
-  // Weekly timeline data (server-serialization — only send primitives to client)
+  // Weekly summary data
   const allThoughts = thoughts || [];
-  const sessionPoints = buildSessionPoints(allThoughts as { id: string; friction_score?: number; created_at: string }[]);
   const daySummaries = buildDaySummaries(allThoughts);
   const weeklyAvg = computeWeeklyAvg(allThoughts, 0);
-  const prevWeekAvg = computeWeeklyAvg(allThoughts, 1);
-  const peakSession = findPeakSession(sessionPoints);
-  const lowestSession = findLowestSession(sessionPoints);
   const activeDays = countActiveDays(allThoughts, 0);
+  const totalSessions = daySummaries.reduce((sum, d) => sum + d.sessions, 0);
 
   const displayName = profile?.first_name || 'Partner';
 
@@ -68,10 +61,9 @@ export default async function DashboardPage() {
       isProteccion ? 'bg-[var(--color-surface-warm,#FFF8F0)]' : 'bg-[var(--color-surface,#FDFDFF)]'
     }`}>
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 pb-16">
-        {/* ── Header ────────────────────────────────────────── */}
         <DashboardHeader firstName={displayName} isProteccion={isProteccion} />
 
-        {/* ── Friction Hero — full width ─────────────────────── */}
+        {/* Friction Hero — snapshot of now */}
         <div className="mt-6">
           <FrictionHero
             score={currentFriction}
@@ -81,24 +73,18 @@ export default async function DashboardPage() {
           />
         </div>
 
-        {/* ── Weekly Timeline — full width ────────────────────── */}
+        {/* Weekly Summary — how was the week at a glance */}
         <div className="mt-6">
-          <WeeklyTimeline
-            sessions={sessionPoints}
+          <WeeklySummary
             days={daySummaries}
             weeklyAvg={weeklyAvg}
-            prevWeekAvg={prevWeekAvg}
-            peakSession={peakSession}
-            lowestSession={lowestSession}
-            totalSessions={sessionPoints.length}
+            totalSessions={totalSessions}
             activeDays={activeDays}
           />
         </div>
 
-        {/* ── Main content grid ──────────────────────────────── */}
+        {/* Main content grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
-
-          {/* Left column: Missions */}
           <div className="lg:col-span-4 space-y-6">
             <MissionSidebar
               isProteccion={isProteccion}
@@ -108,7 +94,6 @@ export default async function DashboardPage() {
             />
           </div>
 
-          {/* Right column: Energy Balance → Perspective → Gallery */}
           <div className="lg:col-span-8 space-y-8">
             <QuickStats thoughts={thoughts || []} resilience={resilience} />
 
