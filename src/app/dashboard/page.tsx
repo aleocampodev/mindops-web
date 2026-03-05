@@ -102,7 +102,7 @@ export default async function DashboardPage() {
               isProteccion={isProteccion}
             />
 
-            <ThoughtGallery thoughts={thoughts || []} />
+            <ThoughtGallery thoughts={thoughts || []} limit={3} showSeeAll />
           </div>
         </div>
       </div>

@@ -1,69 +1,124 @@
 'use client'
 import { motion } from 'framer-motion';
-import { Calendar, History } from 'lucide-react';
+import { Calendar, History, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { MissionStatus } from '@/lib/constants/mission-status';
 
 interface Thought {
   id: string;
   friction_tag: string | null;
+  friction_score?: number;
   summary_title: string;
   raw_content: string;
   status: string;
   created_at: string;
 }
 
-export function ThoughtGallery({ thoughts }: { thoughts: Thought[] }) {
+interface ThoughtGalleryProps {
+  thoughts: Thought[];
+  limit?: number;       // max items to show (undefined = all)
+  showSeeAll?: boolean; // show "See all" link to /dashboard/history
+}
+
+function getScoreColor(score: number | undefined): string {
+  if (!score) return 'bg-slate-100 text-slate-400';
+  if (score >= 70) return 'bg-rose-100 text-rose-600';
+  if (score >= 50) return 'bg-amber-100 text-amber-600';
+  if (score >= 30) return 'bg-indigo-100 text-indigo-600';
+  return 'bg-emerald-100 text-emerald-600';
+}
+
+export function ThoughtGallery({ thoughts, limit, showSeeAll = false }: ThoughtGalleryProps) {
   // Show only committed (released) thoughts in the history gallery
   const history = thoughts.filter(t => t.status === MissionStatus.COMMITTED);
 
   if (history.length === 0) return null;
 
+  const display = limit ? history.slice(0, limit) : history;
+  const hasMore = limit ? history.length > limit : false;
+
   return (
-    <section className="lg:col-span-4 mt-12 space-y-8">
-      <div className="flex items-center gap-3">
-        <div className="bg-slate-100 p-2 rounded-lg text-slate-400">
-          <History size={20} />
+    <section className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-slate-100 p-2 rounded-lg text-slate-400">
+            <History size={18} aria-hidden="true" />
+          </div>
+          <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">
+            Released Thoughts
+          </h3>
         </div>
-        <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tighter italic">
-          Black Box: Synchronized Thoughts
-        </h3>
+        {(showSeeAll || hasMore) ? (
+          <Link
+            href="/dashboard/history"
+            className="flex items-center gap-1.5 text-xs font-black text-indigo-500 uppercase tracking-wider hover:text-indigo-700 transition-colors"
+          >
+            See all
+            <ArrowRight size={12} aria-hidden="true" />
+          </Link>
+        ) : null}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {history.map((t) => (
-          <motion.div
-            key={t.id}
-            whileHover={{ y: -5 }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white/50 backdrop-blur-md border border-slate-100 p-6 rounded-[2.5rem] shadow-lg flex flex-col justify-between group"
-          >
-            <div>
-              <div className="flex justify-between items-start mb-4">
-                <span className="text-2xl">💭</span>
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-widest flex items-center gap-1">
-                  <Calendar size={10} /> {new Date(t.created_at).toLocaleDateString()}
-                </span>
-              </div>
-              
-              <h4 className="font-black text-slate-900 text-lg leading-tight mb-2 uppercase tracking-tight">
-                {t.summary_title}
-              </h4>
-              
-              {/* Original raw thought content */}
-              <p className="text-slate-500 text-sm italic line-clamp-3 mb-4 transition-all group-hover:line-clamp-none">
-                "{t.raw_content}"
-              </p>
-            </div>
-
-            <div className="pt-4 border-t border-slate-100 mt-4">
-              <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Action Impact:</p>
-              <p className="text-xs font-bold text-slate-700">{t.summary_title}</p>
-            </div>
-          </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {display.map((t) => (
+          <ThoughtCard key={t.id} thought={t} />
         ))}
       </div>
     </section>
+  );
+}
+
+// ── Sub-component (composition pattern) ─────────────────────
+
+function ThoughtCard({ thought: t }: { thought: Thought }) {
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="bg-white border border-slate-100 p-6 rounded-[2rem] shadow-sm flex flex-col justify-between group hover:shadow-md transition-shadow"
+    >
+      <div>
+        <div className="flex justify-between items-start mb-4">
+          <span className={`text-[10px] font-black px-3 py-1 rounded-full ${getScoreColor(t.friction_score)}`}>
+            {t.friction_tag ?? 'Processed'}
+          </span>
+          <span className="text-[10px] font-bold text-slate-300 flex items-center gap-1">
+            <Calendar size={10} aria-hidden="true" />
+            {new Date(t.created_at).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: '2-digit',
+            })}
+          </span>
+        </div>
+
+        <h4 className="font-black text-slate-900 text-base leading-tight mb-3 tracking-tight">
+          {t.summary_title}
+        </h4>
+
+        <p className="text-slate-400 text-sm italic line-clamp-3 group-hover:line-clamp-none transition-all leading-relaxed">
+          &ldquo;{t.raw_content}&rdquo;
+        </p>
+      </div>
+
+      {t.friction_score != null ? (
+        <div className="pt-4 border-t border-slate-50 mt-4 flex items-center justify-between">
+          <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">
+            Friction
+          </span>
+          <span className={`text-lg font-black italic tabular-nums ${
+            t.friction_score >= 70 ? 'text-rose-500'
+              : t.friction_score >= 50 ? 'text-amber-500'
+              : t.friction_score >= 30 ? 'text-indigo-500'
+              : 'text-emerald-500'
+          }`}>
+            {t.friction_score}
+          </span>
+        </div>
+      ) : null}
+    </motion.div>
   );
 }
