@@ -1,7 +1,7 @@
 'use client'
 import { Suspense } from 'react';
 import { Hero } from '@/components/landing/Hero';
-import { Marquee } from '@/components/Marquee';
+import { Marquee } from '@/components/ui/Marquee';
 import { CognitiveSimulator } from '@/components/landing/CognitiveSimulator';
 import { Footer } from '@/components/landing/Footer';
 

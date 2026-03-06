@@ -1,65 +1,63 @@
 # 🧠 MindOps Web
 
-MindOps is a **Mental Engineering** platform designed to optimize your biological and cognitive performance. It is not just a task manager; it is a monitoring system that translates your vents and mental patterns into actionable items, helping you maintain "Momentum" without saturating your "RAM" (cognitive capacity).
+[![CI - Build & Lint](https://github.com/aleocampodev/mindops-web/actions/workflows/ci.yml/badge.svg)](https://github.com/aleocampodev/mindops-web/actions/workflows/ci.yml)
+[![Deploy to Cloud Run](https://github.com/aleocampodev/mindops-web/actions/workflows/deploy.yml/badge.svg)](https://github.com/aleocampodev/mindops-web/actions/workflows/deploy.yml)
 
-## 🚀 Key Features
+MindOps is a **Mental Engineering** platform designed to optimize biological and cognitive performance. It functions as a sophisticated monitoring system that translates mental patterns into actionable items, managing "Cognitive RAM" to maintain peak "Momentum."
 
-- **Momentum Anchor:** Identifies your "Atomic Action" priority to avoid analysis paralysis.
-- **Telegram Synchronization:** Connect your mind in real-time via a bot. Send your thoughts and the system will process them.
-- **Calm Rhythm:** Visualization of your mental load throughout the day to identify saturation peaks.
-- **AI Perspective:** Receive deep interpretations of your own patterns to see clearly through the noise.
-- **Pause Protocol:** Automatic detection of critical fatigue to force a biological reset when necessary.
+## 🏗️ System Architecture
 
-## 🛠 Tech Stack
+MindOps follows a modular, event-driven architecture that separates concerns between user interaction, asynchronous processing, and visual analysis.
 
-- **Framework:** [Next.js 15+](https://nextjs.org/) (App Router, Turbopack)
-- **Database & Auth:** [Supabase](https://supabase.com/) (SSR, Google OAuth)
-- **UI & Animations:** [Framer Motion](https://www.framer.com/motion/), [Tailwind CSS](https://tailwindcss.com/) & [Tremor](https://www.tremor.so/)
-- **Icons:** [Lucide React](https://lucide.dev/)
+```mermaid
+graph TD
+    User((User)) -->|Telegram/Web| Frontend[Next.js Web App]
+    Frontend -->|Auth/Data| Supabase[(Supabase DB & Auth)]
+    User -->|Thoughts/Vents| TelegramBot[Telegram Bot]
+    TelegramBot -->|Webhooks| Orchestrator{n8n Orchestrator}
+    Orchestrator -->|Process/Categorize| Supabase
+    Supabase -->|Real-time Sync| Frontend
+    Orchestrator -->|Redundancy| Twilio[Twilio Safety Net]
+```
+
+### 🧠 Backend Orchestration (n8n)
+The core logic resides in a series of specialized workflows located in `n8n/workflows/`, which act as an asynchronous cognitive engine:
+
+*   **MindOps Orchestrator**: The central nervous system coordinating data flow.
+*   **Identity Onboarding (SW-1)**: Manages user lifecycle and state initialization.
+*   **Cognitive Engine (SW-2)**: Processes raw input into mental patterns.
+*   **Mission Control (SW-3)**: Handles task prioritization and "Atomic Actions."
+*   **Telegram Integrator (SW-5)**: Manages real-time bidirectional communication.
+*   **Safety Net Protocol**: Redundancy layer via Twilio for critical alerts.
+
+## 🛠️ Tech Stack
+
+- **Core Framework:** [Next.js 15+](https://nextjs.org/) (App Router, Turbopack)
+- **Runtime:** [React 19](https://react.dev/)
 - **Infrastructure:** [Google Cloud Run](https://cloud.google.com/run) & [Docker](https://www.docker.com/)
-- **CI/CD:** GitHub Actions
+- **Database & Auth:** [Supabase](https://supabase.com/) (SSR, Google OAuth)
+- **UI Architecture:** [Tailwind CSS v4](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/), & [Tremor](https://www.tremor.so/)
+- **CI/CD:** GitHub Actions for automated linting, builds, and GCP deployments.
 
-## ⚙️ Configuration (Environment Variables)
+## ⚙️ Development & Infrastructure
 
-Create a `.env` file in the project root with the following keys:
+### Why Google Cloud Run?
+Unlike standard edge deployments, MindOps utilizes GCP to ensure full control over the container environment, predictable scaling for data-heavy processing, and seamless integration with complex backend workflows.
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+### Local Setup
+1.  **Dependencies**:
+    ```bash
+    npm install --legacy-peer-deps
+    ```
+    *Note: `--legacy-peer-deps` is required for React 19 compatibility with UI libraries.*
 
-## 📦 Deployment (On Google Cloud Run)
+2.  **Environment**:
+    Configure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
-This project **does not use Vercel**. It is deployed on scalable Google Cloud infrastructure.
-
-### Manual Deployment
-If you have the Google Cloud SDK (`gcloud`) configured, you can deploy directly with:
-
-```bash
-npm run deploy
-```
-
-### Automatic Deployment (GitHub Actions)
-The project includes a complete pipeline configured in `.github/workflows/`:
-1. **CI:** Checks for linter and build errors on every Push/PR.
-2. **CD:** Automatically deploys to Google Cloud Run when merging into `main`.
-
-> *Note: Requires configuring `GCP_SA_KEY`, `GCP_PROJECT_ID`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY` Secrets in the GitHub repository.*
-
-## 💻 Local Development
-
-1. Install dependencies (using legacy-peer-deps for React 19 compatibility):
-   ```bash
-   npm install --legacy-peer-deps
-   ```
-2. Start the development server:
-   ```bash
-   npm run dev
-   ```
-3. Clean code before pushing changes:
-   ```bash
-   npm run lint
-   ```
+3.  **Run**:
+    ```bash
+    npm run dev
+    ```
 
 ---
 Designed for efficiency. Built for the mind. ⚡

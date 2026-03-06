@@ -14,8 +14,7 @@ export default function LoginButton() {
     try {
       const getURL = () => {
         let url =
-          process?.env?.NEXT_PUBLIC_SITE_URL ?? // Configura esto en GCP como variable de entorno
-          process?.env?.NEXT_PUBLIC_VERCEL_URL ?? // Para previsualización
+          process?.env?.NEXT_PUBLIC_SITE_URL ?? // Configurar en GCP como variable de entorno
           window.location.origin
         // Asegurarse de incluir el protocolo y no tener slash al final
         url = url.includes('http') ? url : `https://${url}`
