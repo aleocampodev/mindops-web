@@ -25,7 +25,7 @@ export async function completeThought(thoughtId: string) {
     const { error } = await supabase
       .schema('mindops')
       .from('thoughts')
-      .update({ status: MissionStatus.COMMITTED })
+      .update({ status: MissionStatus.COMPLETED })
       .eq('id', input.thoughtId)
 
     if (error) {
@@ -54,7 +54,7 @@ export async function updateMissionStep(thoughtId: string, nextStep: number, isF
       current_step_index: input.nextStep
     }
     if (input.isFinal) {
-      updateData.status = MissionStatus.COMMITTED
+      updateData.status = MissionStatus.COMPLETED
     }
 
     const { error } = await supabase

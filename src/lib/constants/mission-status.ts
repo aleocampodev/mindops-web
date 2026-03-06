@@ -4,10 +4,10 @@
  */
 export const MissionStatus = {
   IDLE: 'IDLE',        // Created, not yet started
-  INPROGRESS: 'INPROGRESS',  // Actively being worked on
-  ACTIVE: 'ACTIVE',      // In the queue / momentum anchor
-  STALLED: 'STALLED',     // Blocked — may trigger Twilio alert
-  COMMITTED: 'COMMITTED',   // Completed / released
+  ACTIVE: 'ACTIVE',    // Actively being worked on
+  PROPOSED: 'PROPOSED', // In the queue / momentum anchor
+  STALLED: 'STALLED',   // Blocked — may trigger Twilio alert
+  COMPLETED: 'COMPLETED', // Completed / released
 } as const;
 
 export type MissionStatusValue = typeof MissionStatus[keyof typeof MissionStatus];

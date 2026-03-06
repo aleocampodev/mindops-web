@@ -30,7 +30,7 @@ function getScoreColor(score: number | undefined): string {
 
 export function ThoughtGallery({ thoughts, limit, showSeeAll = false }: ThoughtGalleryProps) {
   // Show only committed (released) thoughts in the history gallery
-  const history = thoughts.filter(t => t.status === MissionStatus.COMMITTED);
+  const history = thoughts.filter(t => t.status === MissionStatus.COMPLETED);
 
   if (history.length === 0) return null;
 

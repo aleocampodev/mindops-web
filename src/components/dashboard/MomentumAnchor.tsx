@@ -22,7 +22,7 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
   const [isPending, startTransition] = useTransition();
 
   // Filter only in-progress thoughts for the momentum anchor
-  const pendingActions = thoughts.filter(t => t.status === MissionStatus.INPROGRESS);
+  const pendingActions = thoughts.filter(t => t.status === MissionStatus.ACTIVE);
   
   if (isProteccion) {
     return (

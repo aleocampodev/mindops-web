@@ -32,9 +32,9 @@ export default async function MissionsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case MissionStatus.INPROGRESS:
+      case MissionStatus.ACTIVE:
         return { label: 'Active', color: 'bg-emerald-500', icon: Clock };
-      case MissionStatus.COMMITTED:
+      case MissionStatus.COMPLETED:
         return { label: 'Completed', color: 'bg-slate-400', icon: CheckCircle2 };
       default:
         return { label: 'New', color: 'bg-indigo-500', icon: Target };

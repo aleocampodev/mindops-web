@@ -28,7 +28,7 @@ export async function advanceMissionStep(missionId: string, currentIndex: number
         .from('thoughts')
         .update({
           current_step_index: nextIndex,
-          status: MissionStatus.COMMITTED
+          status: MissionStatus.COMPLETED
         })
         .eq('id', input.missionId)
 

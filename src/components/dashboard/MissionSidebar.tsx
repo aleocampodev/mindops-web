@@ -24,7 +24,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
   });
 
   // Active missions (not yet completed)
-  const activeMissions = allMissions.filter(t => t.status !== MissionStatus.COMMITTED);
+  const activeMissions = allMissions.filter(t => t.status !== MissionStatus.COMPLETED);
   const hasMissions = activeMissions.length > 0;
   const displayMissions = activeMissions.slice(0, 3);
   const remainingCount = Math.max(0, activeMissions.length - 3);

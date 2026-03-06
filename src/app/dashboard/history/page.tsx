@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { ThoughtGallery } from '@/components/dashboard/ThoughtGallery';
+import { MissionStatus } from '@/lib/constants/mission-status';
 
 export default async function HistoryPage() {
   const supabase = await createClient();
@@ -43,7 +44,7 @@ export default async function HistoryPage() {
         <ThoughtGallery thoughts={thoughts || []} />
 
         {/* Empty state if no committed thoughts */}
-        {(!thoughts || thoughts.filter((t: { status: string }) => t.status === 'COMMITTED').length === 0) ? (
+        {(!thoughts || thoughts.filter((t: { status: string }) => t.status === MissionStatus.COMPLETED).length === 0) ? (
           <div className="text-center py-20">
             <p className="text-4xl mb-4">💭</p>
             <h2 className="text-xl font-black italic text-slate-300 mb-2">

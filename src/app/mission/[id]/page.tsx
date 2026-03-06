@@ -18,7 +18,7 @@ export default async function MissionPage({ params: paramsPromise }: { params: P
     .single()
 
   if (error || !mission) notFound()
-  if (mission.status === MissionStatus.COMMITTED) redirect('/dashboard')
+  if (mission.status === MissionStatus.COMPLETED) redirect('/dashboard')
 
   // Parse JSON action_plan field
   let plan = mission.action_plan
