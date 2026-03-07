@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-05T03:07:22.349Z",
+  "updatedAt": "2026-03-06T18:23:23.157Z",
   "createdAt": "2026-02-22T01:57:39.282Z",
   "id": "GmInc0tYXj4ZR4kM",
   "name": "SW-1: Identity & Onboarding",
@@ -35,8 +35,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -800,
-        416
+        -1360,
+        384
       ],
       "id": "1503be27-68e3-4d03-afb1-53a30203776d",
       "name": "Strict Entry (Contract)"
@@ -64,8 +64,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        -224,
-        48
+        -784,
+        16
       ],
       "id": "17e7deeb-e79b-46da-b32f-bf1b3e186e8f",
       "name": "Check DB (START)",
@@ -95,8 +95,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        64,
-        640
+        -496,
+        608
       ],
       "id": "dc77f8d2-f622-4ea0-ab47-6b31f47aa6c0",
       "name": "Extract Code (VINCULATE)"
@@ -168,8 +168,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        688,
-        -64
+        128,
+        -96
       ],
       "id": "0421f87a-90e7-46ba-beeb-76a82d4c913c",
       "name": "Welcome message"
@@ -240,8 +240,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        1008,
-        352
+        448,
+        320
       ],
       "id": "4135c30c-de9b-4b52-8e45-e7461075aed6",
       "name": "Reminder message"
@@ -314,8 +314,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        1184,
-        480
+        624,
+        448
       ],
       "id": "458c49ce-a13d-4373-86a4-ff5271c575b8",
       "name": "Linking Successful message"
@@ -386,8 +386,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        944,
-        752
+        384,
+        720
       ],
       "id": "1e96b1f5-7a79-485c-92f4-e5b88affb73a",
       "name": "Error code message"
@@ -415,8 +415,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        288,
-        624
+        -272,
+        592
       ],
       "id": "253c7a10-d47d-4bcb-b3b7-d72fe272151e",
       "name": "Get Code from DB",
@@ -466,8 +466,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        224,
-        48
+        -336,
+        16
       ],
       "id": "38bad971-b9f0-4f09-a373-56308dd885d2",
       "name": "If profile empty?"
@@ -532,8 +532,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        480,
-        112
+        -80,
+        80
       ],
       "id": "b67bdc12-c0a1-4b18-a0e0-938824684651",
       "name": "State user"
@@ -565,8 +565,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        560,
-        592
+        0,
+        560
       ],
       "id": "33c26f2d-42a0-4369-a0c7-e3df39f2f01c",
       "name": "Is Code Valid?"
@@ -656,8 +656,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -496,
-        336
+        -1056,
+        304
       ],
       "id": "549c14be-c34f-46e3-816b-1640b11dadce",
       "name": "Domain Controller"
@@ -689,8 +689,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        192,
-        976
+        -368,
+        944
       ],
       "id": "30626dc8-30ad-4b12-a49b-7c4673405f13",
       "name": "Update  Contact",
@@ -768,8 +768,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        1552,
-        416
+        992,
+        384
       ],
       "id": "1fc72d73-025a-470b-bf54-514e89657ecd",
       "name": "Generic error message3"
@@ -801,8 +801,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        800,
-        528
+        240,
+        496
       ],
       "id": "dc1395e1-e7dc-4540-83ea-1ff66ba0faa2",
       "name": "Link Account DB",
@@ -871,8 +871,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        960,
-        48
+        400,
+        16
       ],
       "id": "b69a70e4-d127-4d4f-ae4b-dd558cee1847",
       "name": "Contact activate"
@@ -933,8 +933,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        656,
-        832
+        96,
+        800
       ],
       "id": "c5e04ec5-04ea-4557-bf66-f089f63bcfe9",
       "name": "Message Domain Controller"
@@ -1005,8 +1005,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        1376,
-        976
+        816,
+        944
       ],
       "id": "3ae91daf-4639-4e41-ac27-00b8527c43fb",
       "name": "Generic error message"
@@ -1201,9 +1201,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "03202895-d936-4c47-be17-74cf7344f023",
+  "versionId": "5f2ac4a1-18d3-4272-8c3c-c5b17a2d93aa",
   "activeVersionId": "5daa4772-dfb6-4ed4-a89e-a2b6777aba17",
-  "versionCounter": 1017,
+  "versionCounter": 1022,
   "triggerCount": 0,
   "shared": [
     {
