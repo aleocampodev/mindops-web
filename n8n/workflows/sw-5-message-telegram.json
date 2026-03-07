@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-03T14:58:02.652Z",
+  "updatedAt": "2026-03-07T04:17:55.606Z",
   "createdAt": "2026-02-22T01:50:52.439Z",
   "id": "zZYZA8aKwUckaap4",
   "name": "SW-5:Message telegram",
@@ -329,26 +329,16 @@
           },
           "conditions": [
             {
-              "id": "609586da-fbc6-4135-a98e-1eb248978339",
-              "leftValue": "={{ $json.error.code }}",
-              "rightValue": "\"ERR_BAD_REQUEST\"",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            },
-            {
               "id": "d5e0dbdc-8bb7-4b2d-974b-3dca9b9ef454",
               "leftValue": "={{ $json.error.status }}",
-              "rightValue": 400,
+              "rightValue": 500,
               "operator": {
                 "type": "number",
                 "operation": "equals"
               }
             }
           ],
-          "combinator": "and"
+          "combinator": "or"
         },
         "options": {}
       },
@@ -359,7 +349,7 @@
         -176
       ],
       "id": "b0a658bc-b30c-4d7e-a75d-b8164477d91d",
-      "name": "Telegram 400 Filter"
+      "name": "Telegram 500 Filter"
     }
   ],
   "connections": {
@@ -422,7 +412,7 @@
         [],
         [
           {
-            "node": "Telegram 400 Filter",
+            "node": "Telegram 500 Filter",
             "type": "main",
             "index": 0
           }
@@ -434,7 +424,7 @@
         [],
         [
           {
-            "node": "Telegram 400 Filter",
+            "node": "Telegram 500 Filter",
             "type": "main",
             "index": 0
           }
@@ -446,7 +436,7 @@
         [],
         [
           {
-            "node": "Telegram 400 Filter",
+            "node": "Telegram 500 Filter",
             "type": "main",
             "index": 0
           }
@@ -458,14 +448,14 @@
         [],
         [
           {
-            "node": "Telegram 400 Filter",
+            "node": "Telegram 500 Filter",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Telegram 400 Filter": {
+    "Telegram 500 Filter": {
       "main": [
         [],
         [
@@ -492,9 +482,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a1e982d5-b602-42f3-a5c1-126c54b239f1",
+  "versionId": "21c1e84f-7353-430c-9037-27ecbe7e969a",
   "activeVersionId": "a1e982d5-b602-42f3-a5c1-126c54b239f1",
-  "versionCounter": 506,
+  "versionCounter": 512,
   "triggerCount": 0,
   "shared": [
     {
