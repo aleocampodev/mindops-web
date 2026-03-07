@@ -4,6 +4,7 @@ import { ArrowLeft, Target, Clock, CheckCircle2, ChevronRight, Rocket } from 'lu
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { MissionStatus } from '@/lib/constants/mission-status';
+import type { Thought } from '@/types/database';
 
 export default async function MissionsPage() {
   const supabase = await createClient();
@@ -22,10 +23,10 @@ export default async function MissionsPage() {
     .order('created_at', { ascending: false });
 
   // Filter missions with a valid action plan
-  const allMissions = thoughts?.filter((t: any) => {
+  const allMissions = thoughts?.filter((t: Thought) => {
     let plan = t.action_plan;
     if (typeof plan === 'string') {
-      try { plan = JSON.parse(plan); } catch (e) { plan = null; }
+      try { plan = JSON.parse(plan); } catch (e) { plan = [] as any; }
     }
     return plan && Array.isArray(plan) && plan.length > 0;
   }) || [];
@@ -78,7 +79,7 @@ export default async function MissionsPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {allMissions.map((mission: any, index: number) => {
+            {allMissions.map((mission: Thought, index: number) => {
               const badge = getStatusBadge(mission.status);
               const Icon = badge.icon;
               

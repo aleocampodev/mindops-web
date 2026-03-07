@@ -4,11 +4,12 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
 import { MissionStatus } from '@/lib/constants/mission-status';
+import type { Thought } from '@/types/database';
 
 interface MissionSidebarProps {
   isProteccion: boolean;
   thoughtsCount: number;
-  allThoughts: any[];
+  allThoughts: Thought[];
   firstName: string;
 }
 
@@ -18,7 +19,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
   const allMissions = allThoughts.filter(t => {
     let plan = t.action_plan;
     if (typeof plan === 'string') {
-      try { plan = JSON.parse(plan); } catch (e) { plan = null; }
+      try { plan = JSON.parse(plan); } catch (e) { plan = [] as any; }
     }
     return plan && Array.isArray(plan) && plan.length > 0;
   });

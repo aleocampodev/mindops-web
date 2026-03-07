@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react' // 🧠 Para el estado de la UI (no de los datos)
+import { useState } from 'react' // 🧠 For UI state
 import { createClient } from '@/utils/supabase/client'
 import { Loader2, LogIn } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -31,7 +31,7 @@ export default function LoginButton() {
 
       if (error) throw error
     } catch (error) {
-      console.error('Error de autenticación:', error)
+      console.error('Authentication error:', error)
       setIsLoading(false)
       alert("Error connecting to Google. Please retry.")
     }

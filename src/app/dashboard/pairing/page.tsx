@@ -223,7 +223,10 @@ export default async function PairingPage() {
               <div className="space-y-6">
                 <PairingTimer expiresAt={pairingData.expiresAt} />
 
-                <form action={generatePairingCode} className="flex justify-center">
+                <form action={async (formData: FormData) => {
+                  'use server';
+                  await generatePairingCode();
+                }} className="flex justify-center">
                   <button
                     type="submit"
                     className="cursor-pointer flex items-center gap-3 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95"

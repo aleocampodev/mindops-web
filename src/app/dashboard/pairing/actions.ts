@@ -6,7 +6,7 @@ export async function generatePairingCode() {
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    if (!user) return { success: false, error: 'Not authenticated' }
 
     const newCode = Math.floor(100000 + Math.random() * 900000).toString()
 
@@ -25,11 +25,14 @@ export async function generatePairingCode() {
 
     if (error) {
       console.error('Error generating pairing code:', error.message)
-      return
+      return { success: false, error: error.message }
     }
 
     revalidatePath('/dashboard/pairing')
+    return { success: true }
   } catch (err) {
-    console.error('Unexpected error in generatePairingCode:', err instanceof Error ? err.message : err)
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('Unexpected error in generatePairingCode:', message)
+    return { success: false, error: message }
   }
 }

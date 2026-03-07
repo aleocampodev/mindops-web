@@ -35,7 +35,7 @@ export function UserMenu({ firstName }: { firstName: string }) {
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Signed in as</p>
             <p className="text-sm font-black text-slate-900 truncate">{firstName}</p>
           </div>
-          <form action={logout}>
+          <form action={async (formData: FormData) => { await logout(); }}>
             <button
               type="submit"
               className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
