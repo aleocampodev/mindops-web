@@ -58,8 +58,10 @@ The core automation resides in specialized n8n workflows (`n8n/workflows/`), act
 
 ## ⚙️ Development & Infrastructure
 
-### Why Google Cloud Run?
-Unlike standard edge deployments, MindOps utilizes GCP to ensure full control over the container environment, predictable scaling for data-heavy processing, and seamless integration with complex backend workflows.
+### Why Google Cloud Run? & Future Scalability
+Unlike standard edge deployments, MindOps utilizes GCP Cloud Run to ensure full control over the container runtime, predictable scaling for data-heavy background processing, and seamless, long-running integration with complex backend n8n automation logic.
+
+**Evolution Path (Queues & Workers):** The architecture is deliberately separated into isolated services. This makes it trivial to upgrade the communication layer from synchronous HTTP webhooks to an asynchronous **Message Queue** (like Google Cloud Pub/Sub or BullMQ). By introducing dedicated **Worker instances** for heavy AI parsing and RAG retrieval, the system can scale horizontally and handle thousands of concurrent "vent" events without bottlenecking the main orchestration engine.
 
 ### Local Setup
 1.  **Dependencies**:
