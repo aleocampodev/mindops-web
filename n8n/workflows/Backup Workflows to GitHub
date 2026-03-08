@@ -1,0 +1,439 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -3456,
+        2288
+      ],
+      "id": "d8d49011-0962-40ac-93c9-0b881202209e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { id: \"cO9M1BtWC9im653l\" } },\n  { json: { id: \"GmInc0tYXj4ZR4kM\" } },\n  { json: { id: \"zc8E5ZfPENEx6Css\" } },\n  { json: { id: \"QciYupwAd2AZ6IEf\" } },\n  { json: { id: \"zDZb0cAxMY5TCjPe\" } },\n  { json: { id: \"zZYZA8aKwUckaap4\" } }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3296,
+        2400
+      ],
+      "id": "5b1ae8ef-14bf-4740-bda3-f39622e8bb26",
+      "name": "Workflow IDs"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2976,
+        2448
+      ],
+      "id": "5c2f1d1a-094b-45e4-bcd2-412e63651b7e",
+      "name": "Loop Over Workflows"
+    },
+    {
+      "parameters": {
+        "url": "=https://n8n-997501160612.us-central1.run.app/api/v1/workflows/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "n8nApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -2656,
+        2432
+      ],
+      "id": "48ab3b5d-d316-4d07-9ea2-e4ba140d1462",
+      "name": "Get Workflow",
+      "credentials": {
+        "n8nApi": {
+          "id": "0IFYjmy5hprVEken",
+          "name": "n8n account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const workflow = $input.first().json;\n\n// Crear un nombre de archivo seguro (slug)\nconst safeName = workflow.name\n  .toLowerCase()\n  .normalize(\"NFD\")\n  .replace(/[\\u0300-\\u036f]/g, \"\")\n  .replace(/[^a-z0-9]/g, \"-\")\n  .replace(/-+/g, \"-\")\n  .replace(/^-|-$/g, \"\");\n\nreturn {\n  id: workflow.id,\n  name: workflow.name,\n  safeName: safeName,\n  fullWorkflow: workflow\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2464,
+        2176
+      ],
+      "id": "0f1b2ad5-3d83-4bd4-be83-9d93113a5e99",
+      "name": "Slugify Name"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/aleocampodev/mindops-web/contents/n8n/workflows/{{ $json.safeName }}.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -2288,
+        2288
+      ],
+      "id": "6e9dcba7-b0fe-425a-9918-37d9b13bd1bb",
+      "name": "Get GitHub File",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1wjXIfqCt2LzYws1",
+          "name": "Github Pat"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const githubResponse = $input.first().json;\nconst n8nData = $(\"Slugify Name\").item.json;\nconst n8nWorkflow = n8nData.fullWorkflow;\n\n// 1. Check if file doesn't exist (GitHub returns 404 or an error object)\nif (githubResponse.error || githubResponse.statusCode === 404) {\n  return [{\n    json: {\n      exists: false,\n      isDifferent: true,\n      name: n8nData.name,\n      safeName: n8nData.safeName,\n      contentBase64: Buffer.from(JSON.stringify(n8nWorkflow, null, 2)).toString('base64')\n    }\n  }];\n}\n\n// 2. If file exists, prepare for comparison\nconst githubContent = Buffer.from(githubResponse.content, 'base64').toString('utf8');\n\n/**\n * Normalizes the workflow object by removing volatile fields \n * and sorting keys to prevent \"ghost\" changes.\n */\nconst normalize = (obj) => {\n  // Remove fields that change on every save/version\n  const { updatedAt, versionId, createdAt, ...rest } = obj;\n  // Sort keys alphabetically so the strings match perfectly\n  return JSON.stringify(rest, Object.keys(rest).sort());\n};\n\nlet githubJson;\ntry {\n  githubJson = JSON.parse(githubContent);\n} catch (e) {\n  githubJson = {};\n}\n\nconst isDifferent = normalize(githubJson) !== normalize(n8nWorkflow);\n\nreturn [{\n  json: {\n    exists: true,\n    isDifferent: isDifferent,\n    sha: githubResponse.sha, // Essential to avoid 409 Conflict errors\n    name: n8nData.name,\n    safeName: n8nData.safeName,\n    contentBase64: Buffer.from(JSON.stringify(n8nWorkflow, null, 2)).toString('base64')\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1792,
+        2160
+      ],
+      "id": "aeec2721-2fb5-4dea-b87b-60507a6c0b39",
+      "name": "Compare Content"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-is-different",
+              "leftValue": "={{ $json.isDifferent }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1968,
+        1808
+      ],
+      "id": "40945a39-9112-42bd-b39c-c5328f75f4bc",
+      "name": "Has Changes?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-exists",
+              "leftValue": "={{ $json.exists }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1568,
+        1904
+      ],
+      "id": "f5329241-1e7b-4f50-8516-b3bcb51f3656",
+      "name": "Update or Create?"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/aleocampodev/mindops-web/contents/n8n/workflows/{{ $json.safeName }}.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore(n8n): update \\\"{{ $json.name }}\\\"\",\n  \"content\": \"{{ $json.contentBase64 }}\",\n  \"sha\": \"{{ $json.sha }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1312,
+        1984
+      ],
+      "id": "e0cb198a-ca28-4145-97a4-2aadccef98c4",
+      "name": "Update File on GitHub",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1wjXIfqCt2LzYws1",
+          "name": "Github Pat"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/aleocampodev/mindops-web/contents/n8n/workflows/{{ $json.safeName }}.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore(n8n): add \\\"{{ $json.name }}\\\"\",\n  \"content\": \"{{ $json.contentBase64 }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1312,
+        2192
+      ],
+      "id": "1978ae7b-7462-4cc6-bfda-5205fa58a0a7",
+      "name": "Create File on GitHub",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1wjXIfqCt2LzYws1",
+          "name": "Github Pat"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const error = $input.first().json;\nthrow new Error(`Error in sync: ${JSON.stringify(error)}`);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -928,
+        2256
+      ],
+      "id": "17282086-d69f-4c8c-a02a-944f15213bbd",
+      "name": "Get error"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Workflow IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow IDs": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Workflows": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Workflow": {
+      "main": [
+        [
+          {
+            "node": "Slugify Name",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slugify Name": {
+      "main": [
+        [
+          {
+            "node": "Get GitHub File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get GitHub File": {
+      "main": [
+        [
+          {
+            "node": "Compare Content",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Compare Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compare Content": {
+      "main": [
+        [
+          {
+            "node": "Has Changes?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Changes?": {
+      "main": [
+        [
+          {
+            "node": "Update or Create?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update or Create?": {
+      "main": [
+        [
+          {
+            "node": "Update File on GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create File on GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update File on GitHub": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create File on GitHub": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get error": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "66419a3487ed795de7328dedc4137387447311219d0c7710a829d56c0b4c83e7"
+  }
+}
