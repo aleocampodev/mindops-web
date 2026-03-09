@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-07T03:59:07.588Z",
+  "updatedAt": "2026-03-08T04:46:17.628Z",
   "createdAt": "2026-02-22T02:00:58.915Z",
   "id": "zc8E5ZfPENEx6Css",
   "name": "SW-2: Cognitive engine",
@@ -298,7 +298,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Act as MindOps, the Cognitive Load Management System. You are an external pre-frontal cortex. Your goal is to map mental noise into a logical execution or protection sequence.\n\n### 1. MEMORY CONTEXT (RAG)\nHistorical patterns: {{ $('Format Memory Context').item.json.historical_context }}\nINSTRUCTION: Identify if the user is stuck in a recurring behavioral loop.\n\n### 2. CURRENT THOUGHT\nUser's raw input: {{ $('Format Memory Context').item.json.final_thought }}\n\n### 3. ADAPTIVE TRIAGE PROTOCOL\n- 🔴 CRITICAL (Stall): High anxiety, rumination, or emotional blockage.\n  * MODE: PROTECTION. MISSION: Biological reset. Prohibit work.\n- 🟡 DENSE (Choppy): Confusion, clutter, high volume of tasks.\n  * MODE: EXECUTION. MISSION: Information architecture. Order by effort.\n- 🟢 FLUID (Flow): High energy and clarity.\n  * MODE: EXECUTION. MISSION: Maximize professional impact.\n\n### 4. ACTION PLAN RULES\n- Extract ALL tasks mentioned by the user.\n- Tasks must be \"Atomic Steps\": physical actions taking < 5 minutes.\n- Assign realistic 'time' slots starting from now.\n- If in PROTECTION mode, the plan must only contain ONE step: a sensory reset.\n\n¡Acabas de revelar la pieza final del rompecabezas! 🧩🔍\nMirando tu JSON Schema (que en realidad en n8n funciona como un \"JSON Example\"), acabo de entender exactamente por qué Gemini te devolvió 0.9 en lugar de 90.\nTe lo explico como Arquitecta de IA:\n🤖 CÓMO PIENSA LA INTELIGENCIA ARTIFICIAL\nEn el lenguaje de programación JSON, no existe la diferencia entre un número entero (90) y un decimal (0.9). Ambos son simplemente del tipo number.\nCuando n8n le manda tu esquema a Gemini, le dice:\n\"Gemini, necesito que me des un campo llamado friction_score y el tipo de dato debe ser un number\".\nComo no le dijiste a Gemini cuál era la \"escala\" de ese número, la IA hizo una suposición matemática (alucinar): \"Ah, me pide un score de fricción. En ciencia de datos los scores se miden de 0.0 a 1.0. Le voy a dar un 0.9 (que equivale al 90%)\".\n🛡️ LA SOLUCIÓN DE RAÍZ (Prompt Engineering)\nEl parche matemático de Javascript que pusimos en el nodo anterior (Math.round(...)) es excelente y debes dejarlo ahí, se llama \"Programación Defensiva\" y te salvará de muchos errores.\nPero para arreglar la raíz del problema y educar a la IA, tenemos que darle instrucciones estrictas en el Prompt.\nVe a tu nodo MindOps Brain (LLM) y en tu prompt, justo en la sección de OUTPUT RULES, agrega esta regla de oro:\ncode\nText\n### 5. OUTPUT RULES\n- Use Cognitive Labeling in your strategic insight: \"Your mind is producing thoughts about X\".\n- Language: Respond in ENGLISH.\n- The 'friction_score' MUST be an INTEGER between 1 and 100 (e.g., 20, 50, 90). DO NOT use decimals or fractions.\n- Return ONLY the JSON object following the exact schema provided",
+        "text": "=Act as MindOps, the Cognitive Load Management System. You are an external pre-frontal cortex. Your goal is to map mental noise into a logical execution or protection sequence.\n\n### 1. MEMORY CONTEXT (RAG)\nHistorical patterns: {{ $('Format Memory Context').item.json.historical_context }}\n\nINSTRUCTION: \n- If historical_context contains thoughts SIMILAR to the current one, \n  explicitly flag it as a RECURRING LOOP in your strategic_insight.\n- Use language like: \"Your mind is producing this thought for the Nth time. \n  This is a pattern, not a new problem.\"\n- If no_previous_history, treat as fresh input.\n\n### 2. CURRENT THOUGHT\nUser's raw input: {{ $('Format Memory Context').item.json.final_thought }}\n\n### 3. ADAPTIVE TRIAGE PROTOCOL\n- 🔴 CRITICAL (Stall): High anxiety, rumination, or emotional blockage.\n  * MODE: PROTECTION. MISSION: Biological reset. Prohibit work.\n- 🟡 DENSE (Choppy): Confusion, clutter, high volume of tasks.\n  * MODE: EXECUTION. MISSION: Information architecture. Order by effort.\n- 🟢 FLUID (Flow): High energy and clarity.\n  * MODE: EXECUTION. MISSION: Maximize professional impact.\n\n### 4. ACTION PLAN RULES\n- Extract ALL tasks mentioned by the user.\n- Tasks must be \"Atomic Steps\": physical actions taking < 5 minutes.\n- Assign realistic 'time' slots starting from now.\n- If in PROTECTION mode, the plan must only contain ONE step: a sensory reset.\n\n¡Acabas de revelar la pieza final del rompecabezas! 🧩🔍\nMirando tu JSON Schema (que en realidad en n8n funciona como un \"JSON Example\"), acabo de entender exactamente por qué Gemini te devolvió 0.9 en lugar de 90.\nTe lo explico como Arquitecta de IA:\n🤖 CÓMO PIENSA LA INTELIGENCIA ARTIFICIAL\nEn el lenguaje de programación JSON, no existe la diferencia entre un número entero (90) y un decimal (0.9). Ambos son simplemente del tipo number.\nCuando n8n le manda tu esquema a Gemini, le dice:\n\"Gemini, necesito que me des un campo llamado friction_score y el tipo de dato debe ser un number\".\nComo no le dijiste a Gemini cuál era la \"escala\" de ese número, la IA hizo una suposición matemática (alucinar): \"Ah, me pide un score de fricción. En ciencia de datos los scores se miden de 0.0 a 1.0. Le voy a dar un 0.9 (que equivale al 90%)\".\n🛡️ LA SOLUCIÓN DE RAÍZ (Prompt Engineering)\nEl parche matemático de Javascript que pusimos en el nodo anterior (Math.round(...)) es excelente y debes dejarlo ahí, se llama \"Programación Defensiva\" y te salvará de muchos errores.\nPero para arreglar la raíz del problema y educar a la IA, tenemos que darle instrucciones estrictas en el Prompt.\nVe a tu nodo MindOps Brain (LLM) y en tu prompt, justo en la sección de OUTPUT RULES, agrega esta regla de oro:\ncode\nText\n### 5. OUTPUT RULES\n- Use Cognitive Labeling in your strategic insight: \"Your mind is producing thoughts about X\".\n- Language: Respond in ENGLISH.\n- The 'friction_score' MUST be an INTEGER between 1 and 100 (e.g., 20, 50, 90). DO NOT use decimals or fractions.\n- Return ONLY the JSON object following the exact schema provided",
         "hasOutputParser": true
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -1051,9 +1051,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "f5eb529a-853f-458e-8314-8ffb7148af44",
-  "activeVersionId": "39334b17-92c6-44e8-a8bb-6e01fa22a9ac",
-  "versionCounter": 351,
+  "versionId": "a00de86c-12ee-4511-b248-5ae0670ade9b",
+  "activeVersionId": "a00de86c-12ee-4511-b248-5ae0670ade9b",
+  "versionCounter": 355,
   "triggerCount": 0,
   "shared": [
     {
@@ -1076,9 +1076,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-07T01:37:21.201Z",
-    "createdAt": "2026-03-07T01:32:16.554Z",
-    "versionId": "39334b17-92c6-44e8-a8bb-6e01fa22a9ac",
+    "updatedAt": "2026-03-08T04:46:45.275Z",
+    "createdAt": "2026-03-08T04:46:17.671Z",
+    "versionId": "a00de86c-12ee-4511-b248-5ae0670ade9b",
     "workflowId": "zc8E5ZfPENEx6Css",
     "nodes": [
       {
@@ -1269,6 +1269,7 @@
         ],
         "id": "b298b5bc-2a45-4e49-8698-864a1eaeb490",
         "name": "Generate Embeddings",
+        "alwaysOutputData": true,
         "credentials": {
           "httpMultipleHeadersAuth": {
             "id": "9KY2AHXMXRxyjGim",
@@ -1371,7 +1372,7 @@
       {
         "parameters": {
           "promptType": "define",
-          "text": "=Act as MindOps, the Cognitive Load Management System. You are an external pre-frontal cortex. Your goal is to map mental noise into a logical execution or protection sequence.\n\n### 1. MEMORY CONTEXT (RAG)\nHistorical patterns: {{ $('Format Memory Context').item.json.historical_context }}\nINSTRUCTION: Identify if the user is stuck in a recurring behavioral loop.\n\n### 2. CURRENT THOUGHT\nUser's raw input: {{ $('Format Memory Context').item.json.final_thought }}\n\n### 3. ADAPTIVE TRIAGE PROTOCOL\n- 🔴 CRITICAL (Stall): High anxiety, rumination, or emotional blockage.\n  * MODE: PROTECTION. MISSION: Biological reset. Prohibit work.\n- 🟡 DENSE (Choppy): Confusion, clutter, high volume of tasks.\n  * MODE: EXECUTION. MISSION: Information architecture. Order by effort.\n- 🟢 FLUID (Flow): High energy and clarity.\n  * MODE: EXECUTION. MISSION: Maximize professional impact.\n\n### 4. ACTION PLAN RULES\n- Extract ALL tasks mentioned by the user.\n- Tasks must be \"Atomic Steps\": physical actions taking < 5 minutes.\n- Assign realistic 'time' slots starting from now.\n- If in PROTECTION mode, the plan must only contain ONE step: a sensory reset.\n\n¡Acabas de revelar la pieza final del rompecabezas! 🧩🔍\nMirando tu JSON Schema (que en realidad en n8n funciona como un \"JSON Example\"), acabo de entender exactamente por qué Gemini te devolvió 0.9 en lugar de 90.\nTe lo explico como Arquitecta de IA:\n🤖 CÓMO PIENSA LA INTELIGENCIA ARTIFICIAL\nEn el lenguaje de programación JSON, no existe la diferencia entre un número entero (90) y un decimal (0.9). Ambos son simplemente del tipo number.\nCuando n8n le manda tu esquema a Gemini, le dice:\n\"Gemini, necesito que me des un campo llamado friction_score y el tipo de dato debe ser un number\".\nComo no le dijiste a Gemini cuál era la \"escala\" de ese número, la IA hizo una suposición matemática (alucinar): \"Ah, me pide un score de fricción. En ciencia de datos los scores se miden de 0.0 a 1.0. Le voy a dar un 0.9 (que equivale al 90%)\".\n🛡️ LA SOLUCIÓN DE RAÍZ (Prompt Engineering)\nEl parche matemático de Javascript que pusimos en el nodo anterior (Math.round(...)) es excelente y debes dejarlo ahí, se llama \"Programación Defensiva\" y te salvará de muchos errores.\nPero para arreglar la raíz del problema y educar a la IA, tenemos que darle instrucciones estrictas en el Prompt.\nVe a tu nodo MindOps Brain (LLM) y en tu prompt, justo en la sección de OUTPUT RULES, agrega esta regla de oro:\ncode\nText\n### 5. OUTPUT RULES\n- Use Cognitive Labeling in your strategic insight: \"Your mind is producing thoughts about X\".\n- Language: Respond in ENGLISH.\n- The 'friction_score' MUST be an INTEGER between 1 and 100 (e.g., 20, 50, 90). DO NOT use decimals or fractions.\n- Return ONLY the JSON object following the exact schema provided",
+          "text": "=Act as MindOps, the Cognitive Load Management System. You are an external pre-frontal cortex. Your goal is to map mental noise into a logical execution or protection sequence.\n\n### 1. MEMORY CONTEXT (RAG)\nHistorical patterns: {{ $('Format Memory Context').item.json.historical_context }}\n\nINSTRUCTION: \n- If historical_context contains thoughts SIMILAR to the current one, \n  explicitly flag it as a RECURRING LOOP in your strategic_insight.\n- Use language like: \"Your mind is producing this thought for the Nth time. \n  This is a pattern, not a new problem.\"\n- If no_previous_history, treat as fresh input.\n\n### 2. CURRENT THOUGHT\nUser's raw input: {{ $('Format Memory Context').item.json.final_thought }}\n\n### 3. ADAPTIVE TRIAGE PROTOCOL\n- 🔴 CRITICAL (Stall): High anxiety, rumination, or emotional blockage.\n  * MODE: PROTECTION. MISSION: Biological reset. Prohibit work.\n- 🟡 DENSE (Choppy): Confusion, clutter, high volume of tasks.\n  * MODE: EXECUTION. MISSION: Information architecture. Order by effort.\n- 🟢 FLUID (Flow): High energy and clarity.\n  * MODE: EXECUTION. MISSION: Maximize professional impact.\n\n### 4. ACTION PLAN RULES\n- Extract ALL tasks mentioned by the user.\n- Tasks must be \"Atomic Steps\": physical actions taking < 5 minutes.\n- Assign realistic 'time' slots starting from now.\n- If in PROTECTION mode, the plan must only contain ONE step: a sensory reset.\n\n¡Acabas de revelar la pieza final del rompecabezas! 🧩🔍\nMirando tu JSON Schema (que en realidad en n8n funciona como un \"JSON Example\"), acabo de entender exactamente por qué Gemini te devolvió 0.9 en lugar de 90.\nTe lo explico como Arquitecta de IA:\n🤖 CÓMO PIENSA LA INTELIGENCIA ARTIFICIAL\nEn el lenguaje de programación JSON, no existe la diferencia entre un número entero (90) y un decimal (0.9). Ambos son simplemente del tipo number.\nCuando n8n le manda tu esquema a Gemini, le dice:\n\"Gemini, necesito que me des un campo llamado friction_score y el tipo de dato debe ser un number\".\nComo no le dijiste a Gemini cuál era la \"escala\" de ese número, la IA hizo una suposición matemática (alucinar): \"Ah, me pide un score de fricción. En ciencia de datos los scores se miden de 0.0 a 1.0. Le voy a dar un 0.9 (que equivale al 90%)\".\n🛡️ LA SOLUCIÓN DE RAÍZ (Prompt Engineering)\nEl parche matemático de Javascript que pusimos en el nodo anterior (Math.round(...)) es excelente y debes dejarlo ahí, se llama \"Programación Defensiva\" y te salvará de muchos errores.\nPero para arreglar la raíz del problema y educar a la IA, tenemos que darle instrucciones estrictas en el Prompt.\nVe a tu nodo MindOps Brain (LLM) y en tu prompt, justo en la sección de OUTPUT RULES, agrega esta regla de oro:\ncode\nText\n### 5. OUTPUT RULES\n- Use Cognitive Labeling in your strategic insight: \"Your mind is producing thoughts about X\".\n- Language: Respond in ENGLISH.\n- The 'friction_score' MUST be an INTEGER between 1 and 100 (e.g., 20, 50, 90). DO NOT use decimals or fractions.\n- Return ONLY the JSON object following the exact schema provided",
           "hasOutputParser": true
         },
         "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -1621,6 +1622,7 @@
         ],
         "id": "c603e84d-f24b-45ef-bf4f-97219f349d23",
         "name": "Check Exact Duplicate",
+        "alwaysOutputData": true,
         "credentials": {
           "httpMultipleHeadersAuth": {
             "id": "9KY2AHXMXRxyjGim",
@@ -1665,6 +1667,40 @@
       },
       {
         "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "0ebb4b7c-97da-4a22-98b4-c2909388de9b",
+                "leftValue": "={{ $json.old_status }}",
+                "rightValue": "PROPOSED",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          1824,
+          -240
+        ],
+        "id": "51c5b090-8dfa-4a34-87ab-1501d18c2bfc",
+        "name": "Is Status PROPOSED?"
+      },
+      {
+        "parameters": {
           "workflowId": {
             "__rl": true,
             "value": "zZYZA8aKwUckaap4",
@@ -1675,8 +1711,81 @@
           "workflowInputs": {
             "mappingMode": "defineBelow",
             "value": {
-              "text": "🛑 *Thought Already Processed*  I noticed you just sent this exact same thought. The system has already processed it recently.   Please check my previous response, complete your current mission, or share a new thought to analyze.",
-              "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}"
+              "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
+              "text": "=={{\"♻️ *RECOVERED THOUGHT:*\\nI noticed you just sent this exact same thought. Here is the mission that was left pending:\\n\\n🧠 *LOAD ANALYSIS:*\\n\" + $json.old_summary_title + \"\\n\\n\" + $json.old_strategic_insight + \"\\n\\n━━━━━━━━━━━━━━━━━━━━\\n⚡ *EXECUTION SEQUENCE PROPOSED:*\\n\" + $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n') + \"\\n\\n🎯 *Ready to execute?*\"}}",
+              "markup_type": "inlineKeyboard"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          2128,
+          -528
+        ],
+        "id": "419653ca-d331-4b9e-b9c5-ce2d705b81ae",
+        "name": "Send: Cached Proposal + Buttons"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
+              "text": "=*Thought Already Processed*\nI noticed you just shared this exact same thought recently. Here is the previous analysis:\n\n**{{ $json.old_summary_title }}**\n{{ $json.old_strategic_insight }}\n\n━━━━━━━━━━━━━━━━━━━━\n⚡ *SECUENCIA:*\n{{ $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n') }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -1729,11 +1838,11 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          1808,
-          -240
+          2192,
+          -272
         ],
         "id": "cfdf11b2-2c70-4cef-a094-090870e803a0",
-        "name": "Send Duplicate Warning"
+        "name": "Send Duplicate Alert"
       }
     ],
     "connections": {
@@ -1964,7 +2073,7 @@
         "main": [
           [
             {
-              "node": "Send Duplicate Warning",
+              "node": "Is Status PROPOSED?",
               "type": "main",
               "index": 0
             }
@@ -1977,18 +2086,41 @@
             }
           ]
         ]
+      },
+      "Is Status PROPOSED?": {
+        "main": [
+          [
+            {
+              "node": "Send: Cached Proposal + Buttons",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send Duplicate Alert",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send Duplicate Alert": {
+        "main": [
+          []
+        ]
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version 39334b17",
+    "name": "Version a00de86c",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-07T01:37:21.156Z",
-        "id": 94,
+        "createdAt": "2026-03-08T04:46:45.127Z",
+        "id": 96,
         "workflowId": "zc8E5ZfPENEx6Css",
-        "versionId": "39334b17-92c6-44e8-a8bb-6e01fa22a9ac",
+        "versionId": "a00de86c-12ee-4511-b248-5ae0670ade9b",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
