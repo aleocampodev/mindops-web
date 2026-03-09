@@ -21,11 +21,11 @@ export async function GET(request: Request) {
       const { data: profile } = await supabase
         .schema('mindops')
         .from('profiles')
-        .select('telegram_id')
+        .select('telegram_id, phone_number')
         .eq('id', user?.id)
         .single()
 
-      const targetPath = profile?.telegram_id ? '/dashboard' : '/dashboard/pairing'
+      const targetPath = (profile?.telegram_id && profile?.phone_number) ? '/dashboard' : '/dashboard/pairing'
       const redirectUrl = new URL(targetPath, origin)
 
       return NextResponse.redirect(redirectUrl)

@@ -36,7 +36,7 @@ export default async function DashboardPage() {
     ? latestThought.friction_score
     : 0;
 
-  if (!profile?.telegram_id) redirect('/dashboard/pairing');
+  if (!profile?.telegram_id || !profile?.phone_number) redirect('/dashboard/pairing');
 
   // Trend
   const avgFriction = thoughts?.length
