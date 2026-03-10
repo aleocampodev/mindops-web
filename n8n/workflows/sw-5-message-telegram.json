@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-08T01:57:03.538Z",
+  "updatedAt": "2026-03-09T21:43:23.089Z",
   "createdAt": "2026-02-22T01:50:52.439Z",
   "id": "zZYZA8aKwUckaap4",
   "name": "SW-5:Message telegram",
@@ -165,11 +165,11 @@
           "parameters": [
             {
               "name": "chat_id",
-              "value": "={{ $node[\"When Executed by Another Workflow\"].json.chat_id }}"
+              "value": "={{ $('When Executed by Another Workflow').first().json.chat_id }}"
             },
             {
               "name": "text",
-              "value": "={{ $node[\"When Executed by Another Workflow\"].json.text }}"
+              "value": "={{ $('When Executed by Another Workflow').first().json.text}}"
             },
             {
               "name": "reply_markup",
@@ -198,11 +198,11 @@
           "parameters": [
             {
               "name": "chat_id",
-              "value": "={{ $node[\"When Executed by Another Workflow\"].json.chat_id }}"
+              "value": "={{ $('When Executed by Another Workflow').item.json.chat_id }}"
             },
             {
               "name": "text",
-              "value": "={{ $node[\"When Executed by Another Workflow\"].json.text}}"
+              "value": "={{ $('When Executed by Another Workflow').item.json.text }}"
             },
             {
               "name": "=reply_markup",
@@ -231,15 +231,11 @@
           "parameters": [
             {
               "name": "chat_id",
-              "value": "={{ $node[\"When Executed by Another Workflow\"].json.chat_id }}"
+              "value": "={{ $('When Executed by Another Workflow').first().json.chat_id }}"
             },
             {
               "name": "text",
-              "value": "={{ $node[\"When Executed by Another Workflow\"].json.text}}"
-            },
-            {
-              "name": "reply_markup",
-              "value": "={{ { \"remove_keyboard\": true } }}"
+              "value": "={{ $('When Executed by Another Workflow').first().json.text }}"
             }
           ]
         },
@@ -258,29 +254,21 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://api.telegram.org/bot{{ $node[\"Telegram token\"].json.value }}/editMessageText",
+        "url": "=https://api.telegram.org/bot{{ $node[\"Telegram token\"].json.value }}/editMessageReplyMarkup",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
             {
               "name": "chat_id",
-              "value": "={{ $node['When Executed by Another Workflow'].json.chat_id }}"
+              "value": "={{ $('When Executed by Another Workflow').first().json.chat_id }}"
             },
             {
               "name": "message_id",
-              "value": "={{ $node['When Executed by Another Workflow'].json.message_id }}"
+              "value": "={{ $('When Executed by Another Workflow').first().json.message_id }}"
             },
             {
               "name": "reply_markup",
               "value": "={\"inline_keyboard\":[]}"
-            },
-            {
-              "name": "parse_mode",
-              "value": "Markdown"
-            },
-            {
-              "name": "text",
-              "value": "={{ $node[\"When Executed by Another Workflow\"].json.text }}"
             }
           ]
         },
@@ -561,9 +549,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "854f9b0e-4e04-49b0-afc0-824bcf175ae4",
-  "activeVersionId": "a1e982d5-b602-42f3-a5c1-126c54b239f1",
-  "versionCounter": 585,
+  "versionId": "9a8bcec1-a939-416f-b1df-5c03edb9d683",
+  "activeVersionId": "9a8bcec1-a939-416f-b1df-5c03edb9d683",
+  "versionCounter": 622,
   "triggerCount": 0,
   "shared": [
     {
@@ -586,9 +574,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-03T14:58:45.132Z",
-    "createdAt": "2026-03-03T14:58:02.683Z",
-    "versionId": "a1e982d5-b602-42f3-a5c1-126c54b239f1",
+    "updatedAt": "2026-03-09T21:44:00.341Z",
+    "createdAt": "2026-03-09T21:43:23.112Z",
+    "versionId": "9a8bcec1-a939-416f-b1df-5c03edb9d683",
     "workflowId": "zZYZA8aKwUckaap4",
     "nodes": [
       {
@@ -613,8 +601,8 @@
         "type": "n8n-nodes-base.executeWorkflowTrigger",
         "typeVersion": 1.1,
         "position": [
-          -16,
-          -272
+          -496,
+          -304
         ],
         "id": "4264b79d-7899-49f3-a5a3-8a4b117aa2f6",
         "name": "When Executed by Another Workflow"
@@ -635,8 +623,8 @@
         "type": "n8n-nodes-base.supabase",
         "typeVersion": 1,
         "position": [
-          208,
-          -272
+          -304,
+          -304
         ],
         "id": "83498be0-3736-4bdd-96b5-52175e210b93",
         "name": "Telegram token",
@@ -734,8 +722,8 @@
         "type": "n8n-nodes-base.switch",
         "typeVersion": 3.4,
         "position": [
-          448,
-          -224
+          176,
+          -288
         ],
         "id": "a2538e22-8858-4bbb-85dc-cf4618624e7c",
         "name": "Router: Markup Type"
@@ -749,11 +737,11 @@
             "parameters": [
               {
                 "name": "chat_id",
-                "value": "={{ $node[\"When Executed by Another Workflow\"].json.chat_id }}"
+                "value": "={{ $('When Executed by Another Workflow').first().json.chat_id }}"
               },
               {
                 "name": "text",
-                "value": "={{ $node[\"When Executed by Another Workflow\"].json.text }}"
+                "value": "={{ $('When Executed by Another Workflow').first().json.text}}"
               },
               {
                 "name": "reply_markup",
@@ -766,8 +754,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.4,
         "position": [
-          800,
-          -288
+          784,
+          -304
         ],
         "id": "10c8e20d-9e55-41ae-8656-fda3556b9ae3",
         "name": "Send: Inline Keyboard",
@@ -782,11 +770,11 @@
             "parameters": [
               {
                 "name": "chat_id",
-                "value": "={{ $node[\"When Executed by Another Workflow\"].json.chat_id }}"
+                "value": "={{ $('When Executed by Another Workflow').item.json.chat_id }}"
               },
               {
                 "name": "text",
-                "value": "={{ $node[\"When Executed by Another Workflow\"].json.text}}"
+                "value": "={{ $('When Executed by Another Workflow').item.json.text }}"
               },
               {
                 "name": "=reply_markup",
@@ -799,8 +787,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.4,
         "position": [
-          720,
-          -432
+          784,
+          -480
         ],
         "id": "2405b12d-0f32-4504-b47d-bb977c0ef21d",
         "name": "Send: Reply Keyboard",
@@ -815,15 +803,11 @@
             "parameters": [
               {
                 "name": "chat_id",
-                "value": "={{ $node[\"When Executed by Another Workflow\"].json.chat_id }}"
+                "value": "={{ $('When Executed by Another Workflow').first().json.chat_id }}"
               },
               {
                 "name": "text",
-                "value": "={{ $node[\"When Executed by Another Workflow\"].json.text}}"
-              },
-              {
-                "name": "reply_markup",
-                "value": "={{ { \"remove_keyboard\": true } }}"
+                "value": "={{ $('When Executed by Another Workflow').first().json.text }}"
               }
             ]
           },
@@ -832,7 +816,7 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.4,
         "position": [
-          688,
+          784,
           112
         ],
         "id": "5fecf0bb-f6ae-47b4-8e12-92bedc1b3579",
@@ -842,29 +826,21 @@
       {
         "parameters": {
           "method": "POST",
-          "url": "=https://api.telegram.org/bot{{ $node[\"Telegram token\"].json.value }}/editMessageText",
+          "url": "=https://api.telegram.org/bot{{ $node[\"Telegram token\"].json.value }}/editMessageReplyMarkup",
           "sendBody": true,
           "bodyParameters": {
             "parameters": [
               {
                 "name": "chat_id",
-                "value": "={{ $node['When Executed by Another Workflow'].json.chat_id }}"
+                "value": "={{ $('When Executed by Another Workflow').first().json.chat_id }}"
               },
               {
                 "name": "message_id",
-                "value": "={{ $node['When Executed by Another Workflow'].json.message_id }}"
+                "value": "={{ $('When Executed by Another Workflow').first().json.message_id }}"
               },
               {
                 "name": "reply_markup",
                 "value": "={\"inline_keyboard\":[]}"
-              },
-              {
-                "name": "parse_mode",
-                "value": "Markdown"
-              },
-              {
-                "name": "text",
-                "value": "={{ $node[\"When Executed by Another Workflow\"].json.text }}"
               }
             ]
           },
@@ -873,8 +849,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.4,
         "position": [
-          752,
-          -80
+          784,
+          -96
         ],
         "id": "28276505-c336-41f6-af9c-025b4857c275",
         "name": "Send: RemoveInline Keyboard",
@@ -889,8 +865,8 @@
         "type": "n8n-nodes-base.telegram",
         "typeVersion": 1.2,
         "position": [
-          1680,
-          -160
+          1808,
+          -176
         ],
         "id": "e9d7df4c-704c-4471-ab5e-618ecfcfd24c",
         "name": "Error Message",
@@ -913,37 +889,106 @@
             },
             "conditions": [
               {
-                "id": "609586da-fbc6-4135-a98e-1eb248978339",
-                "leftValue": "={{ $json.error.code }}",
-                "rightValue": "\"ERR_BAD_REQUEST\"",
-                "operator": {
-                  "type": "string",
-                  "operation": "equals",
-                  "name": "filter.operator.equals"
-                }
-              },
-              {
                 "id": "d5e0dbdc-8bb7-4b2d-974b-3dca9b9ef454",
                 "leftValue": "={{ $json.error.status }}",
-                "rightValue": 400,
+                "rightValue": 500,
                 "operator": {
                   "type": "number",
                   "operation": "equals"
                 }
               }
             ],
-            "combinator": "and"
+            "combinator": "or"
           },
           "options": {}
         },
         "type": "n8n-nodes-base.if",
         "typeVersion": 2.3,
         "position": [
-          1216,
-          -176
+          1408,
+          -192
         ],
         "id": "b0a658bc-b30c-4d7e-a75d-b8164477d91d",
-        "name": "Telegram 400 Filter"
+        "name": "Telegram 500 Filter"
+      },
+      {
+        "parameters": {
+          "content": "**Error Handling**",
+          "height": 272,
+          "width": 704,
+          "color": 6
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1312,
+          -304
+        ],
+        "typeVersion": 1,
+        "id": "90cb49a8-b863-455f-a190-af621a5e6652",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "content": "Centralized Telegram dispatcher. Receives message data and formats the correct API request.",
+          "height": 80,
+          "width": 528
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          -112,
+          -608
+        ],
+        "id": "515c731b-fbe3-4d72-a78b-fab4a7b68998",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "**Inputs & Authentication**",
+          "height": 256,
+          "width": 464,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          -560,
+          -384
+        ],
+        "id": "b19e78c0-eee3-480a-911d-2d05117f8c21",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "**Logic Router**",
+          "height": 416,
+          "width": 368,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          112,
+          -384
+        ],
+        "id": "89d889cc-d0e1-4598-8197-f2e3126f1a1d",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "content": "**Telegram API Requests**",
+          "height": 880,
+          "width": 320,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1,
+        "position": [
+          672,
+          -576
+        ],
+        "id": "13a51a40-6bd0-4420-aa92-458231cf2c9e",
+        "name": "Sticky Note4"
       }
     ],
     "connections": {
@@ -1006,7 +1051,7 @@
           [],
           [
             {
-              "node": "Telegram 400 Filter",
+              "node": "Telegram 500 Filter",
               "type": "main",
               "index": 0
             }
@@ -1018,7 +1063,7 @@
           [],
           [
             {
-              "node": "Telegram 400 Filter",
+              "node": "Telegram 500 Filter",
               "type": "main",
               "index": 0
             }
@@ -1030,7 +1075,7 @@
           [],
           [
             {
-              "node": "Telegram 400 Filter",
+              "node": "Telegram 500 Filter",
               "type": "main",
               "index": 0
             }
@@ -1042,36 +1087,36 @@
           [],
           [
             {
-              "node": "Telegram 400 Filter",
+              "node": "Telegram 500 Filter",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Telegram 400 Filter": {
+      "Telegram 500 Filter": {
         "main": [
-          [],
           [
             {
               "node": "Error Message",
               "type": "main",
               "index": 0
             }
-          ]
+          ],
+          []
         ]
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version a1e982d5",
+    "name": "Version 9a8bcec1",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-03T14:58:44.986Z",
-        "id": 68,
+        "createdAt": "2026-03-09T21:44:00.163Z",
+        "id": 121,
         "workflowId": "zZYZA8aKwUckaap4",
-        "versionId": "a1e982d5-b602-42f3-a5c1-126c54b239f1",
+        "versionId": "9a8bcec1-a939-416f-b1df-5c03edb9d683",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
