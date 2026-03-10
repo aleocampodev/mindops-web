@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-08T04:46:17.628Z",
+  "updatedAt": "2026-03-10T01:10:05.499Z",
   "createdAt": "2026-02-22T02:00:58.915Z",
   "id": "zc8E5ZfPENEx6Css",
   "name": "SW-2: Cognitive engine",
@@ -343,8 +343,54 @@
           ]
         },
         "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"user_id\": \"{{ $('Get Profile UUID').item.json.id }}\",\n  \"summary_title\": \"{{ $json.output.summary_title }}\",\n  \"friction_score\": {{ $json.output.friction_score }},\n  \"friction_tag\": \"{{ $json.output.friction_tag }}\",\n  \"system_mode\": \"{{ $json.output.system_mode }}\",\n  \"strategic_insight\": \"{{ $json.output.strategic_insight }}\",\n  \"voice_script\": \"{{ $json.output.voice_script }}\",\n  \"action_plan\": {{ JSON.stringify($json.output.action_plan) }},\n  \"status\": \"PROPOSED\",\n  \"embedding\": {{ JSON.stringify($('Format Memory Context').item.json.embedding_vector) }},\n  \"raw_content\": \"{{ $('Format Memory Context').item.json.final_thought }}\"\n}",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $('Get Profile UUID').first().json.id }}"
+            },
+            {
+              "name": "summary_title",
+              "value": "={{ $json.output.summary_title }}"
+            },
+            {
+              "name": "friction_score",
+              "value": "={{ $json.output.friction_score }}"
+            },
+            {
+              "name": "friction_tag",
+              "value": "={{ $json.output.friction_tag }}"
+            },
+            {
+              "name": "system_mode",
+              "value": "={{ $json.output.system_mode }}"
+            },
+            {
+              "name": "strategic_insight",
+              "value": "={{ $json.output.strategic_insight }}"
+            },
+            {
+              "name": "voice_script",
+              "value": "={{ $json.output.voice_script }}"
+            },
+            {
+              "name": "action_plan",
+              "value": "={{ JSON.stringify($json.output.action_plan) }}"
+            },
+            {
+              "name": "status",
+              "value": "PROPOSED"
+            },
+            {
+              "name": "embedding",
+              "value": "={{ $('Format Memory Context').first().json.embedding_vector }}"
+            },
+            {
+              "name": "=raw_content",
+              "value": "={{ $('Format Memory Context').first().json.final_thought }}"
+            }
+          ]
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -1051,9 +1097,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a00de86c-12ee-4511-b248-5ae0670ade9b",
-  "activeVersionId": "a00de86c-12ee-4511-b248-5ae0670ade9b",
-  "versionCounter": 355,
+  "versionId": "4c4f8f83-8087-4dab-aa26-05fdeb1459a4",
+  "activeVersionId": "4c4f8f83-8087-4dab-aa26-05fdeb1459a4",
+  "versionCounter": 415,
   "triggerCount": 0,
   "shared": [
     {
@@ -1076,9 +1122,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-08T04:46:45.275Z",
-    "createdAt": "2026-03-08T04:46:17.671Z",
-    "versionId": "a00de86c-12ee-4511-b248-5ae0670ade9b",
+    "updatedAt": "2026-03-10T01:13:01.414Z",
+    "createdAt": "2026-03-10T01:10:02.379Z",
+    "versionId": "4c4f8f83-8087-4dab-aa26-05fdeb1459a4",
     "workflowId": "zc8E5ZfPENEx6Css",
     "nodes": [
       {
@@ -1417,8 +1463,54 @@
             ]
           },
           "sendBody": true,
-          "specifyBody": "json",
-          "jsonBody": "={\n  \"user_id\": \"{{ $('Get Profile UUID').item.json.id }}\",\n  \"summary_title\": \"{{ $json.output.summary_title }}\",\n  \"friction_score\": {{ $json.output.friction_score }},\n  \"friction_tag\": \"{{ $json.output.friction_tag }}\",\n  \"system_mode\": \"{{ $json.output.system_mode }}\",\n  \"strategic_insight\": \"{{ $json.output.strategic_insight }}\",\n  \"voice_script\": \"{{ $json.output.voice_script }}\",\n  \"action_plan\": {{ JSON.stringify($json.output.action_plan) }},\n  \"status\": \"PROPOSED\",\n  \"embedding\": {{ JSON.stringify($('Format Memory Context').item.json.embedding_vector) }},\n  \"raw_content\": \"{{ $('Format Memory Context').item.json.final_thought }}\"\n}",
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "user_id",
+                "value": "={{ $('Get Profile UUID').first().json.id }}"
+              },
+              {
+                "name": "summary_title",
+                "value": "={{ $json.output.summary_title }}"
+              },
+              {
+                "name": "friction_score",
+                "value": "={{ $json.output.friction_score }}"
+              },
+              {
+                "name": "friction_tag",
+                "value": "={{ $json.output.friction_tag }}"
+              },
+              {
+                "name": "system_mode",
+                "value": "={{ $json.output.system_mode }}"
+              },
+              {
+                "name": "strategic_insight",
+                "value": "={{ $json.output.strategic_insight }}"
+              },
+              {
+                "name": "voice_script",
+                "value": "={{ $json.output.voice_script }}"
+              },
+              {
+                "name": "action_plan",
+                "value": "={{ JSON.stringify($json.output.action_plan) }}"
+              },
+              {
+                "name": "status",
+                "value": "PROPOSED"
+              },
+              {
+                "name": "embedding",
+                "value": "={{ $('Format Memory Context').first().json.embedding_vector }}"
+              },
+              {
+                "name": "=raw_content",
+                "value": "={{ $('Format Memory Context').first().json.final_thought }}"
+              }
+            ]
+          },
           "options": {}
         },
         "type": "n8n-nodes-base.httpRequest",
@@ -2112,15 +2204,15 @@
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version a00de86c",
+    "name": "Version 4c4f8f83",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-08T04:46:45.127Z",
-        "id": 96,
+        "createdAt": "2026-03-10T01:13:01.242Z",
+        "id": 140,
         "workflowId": "zc8E5ZfPENEx6Css",
-        "versionId": "a00de86c-12ee-4511-b248-5ae0670ade9b",
+        "versionId": "4c4f8f83-8087-4dab-aa26-05fdeb1459a4",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
