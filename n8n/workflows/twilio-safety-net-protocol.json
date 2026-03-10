@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-06T03:04:23.182Z",
+  "updatedAt": "2026-03-10T19:50:55.508Z",
   "createdAt": "2026-02-22T02:35:22.257Z",
   "id": "zDZb0cAxMY5TCjPe",
   "name": "Twilio:  Safety Net Protocol",
@@ -57,7 +57,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=### DATA:\n- Name: {{ $json.profiles.first_name }}\n- Stall Context: {{ $json.raw_content }}\n- Strategic Insight: {{ $json.strategic_insight }}\n- Title: {{ $json.summary_title }}\n\n### TASK:\nWrite a short script (max 45 words) in SPANISH to be spoken on a phone call. \n1. Greet: \"Hola {{ $json.profiles.first_name }}, soy la Red de Seguridad de MindOps.\"\n2. Report: Mention their block regarding \"{{ $json.summary_title }}\" with empathy.\n3. Action: Give ONE physical grounding instruction based on the Strategic Insight.\n4. Close: \"El sistema está en espera. Respira profundo. Adiós.\""
+        "text": "=### DATA:\n- Name: {{ $json.profiles.first_name }}\n- Stall Context: {{ $json.raw_content }}\n- Strategic Insight: {{ $json.strategic_insight }}\n- Title: {{ $json.summary_title }}\n\n### TASK:\nWrite a short script (max 45 words) in ENGLISH to be spoken on a phone call.\n1. Greet: \"Hi {{ $json.profiles.first_name }}, this is the MindOps Safety Network.\"\n2. Report: Mention their block regarding \"{{ $json.summary_title }}\" with empathy.\n3. Action: Give ONE physical grounding instruction based on the Strategic Insight.\n4. Close: \"The system is on standby. Take a deep breath. Goodbye.\""
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.4,
@@ -107,7 +107,7 @@
             },
             {
               "name": "Twiml",
-              "value": "=<Response><Say voice=\"polly.Mia-Neural\" language=\"es-MX\">{{  $('Write Empathic Script (LLM)').item.json.text }} </Say></Response>"
+              "value": "=<Response><Say voice=\"polly.Mia-Neural\" language=\"en\">{{  $('Write Empathic Script (LLM)').item.json.text }} </Say></Response>"
             }
           ]
         },
@@ -401,9 +401,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "843a9153-bea5-4aa7-93b4-c9df5f35ce99",
+  "versionId": "13ee384b-df10-4f0b-bb2b-6b6a62577497",
   "activeVersionId": null,
-  "versionCounter": 85,
+  "versionCounter": 92,
   "triggerCount": 0,
   "shared": [
     {
