@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-05T00:09:09.498Z",
+  "updatedAt": "2026-03-10T01:54:49.822Z",
   "createdAt": "2026-02-22T02:03:15.790Z",
   "id": "QciYupwAd2AZ6IEf",
   "name": "SW-3: Mission Control",
@@ -32,49 +32,16 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -960,
-        80
+        -1072,
+        64
       ],
       "id": "84bc28a4-ff13-46f1-aef6-73a56599a318",
       "name": "Strict Entry (Mission)"
     },
     {
       "parameters": {
-        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Mission)').item.json.telegram_id }}&select=id",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "httpMultipleHeadersAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept-Profile",
-              "value": "mindops"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        -464,
-        64
-      ],
-      "id": "62f8fa38-2076-455e-b571-5be12b9d81ef",
-      "name": "Get Profile UUID",
-      "alwaysOutputData": true,
-      "credentials": {
-        "httpMultipleHeadersAuth": {
-          "id": "9KY2AHXMXRxyjGim",
-          "name": "Supabase"
-        }
-      },
-      "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
         "method": "PATCH",
-        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get Profile UUID').item.json.id }}&status=eq.PROPOSED",
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get User UUID').first().json.id }}&status=eq.PROPOSED",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "httpMultipleHeadersAuth",
         "sendHeaders": true,
@@ -120,7 +87,7 @@
     {
       "parameters": {
         "method": "PATCH",
-        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get Profile UUID').item.json.id }}&status=eq.PROPOSED",
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get User UUID').first().json.id }}&status=eq.PROPOSED",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "httpMultipleHeadersAuth",
         "sendHeaders": true,
@@ -145,6 +112,7 @@
       ],
       "id": "e9a3d6c4-eb14-47e8-95a1-733ddeef65a6",
       "name": "Set DB to IDLE",
+      "alwaysOutputData": true,
       "credentials": {
         "httpMultipleHeadersAuth": {
           "id": "9KY2AHXMXRxyjGim",
@@ -165,10 +133,9 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "text": "=={{\"Protocol Synced! 🚀🛡️\\n\\nI've loaded your sequence into your mental biometrics. Proactive monitoring is now ACTIVE. If the system detects you've stalled, the Momentum Protocol will reach out by voice.\\n\\n⚡ ENTER FOCUS MODE:\\nhttps://mindops-web-43822856294.us-central1.run.app/mission/\" +  $('Set DB to ACTIVE').first().json.id }}",
-            "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
-            "markup_type": "={{ $('Strict Entry (Mission)').item.json.markup_type }}",
-            "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}"
+            "text": "=={{ \"Protocol Synced! 🚀🛡️\\n\\nI've loaded your sequence into your mental biometrics. Proactive monitoring is now ACTIVE.\\n\\n⚡ ENTER FOCUS MODE:\\nhttps://mindops-web-43822856294.us-central1.run.app/mission/\" + $('Get Thought UUID').first().json.id }}",
+            "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}",
+            "markup_type": "=plain"
           },
           "matchingColumns": [],
           "schema": [
@@ -207,7 +174,7 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string",
-              "removed": false
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -237,9 +204,8 @@
           "mappingMode": "defineBelow",
           "value": {
             "text": "Understood. The system is ready to rethink. 🔄  Which part of the plan doesn't match your current energy? (Too many tasks? Unrealistic times?)  Tell me in a short audio or text and I'll recalibrate the sequence for you.",
-            "markup_type": "={{ $('Strict Entry (Mission)').item.json.markup_type }}",
-            "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}",
-            "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}"
+            "markup_type": "=plain",
+            "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -277,7 +243,8 @@
               "defaultMatch": false,
               "display": true,
               "canBeUsedToMatch": true,
-              "type": "string"
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -355,7 +322,7 @@
       "typeVersion": 3.4,
       "position": [
         -128,
-        64
+        -48
       ],
       "id": "5cf2de66-34a1-4f6f-9857-14b8b867a6ce",
       "name": "Validation Callback Data"
@@ -423,14 +390,14 @@
           "convertFieldsToString": true
         },
         "options": {
-          "waitForSubWorkflow": false
+          "waitForSubWorkflow": true
         }
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -720,
-        48
+        -800,
+        64
       ],
       "id": "6a3d4d1d-4ea5-428d-b11f-a4cc2768c157",
       "name": "Clear Mission Buttons"
@@ -501,11 +468,77 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        592,
-        384
+        432,
+        576
       ],
       "id": "c4246460-6503-4705-8819-9e2f66a6ba4c",
       "name": "Error Message"
+    },
+    {
+      "parameters": {
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get User UUID').first().json.id }}&status=eq.PROPOSED&select=id&order=created_at.desc&limit=1",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpMultipleHeadersAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept-Profile",
+              "value": "mindops"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -384,
+        16
+      ],
+      "id": "62f8fa38-2076-455e-b571-5be12b9d81ef",
+      "name": "Get Thought UUID",
+      "alwaysOutputData": true,
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "9KY2AHXMXRxyjGim",
+          "name": "Supabase"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Mission)').first().json.telegram_id }}&select=id&limit=1",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpMultipleHeadersAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept-Profile",
+              "value": "mindops"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -624,
+        80
+      ],
+      "id": "74d1ff53-0e2c-4099-b47c-50d3b0008eb6",
+      "name": "Get User UUID",
+      "alwaysOutputData": true,
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "9KY2AHXMXRxyjGim",
+          "name": "Supabase"
+        }
+      },
+      "onError": "continueErrorOutput"
     }
   ],
   "connections": {
@@ -514,24 +547,6 @@
         [
           {
             "node": "Clear Mission Buttons",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Profile UUID": {
-      "main": [
-        [
-          {
-            "node": "Validation Callback Data",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Error Message",
             "type": "main",
             "index": 0
           }
@@ -606,7 +621,43 @@
       "main": [
         [
           {
-            "node": "Get Profile UUID",
+            "node": "Get User UUID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Thought UUID": {
+      "main": [
+        [
+          {
+            "node": "Validation Callback Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User UUID": {
+      "main": [
+        [
+          {
+            "node": "Get Thought UUID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
             "type": "main",
             "index": 0
           }
@@ -626,9 +677,9 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "2dd8e72f-a4c3-42d6-bbc4-075c1f661eb0",
-  "activeVersionId": "4d4264a6-31b5-4810-a945-798b5b4ee6df",
-  "versionCounter": 304,
+  "versionId": "2b96e966-314e-4f8b-9e29-5bdbc7fed67d",
+  "activeVersionId": "2b96e966-314e-4f8b-9e29-5bdbc7fed67d",
+  "versionCounter": 416,
   "triggerCount": 0,
   "shared": [
     {
@@ -651,9 +702,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-03T17:52:16.722Z",
-    "createdAt": "2026-03-03T17:50:01.835Z",
-    "versionId": "4d4264a6-31b5-4810-a945-798b5b4ee6df",
+    "updatedAt": "2026-03-10T01:57:30.039Z",
+    "createdAt": "2026-03-10T01:54:49.850Z",
+    "versionId": "2b96e966-314e-4f8b-9e29-5bdbc7fed67d",
     "workflowId": "QciYupwAd2AZ6IEf",
     "nodes": [
       {
@@ -681,49 +732,16 @@
         "type": "n8n-nodes-base.executeWorkflowTrigger",
         "typeVersion": 1.1,
         "position": [
-          -960,
-          80
+          -1072,
+          64
         ],
         "id": "84bc28a4-ff13-46f1-aef6-73a56599a318",
         "name": "Strict Entry (Mission)"
       },
       {
         "parameters": {
-          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Mission)').item.json.telegram_id }}&select=id",
-          "authentication": "predefinedCredentialType",
-          "nodeCredentialType": "httpMultipleHeadersAuth",
-          "sendHeaders": true,
-          "headerParameters": {
-            "parameters": [
-              {
-                "name": "Accept-Profile",
-                "value": "mindops"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.httpRequest",
-        "typeVersion": 4.1,
-        "position": [
-          -464,
-          64
-        ],
-        "id": "62f8fa38-2076-455e-b571-5be12b9d81ef",
-        "name": "Get Profile UUID",
-        "alwaysOutputData": true,
-        "credentials": {
-          "httpMultipleHeadersAuth": {
-            "id": "9KY2AHXMXRxyjGim",
-            "name": "Supabase"
-          }
-        },
-        "onError": "continueErrorOutput"
-      },
-      {
-        "parameters": {
           "method": "PATCH",
-          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get Profile UUID').item.json.id }}&status=eq.PROPOSED",
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get User UUID').first().json.id }}&status=eq.PROPOSED",
           "authentication": "predefinedCredentialType",
           "nodeCredentialType": "httpMultipleHeadersAuth",
           "sendHeaders": true,
@@ -757,6 +775,7 @@
         "id": "18eecd37-abd5-413f-b32f-548a5cc8976b",
         "name": "Set DB to ACTIVE",
         "retryOnFail": false,
+        "alwaysOutputData": true,
         "credentials": {
           "httpMultipleHeadersAuth": {
             "id": "9KY2AHXMXRxyjGim",
@@ -768,7 +787,7 @@
       {
         "parameters": {
           "method": "PATCH",
-          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get Profile UUID').item.json.id }}&status=eq.PROPOSED",
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get User UUID').first().json.id }}&status=eq.PROPOSED",
           "authentication": "predefinedCredentialType",
           "nodeCredentialType": "httpMultipleHeadersAuth",
           "sendHeaders": true,
@@ -793,6 +812,7 @@
         ],
         "id": "e9a3d6c4-eb14-47e8-95a1-733ddeef65a6",
         "name": "Set DB to IDLE",
+        "alwaysOutputData": true,
         "credentials": {
           "httpMultipleHeadersAuth": {
             "id": "9KY2AHXMXRxyjGim",
@@ -813,10 +833,9 @@
           "workflowInputs": {
             "mappingMode": "defineBelow",
             "value": {
-              "text": "=={{\"Protocol Synced! 🚀🛡️\\n\\nI've loaded your sequence into your mental biometrics. Proactive monitoring is now ACTIVE. If the system detects you've stalled, the Momentum Protocol will reach out by voice.\\n\\n⚡ ENTER FOCUS MODE:\\nhttps://mindops-web-43822856294.us-central1.run.app/mission/\" +  $('Set DB to ACTIVE').first().json.id }}",
-              "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
-              "markup_type": "={{ $('Strict Entry (Mission)').item.json.markup_type }}",
-              "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}"
+              "text": "=={{ \"Protocol Synced! 🚀🛡️\\n\\nI've loaded your sequence into your mental biometrics. Proactive monitoring is now ACTIVE.\\n\\n⚡ ENTER FOCUS MODE:\\nhttps://mindops-web-43822856294.us-central1.run.app/mission/\" + $('Get Thought UUID').first().json.id }}",
+              "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}",
+              "markup_type": "=plain"
             },
             "matchingColumns": [],
             "schema": [
@@ -855,7 +874,7 @@
                 "display": true,
                 "canBeUsedToMatch": true,
                 "type": "string",
-                "removed": false
+                "removed": true
               }
             ],
             "attemptToConvertTypes": false,
@@ -885,9 +904,8 @@
             "mappingMode": "defineBelow",
             "value": {
               "text": "Understood. The system is ready to rethink. 🔄  Which part of the plan doesn't match your current energy? (Too many tasks? Unrealistic times?)  Tell me in a short audio or text and I'll recalibrate the sequence for you.",
-              "markup_type": "={{ $('Strict Entry (Mission)').item.json.markup_type }}",
-              "message_id": "={{ $('Strict Entry (Mission)').item.json.message_id }}",
-              "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}"
+              "markup_type": "=plain",
+              "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -925,7 +943,8 @@
                 "defaultMatch": false,
                 "display": true,
                 "canBeUsedToMatch": true,
-                "type": "string"
+                "type": "string",
+                "removed": true
               }
             ],
             "attemptToConvertTypes": false,
@@ -1003,7 +1022,7 @@
         "typeVersion": 3.4,
         "position": [
           -128,
-          64
+          -48
         ],
         "id": "5cf2de66-34a1-4f6f-9857-14b8b867a6ce",
         "name": "Validation Callback Data"
@@ -1071,14 +1090,14 @@
             "convertFieldsToString": true
           },
           "options": {
-            "waitForSubWorkflow": false
+            "waitForSubWorkflow": true
           }
         },
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          -720,
-          48
+          -800,
+          64
         ],
         "id": "6a3d4d1d-4ea5-428d-b11f-a4cc2768c157",
         "name": "Clear Mission Buttons"
@@ -1149,11 +1168,77 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          576,
-          448
+          432,
+          576
         ],
         "id": "c4246460-6503-4705-8819-9e2f66a6ba4c",
         "name": "Error Message"
+      },
+      {
+        "parameters": {
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?user_id=eq.{{ $('Get User UUID').first().json.id }}&status=eq.PROPOSED&select=id&order=created_at.desc&limit=1",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "httpMultipleHeadersAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept-Profile",
+                "value": "mindops"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.1,
+        "position": [
+          -384,
+          16
+        ],
+        "id": "62f8fa38-2076-455e-b571-5be12b9d81ef",
+        "name": "Get Thought UUID",
+        "alwaysOutputData": true,
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "9KY2AHXMXRxyjGim",
+            "name": "Supabase"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Mission)').first().json.telegram_id }}&select=id&limit=1",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "httpMultipleHeadersAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept-Profile",
+                "value": "mindops"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          -624,
+          80
+        ],
+        "id": "74d1ff53-0e2c-4099-b47c-50d3b0008eb6",
+        "name": "Get User UUID",
+        "alwaysOutputData": true,
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "9KY2AHXMXRxyjGim",
+            "name": "Supabase"
+          }
+        },
+        "onError": "continueErrorOutput"
       }
     ],
     "connections": {
@@ -1162,24 +1247,6 @@
           [
             {
               "node": "Clear Mission Buttons",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Get Profile UUID": {
-        "main": [
-          [
-            {
-              "node": "Validation Callback Data",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
-              "node": "Error Message",
               "type": "main",
               "index": 0
             }
@@ -1254,7 +1321,43 @@
         "main": [
           [
             {
-              "node": "Get Profile UUID",
+              "node": "Get User UUID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Thought UUID": {
+        "main": [
+          [
+            {
+              "node": "Validation Callback Data",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get User UUID": {
+        "main": [
+          [
+            {
+              "node": "Get Thought UUID",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Message",
               "type": "main",
               "index": 0
             }
@@ -1263,15 +1366,15 @@
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version 4d4264a6",
+    "name": "Version 2b96e966",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-03T17:52:16.551Z",
-        "id": 80,
+        "createdAt": "2026-03-10T01:57:29.896Z",
+        "id": 145,
         "workflowId": "QciYupwAd2AZ6IEf",
-        "versionId": "4d4264a6-31b5-4810-a945-798b5b4ee6df",
+        "versionId": "2b96e966-314e-4f8b-9e29-5bdbc7fed67d",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
