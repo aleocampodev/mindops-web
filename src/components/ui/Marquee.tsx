@@ -1,13 +1,13 @@
 'use client'
 import { motion } from 'framer-motion';
-
-const words = [
-  "Rumination", "Blockage", "Paralysis", "Mental Chaos", "Anxiety", 
-  "Procrastination", "Noise", "Infinite Loop", "Doubt", "Fog"
-];
+import { useTranslations } from 'next-intl';
 
 // ⚠️ FIX: Quitamos el 'default' para que sea un Named Export
 export function Marquee() {
+  const t = useTranslations('Landing');
+  const wordsString = t('marqueeWords');
+  const words = wordsString.split(',').map(w => w.trim());
+
   return (
     <div className="relative flex overflow-x-hidden border-y border-indigo-100 bg-indigo-50/30 py-4">
       <motion.div

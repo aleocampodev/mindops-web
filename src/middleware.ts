@@ -114,6 +114,27 @@ export async function middleware(request: NextRequest) {
     maxAge: 60 * 60 * 24 * 365, // 1 year
   })
 
+  // ⚠️ CRITICAL CORE SYNC: Propagate the locale to the request headers 
+  // so Server Components can see it immediately.
+  response.headers.set('x-next-intl-locale', locale)
+  
+  // Clone request headers to modify them for the incoming request
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-next-intl-locale', locale)
+  
+  // Create a new response with the modified request headers
+  response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  })
+
+  // Re-apply the cookie to the new response
+  response.cookies.set('NEXT_LOCALE', locale, {
+    path: '/',
+    maxAge: 60 * 60 * 24 * 365,
+  })
+
   // --- NAVIGATION LOGIC ---
   const isDashboard = request.nextUrl.pathname.startsWith('/dashboard')
   const isLogin = request.nextUrl.pathname.startsWith('/login')

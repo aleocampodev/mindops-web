@@ -156,7 +156,8 @@
     "exitLoop": "Sal del bucle. {executeAgain}",
     "executeAgain": "Ejecuta de nuevo.",
     "syncMind": "SINCRONIZAR MI MENTE",
-    "performanceEngineering": "MindOps // Ingeniería de Rendimiento"
+    "performanceEngineering": "MindOps // Ingeniería de Rendimiento",
+    "marqueeWords": "Rumiación, Bloqueo, Parálisis, Caos Mental, Ansiedad, Procrastinación, Ruido, Bucle Infinito, Duda, Niebla"
   },
   "Common": {
     "loading": "Cargando...",

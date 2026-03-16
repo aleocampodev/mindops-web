@@ -156,7 +156,8 @@
     "exitLoop": "Exit the loop. {executeAgain}",
     "executeAgain": "Execute again.",
     "syncMind": "SYNCHRONIZE MY MIND",
-    "performanceEngineering": "MindOps // Performance Engineering"
+    "performanceEngineering": "MindOps // Performance Engineering",
+    "marqueeWords": "Rumination, Blockage, Paralysis, Mental Chaos, Anxiety, Procrastination, Noise, Infinite Loop, Doubt, Fog"
   },
   "Common": {
     "loading": "Loading...",
