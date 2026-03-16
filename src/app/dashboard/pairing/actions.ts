@@ -1,12 +1,16 @@
 'use server'
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { getTranslations } from 'next-intl/server'
+
 
 export async function generatePairingCode() {
   try {
+    const t = await getTranslations('Common')
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { success: false, error: 'Not authenticated' }
+    if (!user) return { success: false, error: t('unauthorized') }
+
 
     const newCode = Math.floor(100000 + Math.random() * 900000).toString()
 
@@ -31,8 +35,10 @@ export async function generatePairingCode() {
     revalidatePath('/dashboard/pairing')
     return { success: true }
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
+    const t = await getTranslations('Common')
+    const message = err instanceof Error ? err.message : t('unknownError')
     console.error('Unexpected error in generatePairingCode:', message)
     return { success: false, error: message }
   }
+
 }

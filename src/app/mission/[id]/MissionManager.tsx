@@ -6,6 +6,8 @@ import { ArrowLeft, Rocket, CheckCircle2, Cpu, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { advanceMissionStep } from './actions'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl';
+
 
 interface Step {
   task: string
@@ -29,7 +31,9 @@ export function MissionManager({
   strategicAnalysis,
   summaryTitle
 }: MissionManagerProps) {
+  const t = useTranslations('Dashboard');
   const [currentIndex, setCurrentIndex] = useState(initialStep)
+
   const [isLifting, setIsLifting] = useState(false)
   const router = useRouter()
   
@@ -70,11 +74,12 @@ export function MissionManager({
       <div className="absolute top-12 left-12 right-12 flex justify-between items-center z-10">
         <Link href="/dashboard" className="group flex items-center gap-3 text-slate-400 hover:text-indigo-600 transition-colors">
           <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Close Focus</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em]">{t('missions.closeFocus')}</span>
         </Link>
         <div className="text-right max-w-md">
-          <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1 italic">Relief Space</p>
+          <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1 italic">{t('missions.reliefSpace')}</p>
           <h2 className="text-xl font-black italic uppercase tracking-tighter text-slate-900 leading-tight">
+
             {summaryTitle || title}
           </h2>
         </div>
@@ -87,9 +92,10 @@ export function MissionManager({
         <div className="w-full space-y-4">
           <div className="flex justify-between items-end">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
-              <Sparkles size={14} className="text-indigo-500" /> CLARITY ACHIEVED
+              <Sparkles size={14} className="text-indigo-500" /> {t('missions.clarityAchieved')}
             </span>
             <div className="flex items-baseline gap-1">
+
               <span className="text-3xl font-black italic tracking-tighter text-slate-900">{progress}</span>
               <span className="text-xs font-black text-slate-400">%</span>
             </div>
@@ -110,8 +116,9 @@ export function MissionManager({
             animate={{ opacity: 1, y: 0 }}
             className="w-full bg-indigo-50/50 border border-indigo-100/50 p-6 rounded-[2rem] text-center"
           >
-            <p className="text-[8px] font-black text-indigo-400 uppercase tracking-widest mb-2">Strategic Perspective</p>
+            <p className="text-[8px] font-black text-indigo-400 uppercase tracking-widest mb-2">{t('missions.strategicPerspective')}</p>
             <p className="text-sm font-medium italic text-indigo-900/70 leading-relaxed">
+
               "{strategicAnalysis}"
             </p>
           </motion.div>
@@ -132,8 +139,9 @@ export function MissionManager({
                 <Sparkles className="text-indigo-600" size={32} />
               </div>
               <div className="space-y-4">
-                <span className="text-[11px] font-black text-indigo-500 bg-indigo-50 px-5 py-2 rounded-full uppercase tracking-[0.2em]">Present Step</span>
+                <span className="text-[11px] font-black text-indigo-500 bg-indigo-50 px-5 py-2 rounded-full uppercase tracking-[0.2em]">{t('missions.presentStep')}</span>
                 <h1 className="text-4xl md:text-5xl font-black italic leading-[1.05] tracking-tighter text-slate-900">
+
                   {currentTask?.task}
                 </h1>
                 <div className="flex items-center justify-center gap-2 text-slate-300">
@@ -148,8 +156,9 @@ export function MissionManager({
 
         {/* The Horizon (Next Steps) */}
         <div className="w-full space-y-5">
-          <p className="text-center text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Your next steps</p>
+          <p className="text-center text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">{t('missions.nextSteps')}</p>
           <div className="space-y-3">
+
             {nextTasks.length > 0 ? nextTasks.map((task, i) => (
               <div 
                 key={i} 
@@ -159,13 +168,14 @@ export function MissionManager({
                     <div className="w-2 h-2 rounded-full bg-slate-200" />
                     <span className="text-sm font-bold italic text-slate-600">{task.task}</span>
                 </div>
-                <span className="text-[10px] font-black text-slate-400 bg-slate-50 px-4 py-1.5 rounded-xl uppercase">{task.hora || `Step ${currentIndex + i + 2}`}</span>
+                <span className="text-[10px] font-black text-slate-400 bg-slate-50 px-4 py-1.5 rounded-xl uppercase">{task.hora || t('missions.step', { number: currentIndex + i + 2 })}</span>
               </div>
             )) : (
                 <div className="p-8 border border-dashed border-slate-200 rounded-3xl text-center">
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Mission completed soon</p>
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{t('missions.completedSoon')}</p>
                 </div>
             )}
+
           </div>
         </div>
 
@@ -182,10 +192,11 @@ export function MissionManager({
           
           <div className="relative z-10 flex items-center justify-center gap-4">
             <span className="text-xl font-black text-white italic tracking-[0.2em] uppercase">
-              {isLifting ? 'Processing...' : 'RELEASE LOAD'}
+              {isLifting ? t('Common.loading') : t('missions.releaseLoad')}
             </span>
             <CheckCircle2 size={24} className="text-white group-hover:rotate-12 transition-transform" />
           </div>
+
         </motion.button>
       </div>
 

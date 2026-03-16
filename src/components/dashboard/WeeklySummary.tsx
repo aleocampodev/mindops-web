@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Calendar } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 // ── Types ────────────────────────────────────────────────────
 
@@ -29,12 +30,12 @@ function getDotStyle(score: number) {
   return                   { bg: 'bg-emerald-500', ring: 'ring-emerald-200', label: 'Fluid' }
 }
 
-function getLevelLabel(score: number): string {
-  if (score >= 70) return 'High Load'
-  if (score >= 50) return 'Moderate'
-  if (score >= 30) return 'Processing'
-  if (score > 0) return 'Fluid'
-  return 'No data'
+function getLevelLabel(score: number, t: any): string {
+  if (score >= 70) return t('levels.high')
+  if (score >= 50) return t('levels.moderate')
+  if (score >= 30) return t('levels.processing')
+  if (score > 0) return t('levels.fluid')
+  return t('levels.noData')
 }
 
 function getLevelColor(score: number): string {
@@ -53,6 +54,8 @@ export function WeeklySummary({
   totalSessions,
   activeDays,
 }: WeeklySummaryProps) {
+  const t = useTranslations('Dashboard');
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -64,7 +67,7 @@ export function WeeklySummary({
       <div className="flex items-center gap-3 mb-8">
         <Calendar size={16} className="text-indigo-500" aria-hidden="true" />
         <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-          Your Week
+          {t('yourWeek')}
         </h3>
       </div>
 
@@ -124,11 +127,11 @@ export function WeeklySummary({
               {/* Session count */}
               {hasData ? (
                 <span className="text-[10px] font-bold text-slate-400">
-                  {day.sessions} {day.sessions === 1 ? 'session' : 'sessions'}
+                  {t('recorded', { count: day.sessions })}
                 </span>
               ) : (
                 <span className="text-[10px] font-bold text-slate-200">
-                  {day.isToday ? 'today' : day.date}
+                  {day.isToday ? t('today') : day.date}
                 </span>
               )}
             </motion.div>
@@ -141,23 +144,23 @@ export function WeeklySummary({
         {totalSessions > 0 ? (
           <>
             <span className="font-bold text-slate-400">
-              {totalSessions} {totalSessions === 1 ? 'session' : 'sessions'}
+              {t('recorded', { count: totalSessions })}
             </span>
             <span className="text-slate-200">·</span>
             <span className={`font-black ${getLevelColor(weeklyAvg)}`}>
-              avg {weeklyAvg}
+              {t('avg')} {weeklyAvg}
             </span>
             <span className={`font-bold ${getLevelColor(weeklyAvg)}`}>
-              ({getLevelLabel(weeklyAvg)})
+              ({getLevelLabel(weeklyAvg, t)})
             </span>
             <span className="text-slate-200">·</span>
             <span className="font-bold text-slate-400">
-              {activeDays}/7 days
+              {t('daysCount', { count: activeDays })}
             </span>
           </>
         ) : (
           <span className="font-bold text-slate-300 italic">
-            Talk to the bot to start tracking your week
+            {t('startTracking')}
           </span>
         )}
       </div>

@@ -1,6 +1,7 @@
 'use client'
 import { motion } from 'framer-motion';
 import { Brain, TrendingDown, TrendingUp, Minus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface FrictionHeroProps {
   score: number;       // 0-100, current friction score
@@ -17,8 +18,8 @@ const CIRCUMFERENCE = Math.PI * RADIUS; // semi-circle arc length ≈ 257.6
 function getState(score: number, isProteccion: boolean) {
   if (isProteccion) {
     return {
-      label: 'Active Pause',
-      sub: 'Your system detected critical overload. Rest is the mission.',
+      labelKey: 'activePause',
+      subKey: 'activePauseSub',
       color: 'text-amber-400',
       stroke: '#fbbf24',
       bg: 'from-amber-950/80 to-slate-900',
@@ -26,24 +27,24 @@ function getState(score: number, isProteccion: boolean) {
     };
   }
   if (score <= 30) return {
-    label: 'Clear Mind',
-    sub: 'Low cognitive friction. You are in peak execution window.',
+    labelKey: 'clearMind',
+    subKey: 'clearMindSub',
     color: 'text-emerald-400',
     stroke: '#34d399',
     bg: 'from-emerald-950/60 to-slate-900',
     badge: 'bg-emerald-500/20 text-emerald-400',
   };
   if (score <= 60) return {
-    label: 'Processing Load',
-    sub: 'Moderate mental friction. Monitor your energy and pace yourself.',
+    labelKey: 'processingLoad',
+    subKey: 'processingLoadSub',
     color: 'text-amber-400',
     stroke: '#fbbf24',
     bg: 'from-amber-950/60 to-slate-900',
     badge: 'bg-amber-500/20 text-amber-400',
   };
   return {
-    label: 'High Friction',
-    sub: 'Your system is under cognitive strain. Consider an active pause.',
+    labelKey: 'highFriction',
+    subKey: 'highFrictionSub',
     color: 'text-rose-400',
     stroke: '#fb7185',
     bg: 'from-rose-950/60 to-slate-900',
@@ -52,6 +53,7 @@ function getState(score: number, isProteccion: boolean) {
 }
 
 export function FrictionHero({ score, trend, sessionCount, isProteccion }: FrictionHeroProps) {
+  const t = useTranslations('Dashboard');
   const state = getState(score, isProteccion);
   const safeScore = Math.max(0, Math.min(100, score));
   const fillLength = (safeScore / 100) * CIRCUMFERENCE;
@@ -59,10 +61,10 @@ export function FrictionHero({ score, trend, sessionCount, isProteccion }: Frict
 
   const TrendIcon = trend < 0 ? TrendingDown : trend > 0 ? TrendingUp : Minus;
   const trendLabel = trend < 0
-    ? `${Math.abs(trend)} pts below your average — improving`
+    ? t('ptsBelow', { count: Math.abs(trend) })
     : trend > 0
-    ? `${Math.abs(trend)} pts above your average — watch out`
-    : 'Steady — matching your average';
+    ? t('ptsAbove', { count: Math.abs(trend) })
+    : t('ptsSteady');
 
   return (
     <motion.div
@@ -127,7 +129,7 @@ export function FrictionHero({ score, trend, sessionCount, isProteccion }: Frict
               {safeScore}
             </motion.span>
             <span className="text-white/25 text-[9px] font-black uppercase tracking-[0.3em] mt-1">
-              friction score
+              {t('frictionScore')}
             </span>
           </div>
         </div>
@@ -137,7 +139,7 @@ export function FrictionHero({ score, trend, sessionCount, isProteccion }: Frict
           <div>
             <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.35em] mb-2 flex items-center gap-2 justify-center md:justify-start">
               <Brain size={10} />
-              Cognitive Load · Now
+              {t('cognitiveLoad')}
             </p>
             <motion.h2
               initial={{ opacity: 0, x: -10 }}
@@ -145,12 +147,12 @@ export function FrictionHero({ score, trend, sessionCount, isProteccion }: Frict
               transition={{ delay: 0.3 }}
               className={`text-4xl md:text-5xl font-black italic tracking-tight leading-none ${state.color}`}
             >
-              {state.label}
+              {t(`frictionStates.${state.labelKey}`)}
             </motion.h2>
           </div>
 
           <p className="text-white/50 text-sm leading-relaxed max-w-xs mx-auto md:mx-0 font-medium">
-            {state.sub}
+            {t(`frictionStates.${state.subKey}`)}
           </p>
 
           <div className="flex flex-wrap gap-3 justify-center md:justify-start">
@@ -161,7 +163,7 @@ export function FrictionHero({ score, trend, sessionCount, isProteccion }: Frict
               </div>
             )}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-wider bg-white/5 text-white/40">
-              {sessionCount} session{sessionCount !== 1 ? 's' : ''} recorded
+              {t('recorded', { count: sessionCount })}
             </div>
           </div>
         </div>

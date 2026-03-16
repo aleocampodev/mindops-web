@@ -4,7 +4,9 @@ import { Zap, Loader2, Sparkles, ChevronRight, Star } from 'lucide-react';
 import { completeThought } from '@/app/dashboard/actions';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@tremor/react';
+import { useTranslations } from 'next-intl';
 import { MissionStatus } from '@/lib/constants/mission-status';
+
 
 interface Thought {
   id: string;
@@ -19,7 +21,9 @@ interface MomentumProps {
 }
 
 export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
+  const t = useTranslations('Dashboard');
   const [isPending, startTransition] = useTransition();
+
 
   // Filter only in-progress thoughts for the momentum anchor
   const pendingActions = thoughts.filter(t => t.status === MissionStatus.ACTIVE);
@@ -36,12 +40,15 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
         </div>
         <div className="space-y-3">
           <h3 className="text-2xl font-black text-amber-900 uppercase tracking-tighter italic">
-            Active Pause Protocol
+            {t('activePauseProtocol')}
           </h3>
           <p className="text-amber-800/70 max-w-lg mx-auto text-sm font-medium leading-relaxed">
-            Your system detected a critical load. <span className="font-bold text-amber-900">There are no pending tasks today.</span> Your only mission is the biological reset on Telegram.
+            {t.rich('activePauseProtocolSub', {
+              bold: (chunks) => <span className="font-bold text-amber-900">{t('noPendingTasks')}</span>
+            })}
           </p>
         </div>
+
       </motion.div>
     );
   }
@@ -54,8 +61,9 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
         </div>
-        <span>Active Surveillance: Twilio monitors your inertia. If you get blocked, Twilio will call you.</span>
+        <span>{t('twilioSurveillance')}</span>
       </div>
+
 
       <header className="max-w-xl">
         <div className="flex items-center gap-3 mb-2">
@@ -63,12 +71,13 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
             <Zap size={18} fill="currentColor" />
           </div>
           <h3 className="text-xl font-black tracking-tighter uppercase text-slate-800 italic">
-            Your Momentum Anchor
+            {t('momentumAnchor')}
           </h3>
         </div>
         <p className="text-slate-400 text-[11px] font-medium leading-relaxed uppercase tracking-widest opacity-70">
-          Focus on the first action. The rest waits in line.
+          {t('momentumAnchorSub')}
         </p>
+
       </header>
 
       <div className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide px-2 -mx-2">
@@ -93,7 +102,7 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
                     </div>
                     {index === 0 && (
                       <Badge color="indigo" size="xs" className="uppercase font-black px-4 py-1 rounded-full tracking-widest">
-                        Priority
+                        {t('priority')}
                       </Badge>
                     )}
                   </div>
@@ -120,9 +129,10 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
                       }}
                       disabled={isPending}
                     >
-                      {isPending ? <Loader2 className="animate-spin" size={16} /> : 'Release Thread'}
+                      {isPending ? t('Auth.processing') : t('releaseThread')}
                       {!isPending && <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />}
                     </button>
+
                   )}
                 </div>
                 {index === 0 && (
@@ -146,9 +156,9 @@ export function MomentumAnchor({ thoughts, isProteccion }: MomentumProps) {
                    <Star className="text-indigo-200 fill-indigo-100" size={24} />
                 </motion.div>
               </div>
-              <h4 className="text-xl font-black text-slate-800 uppercase tracking-tighter italic mb-2">Congratulations, Free Mind!</h4>
+              <h4 className="text-xl font-black text-slate-800 uppercase tracking-tighter italic mb-2">{t('freeMind')}</h4>
               <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[9px] max-w-xs mx-auto leading-relaxed">
-                You have processed all the noise. Your biological RAM is ready to create, not to manage.
+                {t('freeMindSub')}
               </p>
             </motion.div>
           )}

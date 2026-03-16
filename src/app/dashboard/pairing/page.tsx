@@ -2,7 +2,9 @@ import { createClient } from '@/utils/supabase/server';
 import { generatePairingCode } from './actions';
 import { Heart, RefreshCw, Smartphone, ShieldCheck, CheckCircle, Send, BrainCircuit, Zap, Shield, Activity } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { RealtimeRedirect } from '@/components/auth/RealtimeRedirect';
+
 import { PairingTimer } from '@/components/dashboard/PairingTimer';
 import {
   getUserDisplayName,
@@ -14,7 +16,9 @@ import {
 import type { Profile } from '@/lib/pairing/types';
 
 export default async function PairingPage() {
+  const t = await getTranslations('Pairing');
   const supabase = await createClient();
+
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
@@ -63,17 +67,21 @@ export default async function PairingPage() {
 
             <div className="relative z-10 space-y-8">
               <h2 className="text-5xl font-black italic tracking-tight leading-[1.05]">
-                Almost<br />there.
+                {t.rich('almostThere', {
+                  br: (chunks) => <><br />{chunks}</>
+                })}
               </h2>
               <p className="text-white/40 text-lg font-medium max-w-sm leading-relaxed">
-                Your code was accepted. Share your contact in Telegram to complete the connection.
+                {t('pendingDescription')}
               </p>
             </div>
 
+
             <div className="relative z-10 flex items-center gap-6 text-white/20 text-[10px] font-black uppercase tracking-[0.3em]">
-              <span className="flex items-center gap-2"><CheckCircle size={12} /> Code verified</span>
-              <span className="flex items-center gap-2"><Send size={12} /> Contact pending</span>
+              <span className="flex items-center gap-2"><CheckCircle size={12} /> {t('codeVerified')}</span>
+              <span className="flex items-center gap-2"><Send size={12} /> {t('contactPending')}</span>
             </div>
+
             <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px]" />
           </div>
 
@@ -93,33 +101,34 @@ export default async function PairingPage() {
                   </div>
                 </div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-6">
-                  <CheckCircle size={12} /> Code Accepted
+                  <CheckCircle size={12} /> {t('codeAccepted')}
                 </div>
                 <h1 className="text-4xl md:text-5xl font-black italic tracking-tight leading-none mb-4">
-                  Share your<br />contact
+                  {t.rich('shareContact', {
+                    br: (chunks) => <><br />{chunks}</>
+                  })}
                 </h1>
                 <p className="text-white/40 text-lg font-medium leading-relaxed">
-                  Great, <span className="text-emerald-400 font-bold">{userName}</span>! One last step.
+                  {t('oneLastStep', { name: userName })}
                 </p>
+
               </div>
 
               <div className="bg-white/[0.04] backdrop-blur-xl border border-white/[0.06] rounded-3xl p-8 space-y-6">
                 <div className="flex items-center gap-3 text-white/30">
                   <Smartphone size={18} />
-                  <span className="text-xs font-black uppercase tracking-[0.3em]">In Telegram</span>
+                  <span className="text-xs font-black uppercase tracking-[0.3em]">{t('inTelegram')}</span>
                 </div>
-
                 <p className="text-white/60 text-sm font-medium leading-relaxed">
-                  Open the MindOps bot and tap the button to share your phone contact:
+                  {t('sharePrompt')}
                 </p>
-
                 <div className="bg-emerald-500/10 border border-emerald-500/20 p-5 rounded-2xl text-emerald-400 font-black text-xl text-center">
-                  📱 Share Contact
+                  {t('shareBadge')}
                 </div>
-
                 <p className="text-white/20 text-xs font-medium text-center">
-                  This page will update automatically once your contact is received.
+                  {t('autoUpdate')}
                 </p>
+
               </div>
             </div>
           </div>
@@ -156,17 +165,20 @@ export default async function PairingPage() {
 
           <div className="relative z-10 space-y-8">
             <h2 className="text-5xl font-black italic tracking-tight leading-[1.05]">
-              Connect<br />your mind.
+              {t.rich('connectMind', {
+                br: (chunks) => <><br />{chunks}</>
+              })}
             </h2>
             <p className="text-white/40 text-lg font-medium max-w-sm leading-relaxed">
-              Link your Telegram to start tracking your cognitive friction and take control of your mental clarity.
+              {t('pairingDescription')}
             </p>
+
 
             <div className="grid grid-cols-3 gap-4">
               {[
-                { icon: Activity, label: 'Track friction', desc: 'Real-time cognitive load' },
-                { icon: Zap, label: 'AI insights', desc: 'Strategic perspective' },
-                { icon: Shield, label: 'Protection', desc: 'System overload detection' },
+                { icon: Activity, label: t('trackFriction'), desc: t('trackFrictionDesc') },
+                { icon: Zap, label: t('aiInsights'), desc: t('aiInsightsDesc') },
+                { icon: Shield, label: t('protection'), desc: t('protectionDesc') },
               ].map(({ icon: Icon, label, desc }) => (
                 <div key={label} className="bg-white/[0.03] border border-white/[0.05] rounded-2xl p-4 space-y-2">
                   <Icon size={16} className="text-indigo-400" />
@@ -200,19 +212,23 @@ export default async function PairingPage() {
                 </div>
               </div>
               <h1 className="text-4xl md:text-5xl font-black italic tracking-tight leading-none mb-4">
-                Connect<br />my space
+                {t.rich('connectSpace', {
+                  br: (chunks) => <><br />{chunks}</>
+                })}
               </h1>
               <p className="text-white/40 text-lg font-medium leading-relaxed">
-                Hello, <span className="text-indigo-400 font-bold">{userName}</span>. Link your account to manage your cognitive load.
+                {t('linkAccount', { name: userName })}
               </p>
+
             </div>
 
             {/* Code card */}
             <div className="bg-white/[0.04] backdrop-blur-xl border border-white/[0.06] rounded-3xl p-8 md:p-10 space-y-8">
               <div className="flex items-center justify-center gap-3 text-white/30">
                 <ShieldCheck size={16} />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em]">Unique Security Key</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.4em]">{t('securityKey')}</span>
               </div>
+
 
               <div className="text-center">
                 <div className="text-7xl md:text-8xl font-mono font-black tracking-[0.15em] text-white py-6 border-y border-white/[0.06]">
@@ -232,8 +248,9 @@ export default async function PairingPage() {
                     className="cursor-pointer flex items-center gap-3 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95"
                   >
                     <RefreshCw size={14} />
-                    Request new code
+                    {t('requestNewCode')}
                   </button>
+
                 </form>
               </div>
             </div>
@@ -243,16 +260,16 @@ export default async function PairingPage() {
               <div className="relative z-10 space-y-5">
                 <div className="flex items-center gap-3">
                   <Smartphone size={18} />
-                  <span className="text-xs font-black uppercase tracking-widest">In Telegram</span>
+                  <span className="text-xs font-black uppercase tracking-widest">{t('inTelegram')}</span>
                 </div>
 
                 <p className="text-white/80 text-sm font-medium leading-relaxed">
-                  Open your MindOps bot and send this exact message:
+                  {t('sendExactMessage')}
                 </p>
-
                 <div className="cursor-pointer bg-white/10 backdrop-blur-xl p-5 rounded-2xl border border-white/20 font-mono text-xl font-black text-center hover:bg-white/20 transition-all select-all">
-                  /vincular {pairingData.code}
+                  {t('linkCommand', { code: pairingData.code })}
                 </div>
+
               </div>
               <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
             </div>

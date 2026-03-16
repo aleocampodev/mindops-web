@@ -2,6 +2,8 @@
 import { Card } from '@tremor/react';
 import { Activity, TrendingDown, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+
 
 interface ChartDataPoint {
   hora: string;
@@ -10,13 +12,16 @@ interface ChartDataPoint {
 }
 
 const BAR_COLORS = {
-  fluido:  { bar: 'bg-emerald-400', glow: 'shadow-emerald-200', label: 'Fluid' },
-  denso:   { bar: 'bg-amber-400',   glow: 'shadow-amber-200',   label: 'Dense' },
-  critico: { bar: 'bg-rose-400',    glow: 'shadow-rose-200',    label: 'Critical' },
+  fluido:  { bar: 'bg-emerald-400', glow: 'shadow-emerald-200', labelKey: 'levels.fluid' },
+  denso:   { bar: 'bg-amber-400',   glow: 'shadow-amber-200',   labelKey: 'levels.dense' },
+  critico: { bar: 'bg-rose-400',    glow: 'shadow-rose-200',    labelKey: 'levels.critical' },
 };
 
+
 export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], isProteccion: boolean }) {
+  const t = useTranslations('Dashboard');
   const maxValue = 100;
+
   const hasData = data.length > 0;
 
   const lastValue = hasData ? data[data.length - 1]['Mental Load'] : 0;
@@ -46,12 +51,15 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
               </div>
               <div>
                 <h3 className="text-[1rem] font-black tracking-widest uppercase italic bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500">
-                  Your Calm Rhythm
+                  {t('calmRhythm')}
                 </h3>
                 <p className="text-slate-400 text-[11px] font-medium mt-0.5">
-                  Mental friction per session · <span className="text-slate-600 font-bold">lower = calmer</span>
+                  {t.rich('calmRhythmSub', {
+                    bold: (chunks) => <span className="text-slate-600 font-bold">{t('lowerCalmer')}</span>
+                  })}
                 </p>
               </div>
+
             </div>
             {hasData && (
               <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
@@ -60,8 +68,9 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                   : 'bg-rose-50 text-rose-600'
               }`}>
                 {trending === 'mejorando' ? <TrendingDown size={11} /> : <TrendingUp size={11} />}
-                {trending === 'mejorando' ? 'Improving' : 'Rising'}
+                {trending === 'mejorando' ? t('improving') : t('rising')}
               </div>
+
             )}
           </div>
 
@@ -72,9 +81,10 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                 <Activity size={24} className="text-slate-300" />
               </div>
               <div className="text-center space-y-1">
-                <p className="text-slate-400 text-sm font-semibold">No logs yet</p>
-                <p className="text-slate-300 text-xs">Send a message to the bot to see your first log.</p>
+                <p className="text-slate-400 text-sm font-semibold">{t('noLogs')}</p>
+                <p className="text-slate-300 text-xs">{t('sendBotLog')}</p>
               </div>
+
             </div>
           ) : (
             <div className="flex flex-col gap-2">
@@ -122,8 +132,9 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
                       >
                         {/* Tooltip */}
                         <div className="opacity-0 group-hover/bar:opacity-100 transition-opacity mb-1 px-2 py-1 bg-slate-900 text-white text-[8px] font-bold rounded-lg whitespace-nowrap pointer-events-none z-20">
-                          {colors.label} · {point['Mental Load']}%
+                          {t(colors.labelKey)} · {point['Mental Load']}%
                         </div>
+
                         {/* Bar */}
                         <div
                           className={`w-full rounded-t-lg ${colors.bar} shadow-sm hover:shadow-lg hover:${colors.glow} transition-all duration-200 cursor-default z-10`}
@@ -157,13 +168,14 @@ export function RhythmChart({ data, isProteccion }: { data: ChartDataPoint[], is
               {Object.entries(BAR_COLORS).map(([key, val]) => (
                 <div key={key} className="flex items-center gap-1.5">
                   <div className={`w-2.5 h-2.5 rounded-sm ${val.bar}`} />
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{val.label}</span>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{t(val.labelKey)}</span>
                 </div>
               ))}
             </div>
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-              {data.length} log{data.length !== 1 ? 's' : ''}
+              {t('logsCount', { count: data.length })}
             </span>
+
           </div>
         </div>
       </Card>

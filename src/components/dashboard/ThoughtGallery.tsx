@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { Calendar, History, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { MissionStatus } from '@/lib/constants/mission-status';
 
 interface Thought {
@@ -29,6 +30,7 @@ function getScoreColor(score: number | undefined): string {
 }
 
 export function ThoughtGallery({ thoughts, limit, showSeeAll = false }: ThoughtGalleryProps) {
+  const t = useTranslations('Dashboard');
   // Show only committed (released) thoughts in the history gallery
   const history = thoughts.filter(t => t.status === MissionStatus.COMPLETED);
 
@@ -45,7 +47,7 @@ export function ThoughtGallery({ thoughts, limit, showSeeAll = false }: ThoughtG
             <History size={18} aria-hidden="true" />
           </div>
           <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">
-            Released Thoughts
+            {t('releasedThoughts')}
           </h3>
         </div>
         {(showSeeAll || hasMore) ? (
@@ -53,7 +55,7 @@ export function ThoughtGallery({ thoughts, limit, showSeeAll = false }: ThoughtG
             href="/dashboard/history"
             className="flex items-center gap-1.5 text-xs font-black text-indigo-500 uppercase tracking-wider hover:text-indigo-700 transition-colors"
           >
-            See all
+            {t('seeAll')}
             <ArrowRight size={12} aria-hidden="true" />
           </Link>
         ) : null}
@@ -71,6 +73,7 @@ export function ThoughtGallery({ thoughts, limit, showSeeAll = false }: ThoughtG
 // ── Sub-component (composition pattern) ─────────────────────
 
 function ThoughtCard({ thought: t }: { thought: Thought }) {
+  const translations = useTranslations('Dashboard');
   return (
     <motion.div
       whileHover={{ y: -4 }}
@@ -82,11 +85,11 @@ function ThoughtCard({ thought: t }: { thought: Thought }) {
       <div>
         <div className="flex justify-between items-start mb-4">
           <span className={`text-[10px] font-black px-3 py-1 rounded-full ${getScoreColor(t.friction_score)}`}>
-            {t.friction_tag ?? 'Processed'}
+            {t.friction_tag ?? translations('processedTag')}
           </span>
           <span className="text-[10px] font-bold text-slate-300 flex items-center gap-1">
             <Calendar size={10} aria-hidden="true" />
-            {new Date(t.created_at).toLocaleDateString('en-US', {
+            {new Date(t.created_at).toLocaleDateString(translations.raw('locale') === 'es' ? 'es-ES' : 'en-US', {
               month: 'short',
               day: 'numeric',
               hour: 'numeric',
@@ -107,7 +110,7 @@ function ThoughtCard({ thought: t }: { thought: Thought }) {
       {t.friction_score != null ? (
         <div className="pt-4 border-t border-slate-50 mt-4 flex items-center justify-between">
           <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">
-            Friction
+            {translations('friction')}
           </span>
           <span className={`text-lg font-black italic tabular-nums ${
             t.friction_score >= 70 ? 'text-rose-500'

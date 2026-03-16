@@ -1,5 +1,7 @@
 import { BrainCircuit } from 'lucide-react';
 import { UserMenu } from './UserMenu';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
 interface HeaderProps {
   firstName: string;
@@ -7,6 +9,8 @@ interface HeaderProps {
 }
 
 export function DashboardHeader({ firstName, isProteccion }: HeaderProps) {
+  const t = useTranslations('Dashboard');
+
   return (
     <header className="flex items-center justify-between py-4">
       {/* Logo — matches landing page treatment */}
@@ -20,12 +24,15 @@ export function DashboardHeader({ firstName, isProteccion }: HeaderProps) {
         </span>
       </div>
 
-      {/* Right: greeting + avatar */}
-      <div className="flex items-center gap-4">
-        <p className="hidden md:block text-sm font-bold text-slate-400">
-          Hello, <span className="text-slate-900">{firstName}</span>
-        </p>
-        <UserMenu firstName={firstName} />
+      {/* Right: language + greeting + avatar */}
+      <div className="flex items-center gap-6">
+        <LanguageSwitcher />
+        <div className="flex items-center gap-4">
+          <p className="hidden md:block text-sm font-bold text-slate-400">
+            {t('welcome')}, <span className="text-slate-900">{firstName}</span>
+          </p>
+          <UserMenu firstName={firstName} />
+        </div>
       </div>
     </header>
   );

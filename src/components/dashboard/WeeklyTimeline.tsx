@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { Calendar, TrendingDown, TrendingUp, Minus, Activity, Flame, Zap, BarChart3 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+
 
 // ── Types ────────────────────────────────────────────────────
 
@@ -41,7 +43,16 @@ const ZONES = [
   { min: 70, max: 100,label: 'High Load', color: 'rose',   bg: 'bg-rose-50',     text: 'text-rose-600',    bar: 'bg-rose-500' },
 ] as const
 
+function getLevelLabel(score: number, t: any): string {
+  if (score >= 70) return t('levels.high')
+  if (score >= 50) return t('levels.moderate')
+  if (score >= 30) return t('levels.processing')
+  if (score > 0) return t('levels.fluid')
+  return t('levels.noData')
+}
+
 function getZone(score: number) {
+
   return ZONES.find(z => score >= z.min && score < z.max) ?? ZONES[ZONES.length - 1]
 }
 
@@ -57,7 +68,9 @@ export function WeeklyTimeline({
   totalSessions,
   activeDays,
 }: WeeklyTimelineProps) {
+  const t = useTranslations('Dashboard');
   const delta = weeklyAvg - prevWeekAvg
+
   const isImproving = delta < 0
   const isStable = Math.abs(delta) <= 3
 
@@ -73,9 +86,10 @@ export function WeeklyTimeline({
         <div className="flex items-center gap-3">
           <Calendar size={16} className="text-indigo-500" />
           <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-            This Week&apos;s Friction
+            {t('thisWeekFriction')}
           </h3>
         </div>
+
         <div className="flex items-center gap-2">
           {isStable ? (
             <Minus size={14} className="text-slate-400" />
@@ -88,13 +102,14 @@ export function WeeklyTimeline({
             isStable ? 'text-slate-400' : isImproving ? 'text-emerald-500' : 'text-rose-400'
           }`}>
             {totalSessions === 0
-              ? 'No sessions yet'
+              ? t('noSessions')
               : isStable
-                ? 'Stable'
+                ? t('stable')
                 : isImproving
-                  ? `${Math.abs(delta)} pts better`
-                  : `${delta} pts higher`}
+                  ? t('ptsBetter', { count: Math.abs(delta) })
+                  : t('ptsHigher', { count: delta })}
           </span>
+
         </div>
       </div>
 
@@ -120,12 +135,19 @@ export function WeeklyTimeline({
 
           {/* Zone labels (right edge) */}
           <div className="absolute right-2 top-0 bottom-0 flex flex-col justify-between py-1 pointer-events-none z-10">
-            {[...ZONES].reverse().map(zone => (
-              <span key={zone.label} className={`text-[8px] font-bold ${zone.text} opacity-60`}>
-                {zone.label}
-              </span>
-            ))}
+            {[...ZONES].reverse().map(zone => {
+              const zoneLabel = zone.label === 'Fluid' ? t('levels.fluid') : 
+                                zone.label === 'Processing' ? t('levels.processing') :
+                                zone.label === 'Moderate' ? t('levels.moderate') :
+                                t('levels.high');
+              return (
+                <span key={zone.label} className={`text-[8px] font-bold ${zone.text} opacity-60`}>
+                  {zoneLabel}
+                </span>
+              )
+            })}
           </div>
+
 
           {/* Threshold lines */}
           {[35, 50, 70].map(threshold => (
@@ -164,9 +186,10 @@ export function WeeklyTimeline({
           ) : (
             <div className="absolute inset-0 flex items-center justify-center z-10">
               <p className="text-sm font-bold text-slate-300 italic">
-                Talk to the bot to start tracking
+                {t('talkToBot')}
               </p>
             </div>
+
           )}
         </div>
 
@@ -200,32 +223,33 @@ export function WeeklyTimeline({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-100">
         <StatCell
           icon={<BarChart3 size={12} className="text-indigo-500" />}
-          label="Sessions"
+          label={t('sessions')}
           value={totalSessions.toString()}
-          sub={`${activeDays}/7 days active`}
+          sub={t('daysCount', { count: activeDays })}
         />
         <StatCell
           icon={<Activity size={12} className="text-amber-500" />}
-          label="Avg Load"
+          label={t('avg')}
           value={weeklyAvg > 0 ? weeklyAvg.toString() : '—'}
-          sub={weeklyAvg > 0 ? getZone(weeklyAvg).label : 'No data'}
+          sub={weeklyAvg > 0 ? getLevelLabel(weeklyAvg, t) : t('levels.noData')}
           valueColor={weeklyAvg > 0 ? getZone(weeklyAvg).text : 'text-slate-300'}
         />
         <StatCell
           icon={<Flame size={12} className="text-rose-500" />}
-          label="Peak"
+          label={t('peak')}
           value={peakSession ? peakSession.score.toString() : '—'}
-          sub={peakSession ? peakSession.label : 'No sessions'}
+          sub={peakSession ? peakSession.label : t('noSessionsShort')}
           valueColor="text-rose-500"
         />
         <StatCell
           icon={<Zap size={12} className="text-emerald-500" />}
-          label="Lowest"
+          label={t('lowest')}
           value={lowestSession ? lowestSession.score.toString() : '—'}
-          sub={lowestSession ? lowestSession.label : 'No sessions'}
+          sub={lowestSession ? lowestSession.label : t('noSessionsShort')}
           valueColor="text-emerald-500"
         />
       </div>
+
     </motion.div>
   )
 }

@@ -4,6 +4,8 @@ import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { MissionStatus } from '@/lib/constants/mission-status'
 import { z } from 'zod'
+import { getTranslations } from 'next-intl/server'
+
 
 const advanceMissionStepSchema = z.object({
   missionId: z.string().uuid(),
@@ -14,10 +16,12 @@ const advanceMissionStepSchema = z.object({
 export async function advanceMissionStep(missionId: string, currentIndex: number, totalSteps: number) {
   try {
     const input = advanceMissionStepSchema.parse({ missionId, currentIndex, totalSteps })
+    const t = await getTranslations('Common')
 
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { completed: false, error: 'Unauthorized' }
+    if (!user) return { completed: false, error: t('unauthorized') }
+
 
     const nextIndex = input.currentIndex + 1
 
@@ -51,9 +55,11 @@ export async function advanceMissionStep(missionId: string, currentIndex: number
       return { completed: false }
     }
   } catch (err: unknown) {
+    const t = await getTranslations('Common')
     const message = err instanceof z.ZodError
-      ? `Validation error: ${err.issues.map(e => e.message).join(', ')}`
-      : err instanceof Error ? err.message : 'Unknown error'
+      ? `${t('validationError')}: ${err.issues.map(e => e.message).join(', ')}`
+      : err instanceof Error ? err.message : t('unknownError')
     return { completed: false, error: message }
   }
+
 }

@@ -2,9 +2,13 @@ import { createClient } from '@/utils/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import { MissionManager } from './MissionManager'
 import { MissionStatus } from '@/lib/constants/mission-status'
+import { getTranslations } from 'next-intl/server'
+
 
 export default async function MissionPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
+  const t = await getTranslations('Dashboard')
   const supabase = await createClient()
+
   const { id } = await paramsPromise
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -35,7 +39,7 @@ export default async function MissionPage({ params: paramsPromise }: { params: P
       missionId={id}
       initialStep={mission.current_step_index || 0}
       plan={plan || []}
-      title={mission.summary_title || 'Active Mission'}
+      title={mission.summary_title || t('activeMission')}
       strategicAnalysis={mission.strategic_insight}
       summaryTitle={mission.summary_title}
     />

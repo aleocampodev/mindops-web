@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Timer, AlertCircle } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+
 
 interface PairingTimerProps {
   expiresAt: string
@@ -9,7 +11,9 @@ interface PairingTimerProps {
 }
 
 export function PairingTimer({ expiresAt, onExpire }: PairingTimerProps) {
+  const t = useTranslations('Dashboard');
   const [timeLeft, setTimeLeft] = useState<number>(0)
+
   const [progress, setProgress] = useState<number>(100)
 
   const calculateTimeLeft = useCallback(() => {
@@ -55,14 +59,16 @@ export function PairingTimer({ expiresAt, onExpire }: PairingTimerProps) {
       <div className="flex items-center justify-between mb-2 px-1">
         <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors ${isExpiringSoon ? 'text-rose-500 animate-pulse' : 'text-slate-400'}`}>
           <Timer size={12} />
-          <span>EXPIRES IN: {formatTime(timeLeft)}</span>
+          <span>{t('expiresIn')}: {formatTime(timeLeft)}</span>
         </div>
+
         {isExpiringSoon && (
           <div className="flex items-center gap-1 text-[9px] font-black text-rose-500 uppercase tracking-tighter">
             <AlertCircle size={10} />
-            Action required
+            {t('actionRequired')}
           </div>
         )}
+
       </div>
       
       {/* Thinner, wider Thermometer */}
@@ -86,8 +92,9 @@ export function PairingTimer({ expiresAt, onExpire }: PairingTimerProps) {
       </div>
       
       <p className="mt-2 text-[9px] font-medium text-slate-300 uppercase tracking-[0.3em] text-center">
-        Active security synchronization
+        {t('activeSecuritySync')}
       </p>
+
     </div>
   )
 }

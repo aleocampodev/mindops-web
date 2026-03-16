@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { DashboardHeader } from '@/components/dashboard/Header';
 import { PerspectiveCard } from '@/components/dashboard/PerspectiveCard';
 import { ThoughtGallery } from '@/components/dashboard/ThoughtGallery';
@@ -15,6 +16,7 @@ import {
 } from '@/lib/dashboard/weekly';
 
 export default async function DashboardPage() {
+  const t = await getTranslations('Dashboard');
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -54,7 +56,7 @@ export default async function DashboardPage() {
   const activeDays = countActiveDays(allThoughts, 0);
   const totalSessions = daySummaries.reduce((sum, d) => sum + d.sessions, 0);
 
-  const displayName = profile?.first_name || 'Partner';
+  const displayName = profile?.first_name || t('partner');
 
   return (
     <main className={`min-h-screen transition-colors duration-700 ${
@@ -98,7 +100,7 @@ export default async function DashboardPage() {
             <QuickStats thoughts={thoughts || []} resilience={resilience} />
 
             <PerspectiveCard
-              content={latestThought?.strategic_insight || 'Talk to the bot to receive perspective.'}
+              content={latestThought?.strategic_insight || t('noInsight')}
               isProteccion={isProteccion}
             />
 
