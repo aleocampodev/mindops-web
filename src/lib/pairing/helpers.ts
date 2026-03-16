@@ -51,7 +51,7 @@ export function isPairingCodeExpired(expiresAt: string | null | undefined): bool
  * Checks if the user has already completed the pairing process
  */
 export function isUserPaired(profile: Profile | null): boolean {
-  return Boolean(profile?.telegram_id && profile?.phone_number);
+  return profile?.onboarding_state === 'READY' || Boolean(profile?.telegram_id && profile?.phone_number);
 }
 
 /**
@@ -59,5 +59,5 @@ export function isUserPaired(profile: Profile | null): boolean {
  * (they successfully sent the code but haven't shared their phone number yet)
  */
 export function isUserPendingContact(profile: Profile | null): boolean {
-  return Boolean(profile?.telegram_id && !profile?.phone_number);
+  return profile?.onboarding_state === 'PENDING_CONTACT';
 }
