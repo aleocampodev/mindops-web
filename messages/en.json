@@ -199,5 +199,9 @@
     "requestNewCode": "Request new code",
     "sendExactMessage": "Open your MindOps bot and send this exact message:",
     "linkCommand": "/vincular {code}"
+  },
+  "Metadata": {
+    "title": "MindOps // Dashboard",
+    "description": "Mental Performance Engineering Platform — manage your cognitive load and execute with clarity."
   }
 }
