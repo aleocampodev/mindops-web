@@ -2,9 +2,13 @@
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Gauge, Zap, ShieldAlert, PhoneIncoming, MousePointerClick } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+
 
 export function CognitiveSimulator() {
+  const t = useTranslations('Landing');
   const searchParams = useSearchParams();
+
   const pathname = usePathname();
   const { replace } = useRouter();
 
@@ -25,17 +29,20 @@ export function CognitiveSimulator() {
         <div className="space-y-12">
           <div className="space-y-6 text-left">
             <h3 className="text-5xl font-black tracking-tighter leading-none text-slate-900 uppercase italic">
-              Cognitive Load <br/> <span className="text-indigo-600">Management.</span>
+              {t.rich('cognitiveLoadManagement', {
+                management: (chunks) => <span className="text-indigo-600">{chunks}</span>
+              })}
             </h3>
             <p className="text-xl text-slate-500 leading-relaxed font-medium">
-              Your mind is a high-impact processor. When background processes (anxiety/sadness) consume your mind, execution stops.
+              {t('simulatorDescription')}
             </p>
           </div>
 
+
           <div className="grid grid-cols-1 gap-6">
             {[
-              { icon: <Gauge key="gauge" />, t: "Friction Monitoring", d: "We quantify the weight of your thoughts to predict blockages." },
-              { icon: <Zap key="zap" />, t: "Memory Dump", d: "Externalize mental noise and safely free up processing threads." }
+              { icon: <Gauge key="gauge" />, t: t("frictionMonitoring"), d: t("frictionMonitoringSub") },
+              { icon: <Zap key="zap" />, t: t("memoryDump"), d: t("memoryDumpSub") }
             ].map((f, i) => (
               <div key={i} className={`flex items-start gap-6 p-8 rounded-[2.5rem] border transition-all duration-700 ${
                 isCrisis ? 'bg-amber-100/30 border-amber-200' : 'bg-slate-50 border-slate-100'
@@ -59,8 +66,9 @@ export function CognitiveSimulator() {
             className="absolute -top-10 left-1/2 -translate-x-1/2 z-30 cursor-pointer bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-xs shadow-2xl border border-white/20 uppercase tracking-widest flex items-center gap-3 hover:scale-105 active:scale-95 transition-all"
           >
             <MousePointerClick size={16} />
-            {isCrisis ? "Reset System" : "Simulate Overload"}
+            {isCrisis ? t("resetSystem") : t("simulateOverload")}
           </button>
+
 
           <div className={`relative p-12 rounded-[5rem] border transition-all duration-1000 shadow-2xl bg-white ${
             isCrisis ? 'border-amber-200 ring-[20px] ring-amber-100/50' : 'border-slate-100'
@@ -83,10 +91,11 @@ export function CognitiveSimulator() {
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="p-8 rounded-[3rem] bg-gradient-to-br from-amber-500 to-rose-600 text-white shadow-2xl text-left">
                   <div className="flex items-center gap-3 mb-2">
                     <ShieldAlert size={20} className="animate-pulse" />
-                    <span className="font-black uppercase tracking-widest text-[10px]">Rescue Protocol</span>
+                    <span className="font-black uppercase tracking-widest text-[10px]">{t('rescueProtocol')}</span>
                   </div>
-                  <p className="font-bold text-sm leading-tight">Initiating Twilio call for pattern interruption.</p>
+                  <p className="font-bold text-sm leading-tight">{t('twilioInitiating')}</p>
                 </motion.div>
+
               )}
             </AnimatePresence>
           </div>

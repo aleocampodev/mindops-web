@@ -2,6 +2,7 @@
 import { Target, Zap, Star, ChevronRight, List, Rocket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { MissionStatus } from '@/lib/constants/mission-status';
 import type { Thought } from '@/types/database';
@@ -14,6 +15,7 @@ interface MissionSidebarProps {
 }
 
 export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, firstName }: MissionSidebarProps) {
+  const t = useTranslations('Dashboard');
 
   // Filter missions with an action plan, regardless of status
   const allMissions = allThoughts.filter(t => {
@@ -37,12 +39,12 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center gap-2 text-slate-400">
             <Target size={14} />
-            <span className="text-xs font-black uppercase tracking-[0.2em]">Active Missions</span>
+            <span className="text-xs font-black uppercase tracking-[0.2em]">{t('activeMissions')}</span>
           </div>
           {activeMissions.length > 3 && (
             <Link href="/mission">
               <span className="text-xs font-black uppercase text-indigo-500 hover:text-indigo-400 cursor-pointer transition-colors">
-                See All (+{remainingCount})
+                {t('seeAll')} (+{remainingCount})
               </span>
             </Link>
           )}
@@ -68,14 +70,14 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
                         <span className={`text-[8px] font-black uppercase tracking-widest ${
                           idx === 0 ? 'text-indigo-200' : 'text-slate-400'
                         }`}>
-                          {idx === 0 ? 'Execution Priority' : `Mission ${activeMissions.length - idx}`}
+                          {idx === 0 ? t('executionPriority') : t('missionNumber', { number: activeMissions.length - idx })}
                         </span>
                         <Rocket size={14} className={`${idx === 0 ? 'text-white' : 'text-slate-300'} group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform`} />
                       </div>
                       <p className={`text-sm font-black italic uppercase leading-tight tracking-tighter ${
                         idx === 0 ? 'text-white' : 'text-slate-900'
                       }`}>
-                        {mission.summary_title || 'Active Mission'}
+                        {mission.summary_title || t('activeMission')}
                       </p>
                     </div>
                     {idx === 0 && (
@@ -95,10 +97,10 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
             </div>
             <div className="space-y-1">
               <p className="text-xs font-bold text-slate-400">
-                No active missions
+                {t('noActiveMissions')}
               </p>
               <p className="text-[11px] text-slate-300 leading-snug">
-                Missions are generated after your first session.
+                {t('missionsGenerated')}
               </p>
             </div>
             <a
@@ -108,7 +110,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
               className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-indigo-600 hover:text-indigo-500 transition-colors"
             >
               <Rocket size={12} />
-              Start in Telegram
+              {t('startInTelegram')}
             </a>
           </div>
         )}
@@ -116,16 +118,16 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         {/* Impacto y Rango (Simplificado) */}
         <div className="px-6 py-5 bg-gradient-to-br from-slate-50 to-white rounded-[2rem] flex justify-between items-center border border-slate-100 shadow-sm">
           <div>
-            <p className="text-[8px] font-black text-indigo-400 uppercase mb-0.5 tracking-wider">Wellness Impact</p>
+            <p className="text-[8px] font-black text-indigo-400 uppercase mb-0.5 tracking-wider">{t('wellnessImpact')}</p>
             <div className="flex items-baseline gap-1">
                 <span className="text-xl font-black italic text-slate-900">{thoughtsCount * 12}</span>
-                <span className="text-xs font-bold text-slate-400 uppercase">u. relief</span>
+                <span className="text-xs font-bold text-slate-400 uppercase">{t('unitsRelief')}</span>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5 tracking-wider">Current Rank</p>
+            <p className="text-[8px] font-black text-slate-400 uppercase mb-0.5 tracking-wider">{t('currentRank')}</p>
             <span className="text-[10px] font-black text-indigo-600 uppercase italic bg-indigo-50 px-3 py-1 rounded-full">
-              {thoughtsCount > 10 ? 'STRATEGIST' : 'OPERATIVE'}
+              {thoughtsCount > 10 ? t('rank.strategist') : t('rank.operative')}
             </span>
           </div>
         </div>
@@ -139,7 +141,7 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
       >
         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-          Active Surveillance: System operative
+          {t('activeSurveillance')}
         </span>
       </motion.div>
 
@@ -154,12 +156,12 @@ export function MissionSidebar({ isProteccion, thoughtsCount, allThoughts, first
         <div className="relative z-10 space-y-4">
            <div className="flex items-center gap-2 text-indigo-200">
              <Zap size={14} fill="currentColor" />
-             <span className="text-[9px] font-black uppercase tracking-widest">Focus</span>
+             <span className="text-[9px] font-black uppercase tracking-widest">{t('focus')}</span>
            </div>
            <p className="text-white text-sm font-medium italic opacity-90 leading-relaxed">
              {isProteccion 
-               ? "Close your eyes for 5 minutes. Your system will better process the noise." 
-               : "If it takes less than 2 minutes, release it now."}
+               ? t('tipProteccion') 
+               : t('tipEjecucion')}
            </p>
         </div>
       </motion.div>

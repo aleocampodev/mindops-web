@@ -2,6 +2,7 @@
 import { Card, DonutChart, BadgeDelta } from '@tremor/react';
 import { Activity, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import type { ResilienceMetric } from '@/lib/dashboard/analytics';
 
 interface Thought {
@@ -18,14 +19,15 @@ interface QuickStatsProps {
 }
 
 export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
+  const t = useTranslations('Dashboard');
   // Energy balance split by system mode
   const total = thoughts.length || 1;
   const proteccion = thoughts.filter(t => t.system_mode === 'PROTECTION').length;
   const ejecucion = thoughts.filter(t => t.system_mode === 'EXECUTION').length;
   
   const energyData = [
-    { name: 'Execution', value: Math.round((ejecucion / total) * 100) },
-    { name: 'Protection', value: Math.round((proteccion / total) * 100) },
+    { name: t('execution'), value: Math.round((ejecucion / total) * 100) },
+    { name: t('protection'), value: Math.round((proteccion / total) * 100) },
   ];
 
   // Determine Tremor delta type for the badge
@@ -54,10 +56,10 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
           <div className="space-y-2 flex-1">
             <div className="flex items-center gap-2 text-indigo-600">
               <ShieldCheck size={18} className="group-hover:scale-110 transition-transform" />
-              <span className="text-[11px] font-black uppercase tracking-widest">System Resilience</span>
+              <span className="text-[11px] font-black uppercase tracking-widest">{t('systemResilience')}</span>
             </div>
             <h4 className={`text-3xl font-black tracking-tighter italic ${labelColors[resilience.label]}`}>
-              {resilience.label}
+              {t(`levels.${resilience.label.toLowerCase()}`)}
             </h4>
             <p className="text-xs font-semibold text-slate-400 leading-snug max-w-[220px] normal-case">
               {resilience.description}
@@ -71,7 +73,7 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
               {resilience.delta > 0 ? '+' : ''}{resilience.delta}%
             </BadgeDelta>
             <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider text-right leading-tight">
-              vs Previous <br/> Cycle
+              {t('vsPreviousCycle')}
             </span>
           </div>
         </Card>
@@ -86,7 +88,7 @@ export function QuickStats({ thoughts, resilience }: QuickStatsProps) {
           <div className="flex-1">
             <div className="flex items-center gap-2 text-slate-900 mb-4">
               <Activity size={18} />
-              <span className="text-[11px] font-black uppercase tracking-widest">Energy Balance</span>
+              <span className="text-[11px] font-black uppercase tracking-widest">{t('energyBalance')}</span>
             </div>
             <div className="space-y-3">
                {energyData.map((item) => (

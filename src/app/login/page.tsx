@@ -2,6 +2,8 @@
 import { motion } from 'framer-motion';
 import { createClient } from '@/utils/supabase/client';
 import { BrainCircuit, ShieldCheck, Sparkles } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+
 
 // Google logo as inline SVG — avoids external img dependency (CORS, CLS, CSP)
 function GoogleLogo() {
@@ -16,7 +18,9 @@ function GoogleLogo() {
 }
 
 export default function LoginPage() {
+  const t = useTranslations('Auth');
   const supabase = createClient();
+
 
   const handleGoogleLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -64,35 +68,40 @@ export default function LoginPage() {
             MindOps
           </h1>
           <p className="text-slate-500 mb-12 font-medium leading-relaxed">
-            Synchronize your account to manage your{' '}
-            <span className="text-indigo-600 font-bold">Cognitive Load.</span>
+            {t.rich('loginDescription', {
+              cognitiveLoad: (chunks) => <span className="text-indigo-600 font-bold">{chunks}</span>
+            })}
           </p>
+
 
           <div className="space-y-4">
             <button
               type="button"
               onClick={handleGoogleLogin}
-              aria-label="Sign in with Google"
+              aria-label={t('loginWithGoogle')}
               className="w-full bg-slate-900 text-white font-black py-5 rounded-2xl hover:bg-indigo-600 transition-colors duration-200 flex items-center justify-center gap-4 text-lg group relative overflow-hidden shadow-xl cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
             >
               <GoogleLogo />
-              LOGIN WITH GOOGLE
+              {t('loginWithGoogle')}
             </button>
+
 
             <div className="flex items-center justify-center gap-4 pt-6 opacity-60">
               <div className="flex items-center gap-1.5 text-[10px] text-slate-900 font-black tracking-[0.2em] uppercase">
-                <ShieldCheck size={14} className="text-emerald-500" aria-hidden="true" /> Secure
+                <ShieldCheck size={14} className="text-emerald-500" aria-hidden="true" /> {t('secure')}
               </div>
               <div className="flex items-center gap-1.5 text-[10px] text-slate-900 font-black tracking-[0.2em] uppercase">
-                <Sparkles size={14} className="text-indigo-500" aria-hidden="true" /> AI Powered
+                <Sparkles size={14} className="text-indigo-500" aria-hidden="true" /> {t('aiPowered')}
               </div>
             </div>
+
           </div>
         </div>
 
         <p className="text-center text-slate-400 mt-10 text-[11px] font-bold tracking-[0.3em] uppercase">
-          Executive Support for Dynamic Minds
+          {t('executiveSupport')}
         </p>
+
       </motion.div>
     </main>
   );

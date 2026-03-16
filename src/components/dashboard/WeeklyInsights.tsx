@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { TrendingDown, TrendingUp, Minus, Calendar, Brain, Zap, Flame } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+
 
 interface DayData {
   label: string       // "Mon", "Tue", etc.
@@ -27,12 +29,13 @@ function getFrictionColor(score: number): string {
   return 'bg-emerald-500'
 }
 
-function getFrictionLabel(score: number): string {
-  if (score >= 70) return 'High Load'
-  if (score >= 50) return 'Moderate'
-  if (score >= 30) return 'Processing'
-  return 'Clear'
+function getFrictionLabel(score: number, t: any): string {
+  if (score >= 70) return t('levels.high')
+  if (score >= 50) return t('levels.moderate')
+  if (score >= 30) return t('levels.processing')
+  return t('levels.clear')
 }
+
 
 function getFrictionTextColor(score: number): string {
   if (score >= 70) return 'text-rose-500'
@@ -49,7 +52,9 @@ export function WeeklyInsights({
   activeDays,
   bestDay,
 }: WeeklyInsightsProps) {
+  const t = useTranslations('Dashboard');
   const weeklyDelta = weeklyAvg - prevWeekAvg
+
   const isImproving = weeklyDelta < 0
   const isStable = Math.abs(weeklyDelta) <= 3
 
@@ -65,9 +70,10 @@ export function WeeklyInsights({
         <div className="flex items-center gap-3">
           <Calendar size={16} className="text-indigo-500" />
           <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-            Your Week
+            {t('yourWeek')}
           </h3>
         </div>
+
         <div className="flex items-center gap-2">
           {isStable ? (
             <Minus size={14} className="text-slate-400" />
@@ -79,8 +85,9 @@ export function WeeklyInsights({
           <span className={`text-xs font-black ${
             isStable ? 'text-slate-400' : isImproving ? 'text-emerald-500' : 'text-rose-400'
           }`}>
-            {isStable ? 'Stable' : isImproving ? `${Math.abs(weeklyDelta)}% better` : `${weeklyDelta}% higher`}
+            {isStable ? t('stable') : isImproving ? t('pctBetter', { count: Math.abs(weeklyDelta) }) : t('pctHigher', { count: weeklyDelta })}
           </span>
+
         </div>
       </div>
 
@@ -144,16 +151,18 @@ export function WeeklyInsights({
                   ? 'bg-white/10 text-white/60'
                   : 'bg-slate-100 text-slate-400'
               }`}>
-                {day.sessions} {day.sessions === 1 ? 'session' : 'sessions'}
+                {t('recorded', { count: day.sessions })}
               </span>
             )}
+
 
             {/* Tooltip on hover */}
             {day.sessions > 0 && (
               <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[9px] font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                {getFrictionLabel(day.avgFriction)} · {day.sessions} sessions
+                {getFrictionLabel(day.avgFriction, t)} · {t('recorded', { count: day.sessions })}
               </div>
             )}
+
           </motion.div>
         ))}
       </div>
@@ -163,7 +172,7 @@ export function WeeklyInsights({
         <div className="bg-slate-50 rounded-2xl p-4 text-center">
           <div className="flex items-center justify-center gap-1.5 mb-2">
             <Brain size={12} className="text-indigo-500" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Avg Load</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">{t('avg')}</span>
           </div>
           <span className={`text-2xl font-black italic tracking-tight ${getFrictionTextColor(weeklyAvg)}`}>
             {weeklyAvg || '—'}
@@ -173,23 +182,24 @@ export function WeeklyInsights({
         <div className="bg-slate-50 rounded-2xl p-4 text-center">
           <div className="flex items-center justify-center gap-1.5 mb-2">
             <Zap size={12} className="text-amber-500" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Active</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">{t('active')}</span>
           </div>
           <span className="text-2xl font-black italic tracking-tight text-slate-900">
-            {activeDays}<span className="text-sm text-slate-300 font-bold">/7</span>
+            {t('daysCount', { count: activeDays })}
           </span>
         </div>
 
         <div className="bg-slate-50 rounded-2xl p-4 text-center">
           <div className="flex items-center justify-center gap-1.5 mb-2">
             <Flame size={12} className="text-emerald-500" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Best Day</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">{t('bestDay')}</span>
           </div>
           <span className="text-sm font-black italic tracking-tight text-emerald-600">
             {bestDay || '—'}
           </span>
         </div>
       </div>
+
     </motion.div>
   )
 }
