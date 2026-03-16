@@ -160,6 +160,7 @@
     "marqueeWords": "Rumination, Blockage, Paralysis, Mental Chaos, Anxiety, Procrastination, Noise, Infinite Loop, Doubt, Fog"
   },
   "Common": {
+    "translate": "Translate",
     "loading": "Loading...",
     "error": "An error occurred",
     "backToDashboard": "Back to Dashboard",
@@ -199,5 +200,9 @@
     "requestNewCode": "Request new code",
     "sendExactMessage": "Open your MindOps bot and send this exact message:",
     "linkCommand": "/vincular {code}"
+  },
+  "Metadata": {
+    "title": "MindOps // Dashboard",
+    "description": "Mental Performance Engineering Platform — manage your cognitive load and execute with clarity."
   }
 }

@@ -139,7 +139,7 @@
     "heroTitle": "MIND<ops>ops</ops>",
     "heroSubtitle": "Diseñado para <dynamicMinds>mentes dinámicas</dynamicMinds> que necesitan recuperar su poder de ejecución.",
     "dynamicMinds": "mentes dinámicas",
-    "heroDescription": "MindOps is the <operationalLayer>capa operativa</operationalLayer> que detecta cuando la rumiación, la ansiedad o la tristeza sobrecargan tu sistema, interviniendo para traerte de vuelta al presente.",
+    "heroDescription": "MindOps es la <operationalLayer>capa operativa</operationalLayer> que detecta cuando la rumiación, la ansiedad o la tristeza sobrecargan tu sistema, interviniendo para traerte de vuelta al presente.",
     "operationalLayer": "capa operativa",
     "activateProtocol": "ACTIVAR PROTOCOLO",
     "cognitiveLoadManagement": "<management>Gestión</management> de Carga Cognitiva",
@@ -160,6 +160,7 @@
     "marqueeWords": "Rumiación, Bloqueo, Parálisis, Caos Mental, Ansiedad, Procrastinación, Ruido, Bucle Infinito, Duda, Niebla"
   },
   "Common": {
+    "translate": "Traducir",
     "loading": "Cargando...",
     "error": "Ha ocurrido un error",
     "backToDashboard": "Volver al Dashboard",
@@ -198,6 +199,10 @@
     "securityKey": "Clave de Seguridad Única",
     "requestNewCode": "Solicitar nuevo código",
     "sendExactMessage": "Abre tu bot de MindOps y envía este mensaje exacto:",
-    "linkCommand": "/vincular {code}"
+    "linkCommand": "/vinculate {code}"
+  },
+  "Metadata": {
+    "title": "MindOps // Dashboard",
+    "description": "Plataforma de Ingeniería de Rendimiento Mental — gestiona tu carga cognitiva y ejecuta con claridad."
   }
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
+import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,16 +16,20 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "MindOps // Dashboard",
-  description: "Mental Performance Engineering Platform — manage your cognitive load and execute with clarity.",
-  themeColor: "#4f46e5",
-  openGraph: {
-    title: "MindOps",
-    description: "Mental Performance Engineering Platform",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Metadata');
+  
+  return {
+    title: t('title'),
+    description: t('description'),
+    themeColor: "#4f46e5",
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      type: "website",
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
