@@ -160,6 +160,7 @@
     "marqueeWords": "Rumiación, Bloqueo, Parálisis, Caos Mental, Ansiedad, Procrastinación, Ruido, Bucle Infinito, Duda, Niebla"
   },
   "Common": {
+    "translate": "Traducir",
     "loading": "Cargando...",
     "error": "Ha ocurrido un error",
     "backToDashboard": "Volver al Dashboard",

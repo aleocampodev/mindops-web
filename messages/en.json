@@ -160,6 +160,7 @@
     "marqueeWords": "Rumination, Blockage, Paralysis, Mental Chaos, Anxiety, Procrastination, Noise, Infinite Loop, Doubt, Fog"
   },
   "Common": {
+    "translate": "Translate",
     "loading": "Loading...",
     "error": "An error occurred",
     "backToDashboard": "Back to Dashboard",
