@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-10T01:54:49.822Z",
+  "updatedAt": "2026-03-16T00:18:52.989Z",
   "createdAt": "2026-02-22T02:03:15.790Z",
   "id": "QciYupwAd2AZ6IEf",
   "name": "SW-3: Mission Control",
@@ -25,6 +25,10 @@
             },
             {
               "name": "markup_type"
+            },
+            {
+              "name": "context",
+              "type": "object"
             }
           ]
         }
@@ -69,8 +73,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        96,
-        -64
+        432,
+        -144
       ],
       "id": "18eecd37-abd5-413f-b32f-548a5cc8976b",
       "name": "Set DB to ACTIVE",
@@ -107,8 +111,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        112,
-        128
+        480,
+        112
       ],
       "id": "e9a3d6c4-eb14-47e8-95a1-733ddeef65a6",
       "name": "Set DB to IDLE",
@@ -133,9 +137,10 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "text": "=={{ \"Protocol Synced! 🚀🛡️\\n\\nI've loaded your sequence into your mental biometrics. Proactive monitoring is now ACTIVE.\\n\\n⚡ ENTER FOCUS MODE:\\nhttps://mindops-web-43822856294.us-central1.run.app/mission/\" + $('Get Thought UUID').first().json.id }}",
+            "text": "={{ \n  $('Strict Entry (Mission)').item.json.context.translations.protocol_sync\n    .replace('{id}', $('Get Thought UUID').first().json.id)\n}}",
             "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}",
-            "markup_type": "=plain"
+            "markup_type": "=plain",
+            "context": "={{ $json.context}}"
           },
           "matchingColumns": [],
           "schema": [
@@ -175,6 +180,26 @@
               "canBeUsedToMatch": true,
               "type": "string",
               "removed": true
+            },
+            {
+              "id": "keyboard_data",
+              "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": true
+            },
+            {
+              "id": "context",
+              "displayName": "context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -185,8 +210,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        368,
-        -272
+        880,
+        -144
       ],
       "id": "e8a2b83f-3f70-4826-b691-582c00249fc2",
       "name": "Send Active Msg"
@@ -203,9 +228,9 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "text": "Understood. The system is ready to rethink. 🔄  Which part of the plan doesn't match your current energy? (Too many tasks? Unrealistic times?)  Tell me in a short audio or text and I'll recalibrate the sequence for you.",
             "markup_type": "=plain",
-            "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}"
+            "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}",
+            "text": "={{ \n  $('Strict Entry (Mission)').item.json.context.translations.recalibrate_message\n}}"
           },
           "matchingColumns": [],
           "schema": [
@@ -255,8 +280,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        448,
-        32
+        896,
+        80
       ],
       "id": "91a03851-d5d2-4d7f-ab09-23a583a8fa0d",
       "name": "Send Recalibrate Msg"
@@ -321,8 +346,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -128,
-        -48
+        32,
+        -16
       ],
       "id": "5cf2de66-34a1-4f6f-9857-14b8b867a6ce",
       "name": "Validation Callback Data"
@@ -396,7 +421,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -800,
+        -832,
         64
       ],
       "id": "6a3d4d1d-4ea5-428d-b11f-a4cc2768c157",
@@ -415,7 +440,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
-            "text": "⚠️ System Error — The Core couldn't process your request. Please retry or reach out to your operator."
+            "text": "={{ $('Strict Entry (Mission)').item.json.context.translations.error_message_mission }}\n"
           },
           "matchingColumns": [],
           "schema": [
@@ -468,8 +493,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        432,
-        576
+        1104,
+        640
       ],
       "id": "c4246460-6503-4705-8819-9e2f66a6ba4c",
       "name": "Error Message"
@@ -493,8 +518,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        -384,
-        16
+        -368,
+        48
       ],
       "id": "62f8fa38-2076-455e-b571-5be12b9d81ef",
       "name": "Get Thought UUID",
@@ -539,6 +564,117 @@
         }
       },
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Description\nThis sub-workflow manages the lifecycle of a cognitive mission. It processes user confirmations, synchronizes database states (ACTIVE/IDLE), and delivers localized feedback to lock the user's focus into the execution phase",
+        "height": 144,
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1024,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "58fb79c8-0ee3-4a2e-9156-fd1ab6e0c4ba",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### RECEIVE & IDENTITY",
+        "height": 352,
+        "width": 656,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1136,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "37e3f80c-b0df-43a4-8253-25297594f1be",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### SEMANTIC LINKING",
+        "height": 352,
+        "width": 288,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "81d729b5-1ff9-40e5-84f9-1b40d458c977",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### ACTION ROUTER",
+        "height": 432,
+        "width": 336,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "011e49ce-a9d8-430a-ad15-d30498579b0c",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "### DATABASE SYNC (Persistence)",
+        "height": 576,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "a4de5b6b-5574-4ec6-9bca-ba93450acc02",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "### FEEDBACK LOOP",
+        "height": 624,
+        "width": 352,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        -288
+      ],
+      "typeVersion": 1,
+      "id": "630085ac-01cb-47ea-b16e-6d5314250c36",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "### Error Handling",
+        "height": 352,
+        "width": 304,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1008,
+        512
+      ],
+      "typeVersion": 1,
+      "id": "f92cea39-94b8-4ebb-9b2a-aab50beb7707",
+      "name": "Sticky Note6"
     }
   ],
   "connections": {
@@ -677,9 +813,9 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "2b96e966-314e-4f8b-9e29-5bdbc7fed67d",
-  "activeVersionId": "2b96e966-314e-4f8b-9e29-5bdbc7fed67d",
-  "versionCounter": 416,
+  "versionId": "8bcc49a6-0741-46db-9150-23beb44288e4",
+  "activeVersionId": "8bcc49a6-0741-46db-9150-23beb44288e4",
+  "versionCounter": 521,
   "triggerCount": 0,
   "shared": [
     {
@@ -702,9 +838,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-10T01:57:30.039Z",
-    "createdAt": "2026-03-10T01:54:49.850Z",
-    "versionId": "2b96e966-314e-4f8b-9e29-5bdbc7fed67d",
+    "updatedAt": "2026-03-16T00:18:59.337Z",
+    "createdAt": "2026-03-16T00:18:53.015Z",
+    "versionId": "8bcc49a6-0741-46db-9150-23beb44288e4",
     "workflowId": "QciYupwAd2AZ6IEf",
     "nodes": [
       {
@@ -725,6 +861,10 @@
               },
               {
                 "name": "markup_type"
+              },
+              {
+                "name": "context",
+                "type": "object"
               }
             ]
           }
@@ -769,8 +909,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          96,
-          -64
+          432,
+          -144
         ],
         "id": "18eecd37-abd5-413f-b32f-548a5cc8976b",
         "name": "Set DB to ACTIVE",
@@ -807,8 +947,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          112,
-          128
+          480,
+          112
         ],
         "id": "e9a3d6c4-eb14-47e8-95a1-733ddeef65a6",
         "name": "Set DB to IDLE",
@@ -833,9 +973,10 @@
           "workflowInputs": {
             "mappingMode": "defineBelow",
             "value": {
-              "text": "=={{ \"Protocol Synced! 🚀🛡️\\n\\nI've loaded your sequence into your mental biometrics. Proactive monitoring is now ACTIVE.\\n\\n⚡ ENTER FOCUS MODE:\\nhttps://mindops-web-43822856294.us-central1.run.app/mission/\" + $('Get Thought UUID').first().json.id }}",
+              "text": "={{ \n  $('Strict Entry (Mission)').item.json.context.translations.protocol_sync\n    .replace('{id}', $('Get Thought UUID').first().json.id)\n}}",
               "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}",
-              "markup_type": "=plain"
+              "markup_type": "=plain",
+              "context": "={{ $json.context}}"
             },
             "matchingColumns": [],
             "schema": [
@@ -875,6 +1016,26 @@
                 "canBeUsedToMatch": true,
                 "type": "string",
                 "removed": true
+              },
+              {
+                "id": "keyboard_data",
+                "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
+                "removed": true
+              },
+              {
+                "id": "context",
+                "displayName": "context",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "object",
+                "removed": false
               }
             ],
             "attemptToConvertTypes": false,
@@ -885,8 +1046,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          368,
-          -272
+          880,
+          -144
         ],
         "id": "e8a2b83f-3f70-4826-b691-582c00249fc2",
         "name": "Send Active Msg"
@@ -903,9 +1064,9 @@
           "workflowInputs": {
             "mappingMode": "defineBelow",
             "value": {
-              "text": "Understood. The system is ready to rethink. 🔄  Which part of the plan doesn't match your current energy? (Too many tasks? Unrealistic times?)  Tell me in a short audio or text and I'll recalibrate the sequence for you.",
               "markup_type": "=plain",
-              "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}"
+              "chat_id": "={{ $('Strict Entry (Mission)').first().json.chat_id }}",
+              "text": "={{ \n  $('Strict Entry (Mission)').item.json.context.translations.recalibrate_message\n}}"
             },
             "matchingColumns": [],
             "schema": [
@@ -955,8 +1116,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          448,
-          32
+          896,
+          80
         ],
         "id": "91a03851-d5d2-4d7f-ab09-23a583a8fa0d",
         "name": "Send Recalibrate Msg"
@@ -1021,8 +1182,8 @@
         "type": "n8n-nodes-base.switch",
         "typeVersion": 3.4,
         "position": [
-          -128,
-          -48
+          32,
+          -16
         ],
         "id": "5cf2de66-34a1-4f6f-9857-14b8b867a6ce",
         "name": "Validation Callback Data"
@@ -1096,7 +1257,7 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          -800,
+          -832,
           64
         ],
         "id": "6a3d4d1d-4ea5-428d-b11f-a4cc2768c157",
@@ -1115,7 +1276,7 @@
             "mappingMode": "defineBelow",
             "value": {
               "chat_id": "={{ $('Strict Entry (Mission)').item.json.chat_id }}",
-              "text": "⚠️ System Error — The Core couldn't process your request. Please retry or reach out to your operator."
+              "text": "={{ $('Strict Entry (Mission)').item.json.context.translations.error_message_mission }}\n"
             },
             "matchingColumns": [],
             "schema": [
@@ -1168,8 +1329,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          432,
-          576
+          1104,
+          640
         ],
         "id": "c4246460-6503-4705-8819-9e2f66a6ba4c",
         "name": "Error Message"
@@ -1193,8 +1354,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          -384,
-          16
+          -368,
+          48
         ],
         "id": "62f8fa38-2076-455e-b571-5be12b9d81ef",
         "name": "Get Thought UUID",
@@ -1239,6 +1400,117 @@
           }
         },
         "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "content": "## Description\nThis sub-workflow manages the lifecycle of a cognitive mission. It processes user confirmations, synchronizes database states (ACTIVE/IDLE), and delivers localized feedback to lock the user's focus into the execution phase",
+          "height": 144,
+          "width": 480
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1024,
+          -320
+        ],
+        "typeVersion": 1,
+        "id": "58fb79c8-0ee3-4a2e-9156-fd1ab6e0c4ba",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "content": "### RECEIVE & IDENTITY",
+          "height": 352,
+          "width": 656,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1136,
+          -32
+        ],
+        "typeVersion": 1,
+        "id": "37e3f80c-b0df-43a4-8253-25297594f1be",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "### SEMANTIC LINKING",
+          "height": 352,
+          "width": 288,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -432,
+          -48
+        ],
+        "typeVersion": 1,
+        "id": "81d729b5-1ff9-40e5-84f9-1b40d458c977",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "### ACTION ROUTER",
+          "height": 432,
+          "width": 336,
+          "color": 6
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -64,
+          -112
+        ],
+        "typeVersion": 1,
+        "id": "011e49ce-a9d8-430a-ad15-d30498579b0c",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "content": "### DATABASE SYNC (Persistence)",
+          "height": 576,
+          "width": 304,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          384,
+          -224
+        ],
+        "typeVersion": 1,
+        "id": "a4de5b6b-5574-4ec6-9bca-ba93450acc02",
+        "name": "Sticky Note4"
+      },
+      {
+        "parameters": {
+          "content": "### FEEDBACK LOOP",
+          "height": 624,
+          "width": 352,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          768,
+          -288
+        ],
+        "typeVersion": 1,
+        "id": "630085ac-01cb-47ea-b16e-6d5314250c36",
+        "name": "Sticky Note5"
+      },
+      {
+        "parameters": {
+          "content": "### Error Handling",
+          "height": 352,
+          "width": 304,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1008,
+          512
+        ],
+        "typeVersion": 1,
+        "id": "f92cea39-94b8-4ebb-9b2a-aab50beb7707",
+        "name": "Sticky Note6"
       }
     ],
     "connections": {
@@ -1366,15 +1638,15 @@
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version 2b96e966",
+    "name": "Version 8bcc49a6",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-10T01:57:29.896Z",
-        "id": 145,
+        "createdAt": "2026-03-16T00:18:59.295Z",
+        "id": 261,
         "workflowId": "QciYupwAd2AZ6IEf",
-        "versionId": "2b96e966-314e-4f8b-9e29-5bdbc7fed67d",
+        "versionId": "8bcc49a6-0741-46db-9150-23beb44288e4",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
