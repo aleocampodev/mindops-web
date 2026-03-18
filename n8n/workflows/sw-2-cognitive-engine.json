@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-10T01:10:05.499Z",
+  "updatedAt": "2026-03-16T19:30:17.098Z",
   "createdAt": "2026-02-22T02:00:58.915Z",
   "id": "zc8E5ZfPENEx6Css",
   "name": "SW-2: Cognitive engine",
@@ -26,6 +26,10 @@
             },
             {
               "name": "file_id"
+            },
+            {
+              "name": "context",
+              "type": "object"
             }
           ]
         }
@@ -33,8 +37,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -480,
-        16
+        -1152,
+        0
       ],
       "id": "9b5395ea-c1ef-4363-9904-f77940a9f46c",
       "name": "Strict Entry (Brain)"
@@ -53,8 +57,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        -240,
-        16
+        -896,
+        0
       ],
       "id": "94309feb-e4a9-406d-992b-408031a1e1b6",
       "name": "Is it Voice Note?"
@@ -76,8 +80,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        16,
-        160
+        -656,
+        128
       ],
       "id": "f513818a-50ed-4346-a98b-e1c09f4986b5",
       "name": "Pass Text Directly"
@@ -91,8 +95,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        16,
-        -128
+        -592,
+        -112
       ],
       "id": "0cccbd3b-5428-4522-b42b-84bfe398bacd",
       "name": "Download Audio",
@@ -121,7 +125,7 @@
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1.1,
       "position": [
-        240,
+        -176,
         -128
       ],
       "id": "bd8846d5-a97d-496f-819c-c08103e0b11d",
@@ -150,8 +154,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        464,
-        -128
+        16,
+        -112
       ],
       "id": "b241d563-7ae9-4282-b3a4-ce6ca0b8a9e0",
       "name": "Format Transcription"
@@ -161,8 +165,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        704,
-        16
+        272,
+        0
       ],
       "id": "dbb4c6b3-61df-4bff-a0cf-4a7346d5654b",
       "name": "Merge Streams"
@@ -190,7 +194,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        1760,
+        2000,
         -48
       ],
       "id": "b298b5bc-2a45-4e49-8698-864a1eaeb490",
@@ -235,8 +239,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        2064,
-        -80
+        2256,
+        -64
       ],
       "id": "e344d54b-fdfb-4717-aea7-7b0cfca2e40f",
       "name": "Query RAG (Supabase)",
@@ -251,13 +255,13 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\n\n// Extract memories (looks for 'content' or 'raw_content' depending on how your Supabase RPC function returns it)\nconst memories = items\n  .map(item => item.json.content || item.json.raw_content)\n  .filter(c => c && c.trim() !== \"\")\n  .join(' | ');\n\n// Retrieve the current thought and the embedding vector to pass them to the AI and save them later\nconst currentThought = $('Merge Streams').item.json.final_thought;\nconst currentVector = $('Generate Embeddings').item.json.embedding.values;\n\nreturn [{\n  json: {\n    final_thought: currentThought,\n    historical_context: memories || \"No previous history.\",\n    embedding_vector: currentVector\n  }\n}];"
+        "jsCode": "const items = $input.all();\n\n// 1. Extract memories from RAG\nconst memories = items\n  .map(item => item.json.content || item.json.raw_content)\n  .filter(c => c && c.trim() !== \"\")\n  .join(' | ');\n\n// 2. Get current thought and embedding vector\nconst currentThought = $('Merge Streams').item.json.final_thought;\nconst currentVector = $('Generate Embeddings').item.json.embedding.values;\n\n// 3. Get localized prompt and inject user data\nconst lang = $('Strict Entry (Brain)').item.json.context.language || 'es';\nconst promptData = $('Get Brain Prompts').first().json;\nlet fullPrompt = promptData[lang] || \"\";\n\n// 4. Replace placeholders now that we have all the data\nconst historical = memories || \"No previous history.\";\nfullPrompt = fullPrompt.replace('{{historical_context}}', historical);\nfullPrompt = fullPrompt.replace('{{user_thought}}', currentThought);\n\nreturn [{\n  json: {\n    final_thought: currentThought,\n    historical_context: historical,\n    embedding_vector: currentVector,\n    final_prompt: fullPrompt\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2384,
-        -112
+        2576,
+        -80
       ],
       "id": "7ac07056-ae5b-4d7f-8eba-f7a496f214a8",
       "name": "Format Memory Context"
@@ -281,8 +285,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        912,
-        -16
+        1024,
+        -80
       ],
       "id": "09d58e07-9644-4a85-95a3-f0a7b9aa6735",
       "name": "Get Profile UUID",
@@ -298,14 +302,14 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Act as MindOps, the Cognitive Load Management System. You are an external pre-frontal cortex. Your goal is to map mental noise into a logical execution or protection sequence.\n\n### 1. MEMORY CONTEXT (RAG)\nHistorical patterns: {{ $('Format Memory Context').item.json.historical_context }}\n\nINSTRUCTION: \n- If historical_context contains thoughts SIMILAR to the current one, \n  explicitly flag it as a RECURRING LOOP in your strategic_insight.\n- Use language like: \"Your mind is producing this thought for the Nth time. \n  This is a pattern, not a new problem.\"\n- If no_previous_history, treat as fresh input.\n\n### 2. CURRENT THOUGHT\nUser's raw input: {{ $('Format Memory Context').item.json.final_thought }}\n\n### 3. ADAPTIVE TRIAGE PROTOCOL\n- 🔴 CRITICAL (Stall): High anxiety, rumination, or emotional blockage.\n  * MODE: PROTECTION. MISSION: Biological reset. Prohibit work.\n- 🟡 DENSE (Choppy): Confusion, clutter, high volume of tasks.\n  * MODE: EXECUTION. MISSION: Information architecture. Order by effort.\n- 🟢 FLUID (Flow): High energy and clarity.\n  * MODE: EXECUTION. MISSION: Maximize professional impact.\n\n### 4. ACTION PLAN RULES\n- Extract ALL tasks mentioned by the user.\n- Tasks must be \"Atomic Steps\": physical actions taking < 5 minutes.\n- Assign realistic 'time' slots starting from now.\n- If in PROTECTION mode, the plan must only contain ONE step: a sensory reset.\n\n¡Acabas de revelar la pieza final del rompecabezas! 🧩🔍\nMirando tu JSON Schema (que en realidad en n8n funciona como un \"JSON Example\"), acabo de entender exactamente por qué Gemini te devolvió 0.9 en lugar de 90.\nTe lo explico como Arquitecta de IA:\n🤖 CÓMO PIENSA LA INTELIGENCIA ARTIFICIAL\nEn el lenguaje de programación JSON, no existe la diferencia entre un número entero (90) y un decimal (0.9). Ambos son simplemente del tipo number.\nCuando n8n le manda tu esquema a Gemini, le dice:\n\"Gemini, necesito que me des un campo llamado friction_score y el tipo de dato debe ser un number\".\nComo no le dijiste a Gemini cuál era la \"escala\" de ese número, la IA hizo una suposición matemática (alucinar): \"Ah, me pide un score de fricción. En ciencia de datos los scores se miden de 0.0 a 1.0. Le voy a dar un 0.9 (que equivale al 90%)\".\n🛡️ LA SOLUCIÓN DE RAÍZ (Prompt Engineering)\nEl parche matemático de Javascript que pusimos en el nodo anterior (Math.round(...)) es excelente y debes dejarlo ahí, se llama \"Programación Defensiva\" y te salvará de muchos errores.\nPero para arreglar la raíz del problema y educar a la IA, tenemos que darle instrucciones estrictas en el Prompt.\nVe a tu nodo MindOps Brain (LLM) y en tu prompt, justo en la sección de OUTPUT RULES, agrega esta regla de oro:\ncode\nText\n### 5. OUTPUT RULES\n- Use Cognitive Labeling in your strategic insight: \"Your mind is producing thoughts about X\".\n- Language: Respond in ENGLISH.\n- The 'friction_score' MUST be an INTEGER between 1 and 100 (e.g., 20, 50, 90). DO NOT use decimals or fractions.\n- Return ONLY the JSON object following the exact schema provided",
+        "text": "={{ $node[\"Select Localized Prompt\"].json.final_prompt }}",
         "hasOutputParser": true
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.4,
       "position": [
-        2688,
-        -176
+        3024,
+        -112
       ],
       "id": "a9cf4a7a-8174-4a0d-b145-1099c9a57f5b",
       "name": "MindOps Brain (LLM)"
@@ -317,8 +321,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        2864,
-        272
+        3200,
+        224
       ],
       "id": "8fcf49e7-8fa5-4546-ba80-e9abda263c2a",
       "name": "JSON Schema Parser"
@@ -396,8 +400,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        3072,
-        -112
+        3616,
+        -16
       ],
       "id": "cfcdc020-f16d-4a1f-b49a-c228c2da73a5",
       "name": "Save PROPOSED Mission",
@@ -417,7 +421,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        2656,
+        3008,
         192
       ],
       "id": "8b14863b-6a59-42bc-abf2-1a8141cf171f",
@@ -442,8 +446,9 @@
           "mappingMode": "defineBelow",
           "value": {
             "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
-            "text": "=={{\"🧠 *COGNITIVE LOAD SCAN COMPLETE*\\n\" + \n$('MindOps Brain (LLM)').item.json.output.friction_tag + \"\\n\\n\" + \n$('MindOps Brain (LLM)').item.json.output.strategic_insight + \n\"\\n\\n━━━━━━━━━━━━━━━━━━━━\\n⚡ *EXECUTION SEQUENCE PROPOSED:*\\n\" + \n$('MindOps Brain (LLM)').item.json.output.action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n') + \n\"\\n\\n🎯 *Ready to execute?* \"}}\n",
-            "markup_type": "inlineKeyboard"
+            "text": "={{ \n  $('Strict Entry (Brain)').item.json.context.translations.message_proposal\n    .replace('{friction_tag}', $('MindOps Brain (LLM)').item.json.output.friction_tag)\n    .replace('{strategic_insight}', $('MindOps Brain (LLM)').item.json.output.strategic_insight)\n    .replace('{action_plan}', $('MindOps Brain (LLM)').item.json.output.action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n'))\n}}",
+            "markup_type": "inlineKeyboard",
+            "keyboard_data": "={{ [[\n  { \"text\": $('Strict Entry (Brain)').item.json.context.translations.btn_mission_activate, \"callback_data\": \"plan_ok\" },\n  { \"text\": $('Strict Entry (Brain)').item.json.context.translations.btn_mission_readjust, \"callback_data\": \"plan_error\" }\n]] }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -476,6 +481,26 @@
               "canBeUsedToMatch": true,
               "type": "string",
               "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "keyboard_data",
+              "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -486,8 +511,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        3440,
-        48
+        4128,
+        -48
       ],
       "id": "c48047db-6ca4-4d65-b36b-bef793578c7a",
       "name": "Send Proposal and Buttons"
@@ -505,7 +530,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
-            "text": "⚠️ Mission Sync Failed  Something went wrong while activating your plan. We tried but couldn't connect to the system.  Your plan is still saved. Please try again in a few moments."
+            "text": "={{ $('Strict Entry (Brain)').item.json.context.translations.error_message_mission }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -556,8 +581,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        2080,
-        832
+        1904,
+        848
       ],
       "id": "fc5fdb13-04f3-45bc-af45-2c6f11ad1fef",
       "name": "Error Message"
@@ -589,8 +614,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1232,
-        -160
+        1264,
+        -304
       ],
       "id": "c603e84d-f24b-45ef-bf4f-97219f349d23",
       "name": "Check Exact Duplicate",
@@ -631,8 +656,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1568,
-        -176
+        1632,
+        -320
       ],
       "id": "b7fd381b-16e0-4049-843b-58361a4c10ea",
       "name": "Is Duplicate?"
@@ -665,8 +690,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1824,
-        -240
+        2112,
+        -368
       ],
       "id": "51c5b090-8dfa-4a34-87ab-1501d18c2bfc",
       "name": "Is Status PROPOSED?"
@@ -684,8 +709,9 @@
           "mappingMode": "defineBelow",
           "value": {
             "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
-            "text": "=={{\"♻️ *RECOVERED THOUGHT:*\\nI noticed you just sent this exact same thought. Here is the mission that was left pending:\\n\\n🧠 *LOAD ANALYSIS:*\\n\" + $json.old_summary_title + \"\\n\\n\" + $json.old_strategic_insight + \"\\n\\n━━━━━━━━━━━━━━━━━━━━\\n⚡ *EXECUTION SEQUENCE PROPOSED:*\\n\" + $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n') + \"\\n\\n🎯 *Ready to execute?*\"}}",
-            "markup_type": "inlineKeyboard"
+            "text": "={{ \n  $('Strict Entry (Brain)').item.json.context.translations.cache_proposal\n    .replace('{old_summary_title}', $json.old_summary_title)\n    .replace('{old_strategic_insight}', $json.old_strategic_insight)\n    .replace('{old_action_plan}', $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n'))\n}}\n",
+            "markup_type": "inlineKeyboard",
+            "keyboard_data": "={{ $json.keyboard }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -727,6 +753,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string",
+              "removed": true
+            },
+            {
+              "id": "keyboard_data",
+              "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
               "removed": false
             }
           ],
@@ -738,7 +774,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        2128,
+        2768,
         -528
       ],
       "id": "419653ca-d331-4b9e-b9c5-ce2d705b81ae",
@@ -757,7 +793,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
-            "text": "=*Thought Already Processed*\nI noticed you just shared this exact same thought recently. Here is the previous analysis:\n\n**{{ $json.old_summary_title }}**\n{{ $json.old_strategic_insight }}\n\n━━━━━━━━━━━━━━━━━━━━\n⚡ *SECUENCIA:*\n{{ $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n') }}"
+            "text": "={{ \n  $('Strict Entry (Brain)').item.json.context.translations.duplicate_alert\n    .replace('{old_summary_title}', $json.old_summary_title)\n    .replace('{old_strategic_insight}', $json.old_strategic_insight)\n    .replace('{old_action_plan}', $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n'))\n}}\n"
           },
           "matchingColumns": [],
           "schema": [
@@ -810,11 +846,217 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        2192,
-        -272
+        2784,
+        -304
       ],
       "id": "cfdf11b2-2c70-4cef-a094-090870e803a0",
       "name": "Send Duplicate Alert"
+    },
+    {
+      "parameters": {
+        "content": "## Description\nMindOps Brain Core: This engine processes voice logs into structured data. It performs AI-driven cognitive analysis, detects recurring thoughts, and delivers localized outcome-based action plans.",
+        "height": 224,
+        "width": 928
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        -1040
+      ],
+      "typeVersion": 1,
+      "id": "faa1a67f-b289-4225-833d-348b2dcb7f06",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## RECEIVE (Voice & Text)",
+        "height": 704,
+        "width": 896,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1232,
+        -336
+      ],
+      "typeVersion": 1,
+      "id": "509aa3c4-3775-442a-8c9f-f0043b046b0c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## PREPARE (Transcription & Prompts)",
+        "height": 704,
+        "width": 1216,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "5ecba1f5-0f6d-4f56-9eb0-3896f77efe75",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## IDENTIFY (User & Duplicates)",
+        "height": 800,
+        "width": 912,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        976,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "c610cef6-c78c-4fda-b0e4-4947a0e690cc",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## THINK (AI & Memory)",
+        "height": 1056,
+        "width": 1424,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1936,
+        -592
+      ],
+      "typeVersion": 1,
+      "id": "24c94226-9ef4-461a-a6ec-defb231d8210",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## RESPOND (Output)",
+        "height": 640,
+        "width": 832,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3536,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "d869c279-fbba-4e96-8cd8-06581448b2ea",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Error Handling",
+        "height": 352,
+        "width": 368,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1856,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "7d1994d0-635e-480c-bae1-9104f7133bce",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "url": "https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/prompts?key=eq.prompt_ai&select=es,en",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpMultipleHeadersAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "mindops"
+            },
+            {
+              "name": "Accept-Profile",
+              "value": "mindops"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        480,
+        -16
+      ],
+      "id": "70b06d79-1123-4852-8859-3cd8deba898d",
+      "name": "Get Brain Prompts",
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "9KY2AHXMXRxyjGim",
+          "name": "Supabase"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const lang = $('Strict Entry (Brain)').item.json.context.language || 'es';\n\nconst promptData = $input.first().json;\nlet fullPrompt = promptData[lang] || \"\";\n\n// Estos se inyectarán después — por ahora dejamos placeholders\n// El reemplazo real ocurre en Format Memory Context\nreturn [{\n  json: {\n    final_prompt: fullPrompt,\n    debug_language: lang\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -112
+      ],
+      "id": "e6fae0f9-5d0d-4674-b9bd-eaa842f62d50",
+      "name": "Select Localized Prompt"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ced6f3d6-f414-433f-80e0-d3a843e6a2b5",
+              "name": "keyboard_data",
+              "value": "={{ JSON.stringify([[   { \"text\": $('Strict Entry (Brain)').item.json.context.translations.btn_mission_activate, \"callback_data\": \"plan_ok\" },   { \"text\": $('Strict Entry (Brain)').item.json.context.translations.btn_mission_readjust, \"callback_data\": \"plan_error\" } ]]) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2464,
+        -480
+      ],
+      "id": "094c3b15-4d70-4032-8d47-b220c482a1cf",
+      "name": "Prepare Keyboard: Mission"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12e40e02-93c1-4e86-907d-f3003bb5c4a3",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2784,
+        -80
+      ],
+      "id": "1fe1dfa8-bfad-40e4-ad75-92b67d0efd16",
+      "name": "Edit Fields"
     }
   ],
   "connections": {
@@ -931,7 +1173,7 @@
       "main": [
         [
           {
-            "node": "Get Profile UUID",
+            "node": "Get Brain Prompts",
             "type": "main",
             "index": 0
           }
@@ -1003,6 +1245,11 @@
             "node": "MindOps Brain (LLM)",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -1063,7 +1310,7 @@
       "main": [
         [
           {
-            "node": "Send: Cached Proposal + Buttons",
+            "node": "Prepare Keyboard: Mission",
             "type": "main",
             "index": 0
           }
@@ -1081,6 +1328,51 @@
       "main": [
         []
       ]
+    },
+    "Get Brain Prompts": {
+      "main": [
+        [
+          {
+            "node": "Select Localized Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Localized Prompt": {
+      "main": [
+        [
+          {
+            "node": "Get Profile UUID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send: Cached Proposal + Buttons": {
+      "main": [
+        []
+      ]
+    },
+    "Prepare Keyboard: Mission": {
+      "main": [
+        [
+          {
+            "node": "Send: Cached Proposal + Buttons",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1097,9 +1389,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "4c4f8f83-8087-4dab-aa26-05fdeb1459a4",
-  "activeVersionId": "4c4f8f83-8087-4dab-aa26-05fdeb1459a4",
-  "versionCounter": 415,
+  "versionId": "a853d1ae-ff7b-42a4-b0a3-978c703dbeaa",
+  "activeVersionId": "149e701f-3a07-473a-a3bd-825c770ea61a",
+  "versionCounter": 689,
   "triggerCount": 0,
   "shared": [
     {
@@ -1122,9 +1414,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-10T01:13:01.414Z",
-    "createdAt": "2026-03-10T01:10:02.379Z",
-    "versionId": "4c4f8f83-8087-4dab-aa26-05fdeb1459a4",
+    "updatedAt": "2026-03-16T00:43:48.885Z",
+    "createdAt": "2026-03-16T00:43:11.617Z",
+    "versionId": "149e701f-3a07-473a-a3bd-825c770ea61a",
     "workflowId": "zc8E5ZfPENEx6Css",
     "nodes": [
       {
@@ -1146,6 +1438,10 @@
               },
               {
                 "name": "file_id"
+              },
+              {
+                "name": "context",
+                "type": "object"
               }
             ]
           }
@@ -1153,8 +1449,8 @@
         "type": "n8n-nodes-base.executeWorkflowTrigger",
         "typeVersion": 1.1,
         "position": [
-          -480,
-          16
+          -1152,
+          0
         ],
         "id": "9b5395ea-c1ef-4363-9904-f77940a9f46c",
         "name": "Strict Entry (Brain)"
@@ -1173,8 +1469,8 @@
         "type": "n8n-nodes-base.if",
         "typeVersion": 1,
         "position": [
-          -240,
-          16
+          -896,
+          0
         ],
         "id": "94309feb-e4a9-406d-992b-408031a1e1b6",
         "name": "Is it Voice Note?"
@@ -1196,8 +1492,8 @@
         "type": "n8n-nodes-base.set",
         "typeVersion": 3.4,
         "position": [
-          16,
-          160
+          -656,
+          128
         ],
         "id": "f513818a-50ed-4346-a98b-e1c09f4986b5",
         "name": "Pass Text Directly"
@@ -1211,8 +1507,8 @@
         "type": "n8n-nodes-base.telegram",
         "typeVersion": 1.2,
         "position": [
-          16,
-          -128
+          -592,
+          -112
         ],
         "id": "0cccbd3b-5428-4522-b42b-84bfe398bacd",
         "name": "Download Audio",
@@ -1241,7 +1537,7 @@
         "type": "@n8n/n8n-nodes-langchain.googleGemini",
         "typeVersion": 1.1,
         "position": [
-          240,
+          -176,
           -128
         ],
         "id": "bd8846d5-a97d-496f-819c-c08103e0b11d",
@@ -1270,8 +1566,8 @@
         "type": "n8n-nodes-base.set",
         "typeVersion": 3.4,
         "position": [
-          464,
-          -128
+          16,
+          -112
         ],
         "id": "b241d563-7ae9-4282-b3a4-ce6ca0b8a9e0",
         "name": "Format Transcription"
@@ -1281,8 +1577,8 @@
         "type": "n8n-nodes-base.merge",
         "typeVersion": 3,
         "position": [
-          704,
-          16
+          272,
+          0
         ],
         "id": "dbb4c6b3-61df-4bff-a0cf-4a7346d5654b",
         "name": "Merge Streams"
@@ -1310,7 +1606,7 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          1760,
+          2000,
           -48
         ],
         "id": "b298b5bc-2a45-4e49-8698-864a1eaeb490",
@@ -1355,8 +1651,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          2064,
-          -80
+          2256,
+          -64
         ],
         "id": "e344d54b-fdfb-4717-aea7-7b0cfca2e40f",
         "name": "Query RAG (Supabase)",
@@ -1371,13 +1667,13 @@
       },
       {
         "parameters": {
-          "jsCode": "const items = $input.all();\n\n// Extract memories (looks for 'content' or 'raw_content' depending on how your Supabase RPC function returns it)\nconst memories = items\n  .map(item => item.json.content || item.json.raw_content)\n  .filter(c => c && c.trim() !== \"\")\n  .join(' | ');\n\n// Retrieve the current thought and the embedding vector to pass them to the AI and save them later\nconst currentThought = $('Merge Streams').item.json.final_thought;\nconst currentVector = $('Generate Embeddings').item.json.embedding.values;\n\nreturn [{\n  json: {\n    final_thought: currentThought,\n    historical_context: memories || \"No previous history.\",\n    embedding_vector: currentVector\n  }\n}];"
+          "jsCode": "const items = $input.all();\n\n// 1. Extract memories from RAG\nconst memories = items\n  .map(item => item.json.content || item.json.raw_content)\n  .filter(c => c && c.trim() !== \"\")\n  .join(' | ');\n\n// 2. Get current thought and embedding vector\nconst currentThought = $('Merge Streams').item.json.final_thought;\nconst currentVector = $('Generate Embeddings').item.json.embedding.values;\n\n// 3. Get localized prompt and inject user data\nconst lang = $('Strict Entry (Brain)').item.json.context.language || 'es';\nconst promptData = $('Get Brain Prompts').first().json;\nlet fullPrompt = promptData[lang] || \"\";\n\n// 4. Replace placeholders now that we have all the data\nconst historical = memories || \"No previous history.\";\nfullPrompt = fullPrompt.replace('{{historical_context}}', historical);\nfullPrompt = fullPrompt.replace('{{user_thought}}', currentThought);\n\nreturn [{\n  json: {\n    final_thought: currentThought,\n    historical_context: historical,\n    embedding_vector: currentVector,\n    final_prompt: fullPrompt\n  }\n}];"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
         "position": [
-          2384,
-          -112
+          2576,
+          -80
         ],
         "id": "7ac07056-ae5b-4d7f-8eba-f7a496f214a8",
         "name": "Format Memory Context"
@@ -1401,8 +1697,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          912,
-          -16
+          1024,
+          -80
         ],
         "id": "09d58e07-9644-4a85-95a3-f0a7b9aa6735",
         "name": "Get Profile UUID",
@@ -1418,14 +1714,14 @@
       {
         "parameters": {
           "promptType": "define",
-          "text": "=Act as MindOps, the Cognitive Load Management System. You are an external pre-frontal cortex. Your goal is to map mental noise into a logical execution or protection sequence.\n\n### 1. MEMORY CONTEXT (RAG)\nHistorical patterns: {{ $('Format Memory Context').item.json.historical_context }}\n\nINSTRUCTION: \n- If historical_context contains thoughts SIMILAR to the current one, \n  explicitly flag it as a RECURRING LOOP in your strategic_insight.\n- Use language like: \"Your mind is producing this thought for the Nth time. \n  This is a pattern, not a new problem.\"\n- If no_previous_history, treat as fresh input.\n\n### 2. CURRENT THOUGHT\nUser's raw input: {{ $('Format Memory Context').item.json.final_thought }}\n\n### 3. ADAPTIVE TRIAGE PROTOCOL\n- 🔴 CRITICAL (Stall): High anxiety, rumination, or emotional blockage.\n  * MODE: PROTECTION. MISSION: Biological reset. Prohibit work.\n- 🟡 DENSE (Choppy): Confusion, clutter, high volume of tasks.\n  * MODE: EXECUTION. MISSION: Information architecture. Order by effort.\n- 🟢 FLUID (Flow): High energy and clarity.\n  * MODE: EXECUTION. MISSION: Maximize professional impact.\n\n### 4. ACTION PLAN RULES\n- Extract ALL tasks mentioned by the user.\n- Tasks must be \"Atomic Steps\": physical actions taking < 5 minutes.\n- Assign realistic 'time' slots starting from now.\n- If in PROTECTION mode, the plan must only contain ONE step: a sensory reset.\n\n¡Acabas de revelar la pieza final del rompecabezas! 🧩🔍\nMirando tu JSON Schema (que en realidad en n8n funciona como un \"JSON Example\"), acabo de entender exactamente por qué Gemini te devolvió 0.9 en lugar de 90.\nTe lo explico como Arquitecta de IA:\n🤖 CÓMO PIENSA LA INTELIGENCIA ARTIFICIAL\nEn el lenguaje de programación JSON, no existe la diferencia entre un número entero (90) y un decimal (0.9). Ambos son simplemente del tipo number.\nCuando n8n le manda tu esquema a Gemini, le dice:\n\"Gemini, necesito que me des un campo llamado friction_score y el tipo de dato debe ser un number\".\nComo no le dijiste a Gemini cuál era la \"escala\" de ese número, la IA hizo una suposición matemática (alucinar): \"Ah, me pide un score de fricción. En ciencia de datos los scores se miden de 0.0 a 1.0. Le voy a dar un 0.9 (que equivale al 90%)\".\n🛡️ LA SOLUCIÓN DE RAÍZ (Prompt Engineering)\nEl parche matemático de Javascript que pusimos en el nodo anterior (Math.round(...)) es excelente y debes dejarlo ahí, se llama \"Programación Defensiva\" y te salvará de muchos errores.\nPero para arreglar la raíz del problema y educar a la IA, tenemos que darle instrucciones estrictas en el Prompt.\nVe a tu nodo MindOps Brain (LLM) y en tu prompt, justo en la sección de OUTPUT RULES, agrega esta regla de oro:\ncode\nText\n### 5. OUTPUT RULES\n- Use Cognitive Labeling in your strategic insight: \"Your mind is producing thoughts about X\".\n- Language: Respond in ENGLISH.\n- The 'friction_score' MUST be an INTEGER between 1 and 100 (e.g., 20, 50, 90). DO NOT use decimals or fractions.\n- Return ONLY the JSON object following the exact schema provided",
+          "text": "={{ $node[\"Select Localized Prompt\"].json.final_prompt }}",
           "hasOutputParser": true
         },
         "type": "@n8n/n8n-nodes-langchain.chainLlm",
         "typeVersion": 1.4,
         "position": [
-          2688,
-          -176
+          3024,
+          -112
         ],
         "id": "a9cf4a7a-8174-4a0d-b145-1099c9a57f5b",
         "name": "MindOps Brain (LLM)"
@@ -1437,8 +1733,8 @@
         "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
         "typeVersion": 1.2,
         "position": [
-          2864,
-          272
+          3200,
+          224
         ],
         "id": "8fcf49e7-8fa5-4546-ba80-e9abda263c2a",
         "name": "JSON Schema Parser"
@@ -1516,8 +1812,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          3072,
-          -112
+          3616,
+          -16
         ],
         "id": "cfcdc020-f16d-4a1f-b49a-c228c2da73a5",
         "name": "Save PROPOSED Mission",
@@ -1537,7 +1833,7 @@
         "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
         "typeVersion": 1,
         "position": [
-          2656,
+          3008,
           192
         ],
         "id": "8b14863b-6a59-42bc-abf2-1a8141cf171f",
@@ -1562,8 +1858,9 @@
             "mappingMode": "defineBelow",
             "value": {
               "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
-              "text": "=={{\"🧠 *COGNITIVE LOAD SCAN COMPLETE*\\n\" + \n$('MindOps Brain (LLM)').item.json.output.friction_tag + \"\\n\\n\" + \n$('MindOps Brain (LLM)').item.json.output.strategic_insight + \n\"\\n\\n━━━━━━━━━━━━━━━━━━━━\\n⚡ *EXECUTION SEQUENCE PROPOSED:*\\n\" + \n$('MindOps Brain (LLM)').item.json.output.action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n') + \n\"\\n\\n🎯 *Ready to execute?* \"}}\n",
-              "markup_type": "inlineKeyboard"
+              "text": "={{ \n  $('Strict Entry (Brain)').item.json.context.translations.message_proposal\n    .replace('{friction_tag}', $('MindOps Brain (LLM)').item.json.output.friction_tag)\n    .replace('{strategic_insight}', $('MindOps Brain (LLM)').item.json.output.strategic_insight)\n    .replace('{action_plan}', $('MindOps Brain (LLM)').item.json.output.action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n'))\n}}",
+              "markup_type": "inlineKeyboard",
+              "keyboard_data": "={{ [[\n  { \"text\": $('Strict Entry (Brain)').item.json.context.translations.btn_mission_activate, \"callback_data\": \"plan_ok\" },\n  { \"text\": $('Strict Entry (Brain)').item.json.context.translations.btn_mission_readjust, \"callback_data\": \"plan_error\" }\n]] }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -1596,6 +1893,26 @@
                 "canBeUsedToMatch": true,
                 "type": "string",
                 "removed": false
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "keyboard_data",
+                "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
+                "removed": false
               }
             ],
             "attemptToConvertTypes": false,
@@ -1606,8 +1923,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          3440,
-          48
+          4128,
+          -48
         ],
         "id": "c48047db-6ca4-4d65-b36b-bef793578c7a",
         "name": "Send Proposal and Buttons"
@@ -1625,7 +1942,7 @@
             "mappingMode": "defineBelow",
             "value": {
               "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
-              "text": "⚠️ Mission Sync Failed  Something went wrong while activating your plan. We tried but couldn't connect to the system.  Your plan is still saved. Please try again in a few moments."
+              "text": "={{ $('Strict Entry (Brain)').item.json.context.translations.error_message_mission }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -1676,8 +1993,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          2080,
-          832
+          1904,
+          848
         ],
         "id": "fc5fdb13-04f3-45bc-af45-2c6f11ad1fef",
         "name": "Error Message"
@@ -1709,8 +2026,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.4,
         "position": [
-          1232,
-          -160
+          1264,
+          -304
         ],
         "id": "c603e84d-f24b-45ef-bf4f-97219f349d23",
         "name": "Check Exact Duplicate",
@@ -1751,8 +2068,8 @@
         "type": "n8n-nodes-base.if",
         "typeVersion": 2.3,
         "position": [
-          1568,
-          -176
+          1632,
+          -320
         ],
         "id": "b7fd381b-16e0-4049-843b-58361a4c10ea",
         "name": "Is Duplicate?"
@@ -1785,8 +2102,8 @@
         "type": "n8n-nodes-base.if",
         "typeVersion": 2.3,
         "position": [
-          1824,
-          -240
+          2112,
+          -368
         ],
         "id": "51c5b090-8dfa-4a34-87ab-1501d18c2bfc",
         "name": "Is Status PROPOSED?"
@@ -1804,8 +2121,9 @@
             "mappingMode": "defineBelow",
             "value": {
               "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
-              "text": "=={{\"♻️ *RECOVERED THOUGHT:*\\nI noticed you just sent this exact same thought. Here is the mission that was left pending:\\n\\n🧠 *LOAD ANALYSIS:*\\n\" + $json.old_summary_title + \"\\n\\n\" + $json.old_strategic_insight + \"\\n\\n━━━━━━━━━━━━━━━━━━━━\\n⚡ *EXECUTION SEQUENCE PROPOSED:*\\n\" + $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n') + \"\\n\\n🎯 *Ready to execute?*\"}}",
-              "markup_type": "inlineKeyboard"
+              "text": "={{ \n  $('Strict Entry (Brain)').item.json.context.translations.cache_proposal\n    .replace('{old_summary_title}', $json.old_summary_title)\n    .replace('{old_strategic_insight}', $json.old_strategic_insight)\n    .replace('{old_action_plan}', $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n'))\n}}\n",
+              "markup_type": "inlineKeyboard",
+              "keyboard_data": "={{ $json.keyboard }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -1847,6 +2165,16 @@
                 "display": true,
                 "canBeUsedToMatch": true,
                 "type": "string",
+                "removed": true
+              },
+              {
+                "id": "keyboard_data",
+                "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
                 "removed": false
               }
             ],
@@ -1858,7 +2186,7 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          2128,
+          2768,
           -528
         ],
         "id": "419653ca-d331-4b9e-b9c5-ce2d705b81ae",
@@ -1877,7 +2205,7 @@
             "mappingMode": "defineBelow",
             "value": {
               "chat_id": "={{ $('Strict Entry (Brain)').item.json.chat_id }}",
-              "text": "=*Thought Already Processed*\nI noticed you just shared this exact same thought recently. Here is the previous analysis:\n\n**{{ $json.old_summary_title }}**\n{{ $json.old_strategic_insight }}\n\n━━━━━━━━━━━━━━━━━━━━\n⚡ *SECUENCIA:*\n{{ $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n') }}"
+              "text": "={{ \n  $('Strict Entry (Brain)').item.json.context.translations.duplicate_alert\n    .replace('{old_summary_title}', $json.old_summary_title)\n    .replace('{old_strategic_insight}', $json.old_strategic_insight)\n    .replace('{old_action_plan}', $json.old_action_plan.map(p => \"🕒 \" + p.time + \" | \" + p.task).join('\\n'))\n}}\n"
             },
             "matchingColumns": [],
             "schema": [
@@ -1930,11 +2258,217 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          2192,
-          -272
+          2784,
+          -304
         ],
         "id": "cfdf11b2-2c70-4cef-a094-090870e803a0",
         "name": "Send Duplicate Alert"
+      },
+      {
+        "parameters": {
+          "content": "## Description\nMindOps Brain Core: This engine processes voice logs into structured data. It performs AI-driven cognitive analysis, detects recurring thoughts, and delivers localized outcome-based action plans.",
+          "height": 192,
+          "width": 832
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -80,
+          -768
+        ],
+        "typeVersion": 1,
+        "id": "faa1a67f-b289-4225-833d-348b2dcb7f06",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "content": "## RECEIVE (Voice & Text)",
+          "height": 704,
+          "width": 896,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1232,
+          -336
+        ],
+        "typeVersion": 1,
+        "id": "509aa3c4-3775-442a-8c9f-f0043b046b0c",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "## PREPARE (Transcription & Prompts)",
+          "height": 704,
+          "width": 1216,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -272,
+          -368
+        ],
+        "typeVersion": 1,
+        "id": "5ecba1f5-0f6d-4f56-9eb0-3896f77efe75",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "## IDENTIFY (User & Duplicates)",
+          "height": 800,
+          "width": 912,
+          "color": 6
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          976,
+          -496
+        ],
+        "typeVersion": 1,
+        "id": "c610cef6-c78c-4fda-b0e4-4947a0e690cc",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "content": "## THINK (AI & Memory)",
+          "height": 1056,
+          "width": 1424,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1936,
+          -592
+        ],
+        "typeVersion": 1,
+        "id": "24c94226-9ef4-461a-a6ec-defb231d8210",
+        "name": "Sticky Note4"
+      },
+      {
+        "parameters": {
+          "content": "## RESPOND (Output)",
+          "height": 640,
+          "width": 832,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          3536,
+          -320
+        ],
+        "typeVersion": 1,
+        "id": "d869c279-fbba-4e96-8cd8-06581448b2ea",
+        "name": "Sticky Note5"
+      },
+      {
+        "parameters": {
+          "content": "## Error Handling",
+          "height": 352,
+          "width": 368,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1856,
+          672
+        ],
+        "typeVersion": 1,
+        "id": "7d1994d0-635e-480c-bae1-9104f7133bce",
+        "name": "Sticky Note6"
+      },
+      {
+        "parameters": {
+          "url": "https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/prompts?key=eq.prompt_ai&select=es,en",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "httpMultipleHeadersAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Profile",
+                "value": "mindops"
+              },
+              {
+                "name": "Accept-Profile",
+                "value": "mindops"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          480,
+          -16
+        ],
+        "id": "70b06d79-1123-4852-8859-3cd8deba898d",
+        "name": "Get Brain Prompts",
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "9KY2AHXMXRxyjGim",
+            "name": "Supabase"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "jsCode": "const lang = $('Strict Entry (Brain)').item.json.context.language || 'es';\n\nconst promptData = $input.first().json;\nlet fullPrompt = promptData[lang] || \"\";\n\n// Estos se inyectarán después — por ahora dejamos placeholders\n// El reemplazo real ocurre en Format Memory Context\nreturn [{\n  json: {\n    final_prompt: fullPrompt,\n    debug_language: lang\n  }\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          800,
+          -112
+        ],
+        "id": "e6fae0f9-5d0d-4674-b9bd-eaa842f62d50",
+        "name": "Select Localized Prompt"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ced6f3d6-f414-433f-80e0-d3a843e6a2b5",
+                "name": "keyboard_data",
+                "value": "={{ JSON.stringify([[   { \"text\": $('Strict Entry (Brain)').item.json.context.translations.btn_mission_activate, \"callback_data\": \"plan_ok\" },   { \"text\": $('Strict Entry (Brain)').item.json.context.translations.btn_mission_readjust, \"callback_data\": \"plan_error\" } ]]) }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          2464,
+          -480
+        ],
+        "id": "094c3b15-4d70-4032-8d47-b220c482a1cf",
+        "name": "Prepare Keyboard: Mission"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "12e40e02-93c1-4e86-907d-f3003bb5c4a3",
+                "name": "",
+                "value": "",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          2784,
+          -80
+        ],
+        "id": "1fe1dfa8-bfad-40e4-ad75-92b67d0efd16",
+        "name": "Edit Fields"
       }
     ],
     "connections": {
@@ -2051,7 +2585,7 @@
         "main": [
           [
             {
-              "node": "Get Profile UUID",
+              "node": "Get Brain Prompts",
               "type": "main",
               "index": 0
             }
@@ -2123,6 +2657,11 @@
               "node": "MindOps Brain (LLM)",
               "type": "main",
               "index": 0
+            },
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
             }
           ]
         ]
@@ -2183,7 +2722,7 @@
         "main": [
           [
             {
-              "node": "Send: Cached Proposal + Buttons",
+              "node": "Prepare Keyboard: Mission",
               "type": "main",
               "index": 0
             }
@@ -2201,18 +2740,63 @@
         "main": [
           []
         ]
+      },
+      "Get Brain Prompts": {
+        "main": [
+          [
+            {
+              "node": "Select Localized Prompt",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Select Localized Prompt": {
+        "main": [
+          [
+            {
+              "node": "Get Profile UUID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send: Cached Proposal + Buttons": {
+        "main": [
+          []
+        ]
+      },
+      "Prepare Keyboard: Mission": {
+        "main": [
+          [
+            {
+              "node": "Send: Cached Proposal + Buttons",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version 4c4f8f83",
+    "name": "Version 149e701f",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-10T01:13:01.242Z",
-        "id": 140,
+        "createdAt": "2026-03-16T00:43:48.841Z",
+        "id": 267,
         "workflowId": "zc8E5ZfPENEx6Css",
-        "versionId": "4c4f8f83-8087-4dab-aa26-05fdeb1459a4",
+        "versionId": "149e701f-3a07-473a-a3bd-825c770ea61a",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
