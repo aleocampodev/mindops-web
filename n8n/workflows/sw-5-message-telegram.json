@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-09T21:43:23.089Z",
+  "updatedAt": "2026-03-16T19:32:57.046Z",
   "createdAt": "2026-02-22T01:50:52.439Z",
   "id": "zZYZA8aKwUckaap4",
   "name": "SW-5:Message telegram",
@@ -22,6 +22,10 @@
             },
             {
               "name": "message_id"
+            },
+            {
+              "name": "keyboard_data",
+              "type": "array"
             }
           ]
         }
@@ -30,7 +34,7 @@
       "typeVersion": 1.1,
       "position": [
         -496,
-        -304
+        -320
       ],
       "id": "4264b79d-7899-49f3-a5a3-8a4b117aa2f6",
       "name": "When Executed by Another Workflow"
@@ -52,7 +56,7 @@
       "typeVersion": 1,
       "position": [
         -304,
-        -304
+        -320
       ],
       "id": "83498be0-3736-4bdd-96b5-52175e210b93",
       "name": "Telegram token",
@@ -140,6 +144,31 @@
               },
               "renameOutput": true,
               "outputKey": "RemoveInline"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "60c7cf27-e05b-4217-ae1a-8e00dcceb565",
+                    "leftValue": "={{ $node[\"When Executed by Another Workflow\"].json.markup_type }}",
+                    "rightValue": "removeReply",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RemoveReply"
             }
           ]
         },
@@ -151,7 +180,7 @@
       "typeVersion": 3.4,
       "position": [
         176,
-        -288
+        -304
       ],
       "id": "a2538e22-8858-4bbb-85dc-cf4618624e7c",
       "name": "Router: Markup Type"
@@ -173,7 +202,7 @@
             },
             {
               "name": "reply_markup",
-              "value": "={{ JSON.stringify({ \"inline_keyboard\": [[{ \"text\": \"✅ Activate Mission\", \"callback_data\": \"plan_ok\" }, { \"text\": \"🔄 Readjust\", \"callback_data\": \"plan_error\" }]] }) }}"
+              "value": "={{ JSON.stringify({ \"inline_keyboard\": $('When Executed by Another Workflow').item.json.keyboard_data }) }}"
             }
           ]
         },
@@ -183,7 +212,7 @@
       "typeVersion": 4.4,
       "position": [
         784,
-        -304
+        -320
       ],
       "id": "10c8e20d-9e55-41ae-8656-fda3556b9ae3",
       "name": "Send: Inline Keyboard",
@@ -206,7 +235,7 @@
             },
             {
               "name": "=reply_markup",
-              "value": "={{ { \"keyboard\": [[{ \"text\": \"📲 Share Contact\", \"request_contact\": true }]], \"resize_keyboard\": true, \"one_time_keyboard\": true } }}"
+              "value": "={{ JSON.stringify({ \n  \"keyboard\": $('When Executed by Another Workflow').item.json.keyboard_data, \n  \"resize_keyboard\": true, \n  \"one_time_keyboard\": true \n}) }}"
             }
           ]
         },
@@ -216,7 +245,7 @@
       "typeVersion": 4.4,
       "position": [
         784,
-        -480
+        -496
       ],
       "id": "2405b12d-0f32-4504-b47d-bb977c0ef21d",
       "name": "Send: Reply Keyboard",
@@ -245,7 +274,7 @@
       "typeVersion": 4.4,
       "position": [
         784,
-        112
+        336
       ],
       "id": "5fecf0bb-f6ae-47b4-8e12-92bedc1b3579",
       "name": "Send: Plain Message",
@@ -278,7 +307,7 @@
       "typeVersion": 4.4,
       "position": [
         784,
-        -96
+        -112
       ],
       "id": "28276505-c336-41f6-af9c-025b4857c275",
       "name": "Send: RemoveInline Keyboard",
@@ -294,7 +323,7 @@
       "typeVersion": 1.2,
       "position": [
         1808,
-        -176
+        -224
       ],
       "id": "e9d7df4c-704c-4471-ab5e-618ecfcfd24c",
       "name": "Error Message",
@@ -334,7 +363,7 @@
       "typeVersion": 2.3,
       "position": [
         1408,
-        -192
+        -208
       ],
       "id": "b0a658bc-b30c-4d7e-a75d-b8164477d91d",
       "name": "Telegram 500 Filter"
@@ -349,7 +378,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         1312,
-        -304
+        -320
       ],
       "typeVersion": 1,
       "id": "90cb49a8-b863-455f-a190-af621a5e6652",
@@ -357,15 +386,15 @@
     },
     {
       "parameters": {
-        "content": "Centralized Telegram dispatcher. Receives message data and formats the correct API request.",
-        "height": 80,
-        "width": 528
+        "content": "### Description\nCentralized Telegram dispatcher. Receives message data and formats the correct API request.",
+        "height": 112,
+        "width": 544
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -112,
-        -608
+        -240,
+        -720
       ],
       "id": "515c731b-fbe3-4d72-a78b-fab4a7b68998",
       "name": "Sticky Note1"
@@ -381,7 +410,7 @@
       "typeVersion": 1,
       "position": [
         -560,
-        -384
+        -400
       ],
       "id": "b19e78c0-eee3-480a-911d-2d05117f8c21",
       "name": "Sticky Note2"
@@ -397,7 +426,7 @@
       "typeVersion": 1,
       "position": [
         112,
-        -384
+        -400
       ],
       "id": "89d889cc-d0e1-4598-8197-f2e3126f1a1d",
       "name": "Sticky Note3"
@@ -405,18 +434,51 @@
     {
       "parameters": {
         "content": "**Telegram API Requests**",
-        "height": 880,
-        "width": 320,
+        "height": 1184,
+        "width": 384,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         672,
-        -576
+        -592
       ],
       "id": "13a51a40-6bd0-4420-aa92-458231cf2c9e",
       "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $node[\"Telegram token\"].json.value }}/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=chat_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.chat_id }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $('When Executed by Another Workflow').item.json.text }}"
+            },
+            {
+              "name": "reply_markup",
+              "value": "{\"remove_keyboard\": true}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        784,
+        112
+      ],
+      "id": "22b7ccdb-a7d2-49db-bd67-403d72139733",
+      "name": "Send: RemoveReply",
+      "onError": "continueErrorOutput"
     }
   ],
   "connections": {
@@ -461,6 +523,13 @@
         [
           {
             "node": "Send: RemoveInline Keyboard",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send: RemoveReply",
             "type": "main",
             "index": 0
           }
@@ -533,6 +602,18 @@
         ],
         []
       ]
+    },
+    "Send: RemoveReply": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Telegram 500 Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -549,9 +630,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "9a8bcec1-a939-416f-b1df-5c03edb9d683",
-  "activeVersionId": "9a8bcec1-a939-416f-b1df-5c03edb9d683",
-  "versionCounter": 622,
+  "versionId": "6a877baa-2ec0-4f03-8fc5-bd5ca5e2fb45",
+  "activeVersionId": "42de3401-ae0e-47d7-a3f4-78871be92f55",
+  "versionCounter": 746,
   "triggerCount": 0,
   "shared": [
     {
@@ -574,9 +655,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-09T21:44:00.341Z",
-    "createdAt": "2026-03-09T21:43:23.112Z",
-    "versionId": "9a8bcec1-a939-416f-b1df-5c03edb9d683",
+    "updatedAt": "2026-03-16T00:05:37.301Z",
+    "createdAt": "2026-03-16T00:05:26.545Z",
+    "versionId": "42de3401-ae0e-47d7-a3f4-78871be92f55",
     "workflowId": "zZYZA8aKwUckaap4",
     "nodes": [
       {
@@ -594,6 +675,10 @@
               },
               {
                 "name": "message_id"
+              },
+              {
+                "name": "keyboard_data",
+                "type": "array"
               }
             ]
           }
@@ -712,6 +797,31 @@
                 },
                 "renameOutput": true,
                 "outputKey": "RemoveInline"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "id": "60c7cf27-e05b-4217-ae1a-8e00dcceb565",
+                      "leftValue": "={{ $node[\"When Executed by Another Workflow\"].json.markup_type }}",
+                      "rightValue": "removeReply",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "RemoveReply"
               }
             ]
           },
@@ -745,7 +855,7 @@
               },
               {
                 "name": "reply_markup",
-                "value": "={{ JSON.stringify({ \"inline_keyboard\": [[{ \"text\": \"✅ Activate Mission\", \"callback_data\": \"plan_ok\" }, { \"text\": \"🔄 Readjust\", \"callback_data\": \"plan_error\" }]] }) }}"
+                "value": "={{ JSON.stringify({ \"inline_keyboard\": $('When Executed by Another Workflow').item.json.keyboard_data }) }}"
               }
             ]
           },
@@ -778,7 +888,7 @@
               },
               {
                 "name": "=reply_markup",
-                "value": "={{ { \"keyboard\": [[{ \"text\": \"📲 Share Contact\", \"request_contact\": true }]], \"resize_keyboard\": true, \"one_time_keyboard\": true } }}"
+                "value": "={{ JSON.stringify({ \n  \"keyboard\": $('When Executed by Another Workflow').item.json.keyboard_data, \n  \"resize_keyboard\": true, \n  \"one_time_keyboard\": true \n}) }}"
               }
             ]
           },
@@ -817,7 +927,7 @@
         "typeVersion": 4.4,
         "position": [
           784,
-          112
+          352
         ],
         "id": "5fecf0bb-f6ae-47b4-8e12-92bedc1b3579",
         "name": "Send: Plain Message",
@@ -866,7 +976,7 @@
         "typeVersion": 1.2,
         "position": [
           1808,
-          -176
+          -208
         ],
         "id": "e9d7df4c-704c-4471-ab5e-618ecfcfd24c",
         "name": "Error Message",
@@ -929,15 +1039,15 @@
       },
       {
         "parameters": {
-          "content": "Centralized Telegram dispatcher. Receives message data and formats the correct API request.",
-          "height": 80,
-          "width": 528
+          "content": "### Description\nCentralized Telegram dispatcher. Receives message data and formats the correct API request.",
+          "height": 112,
+          "width": 544
         },
         "type": "n8n-nodes-base.stickyNote",
         "typeVersion": 1,
         "position": [
-          -112,
-          -608
+          -240,
+          -704
         ],
         "id": "515c731b-fbe3-4d72-a78b-fab4a7b68998",
         "name": "Sticky Note1"
@@ -977,8 +1087,8 @@
       {
         "parameters": {
           "content": "**Telegram API Requests**",
-          "height": 880,
-          "width": 320,
+          "height": 1088,
+          "width": 336,
           "color": 4
         },
         "type": "n8n-nodes-base.stickyNote",
@@ -989,6 +1099,39 @@
         ],
         "id": "13a51a40-6bd0-4420-aa92-458231cf2c9e",
         "name": "Sticky Note4"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://api.telegram.org/bot{{ $node[\"Telegram token\"].json.value }}/sendMessage",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "=chat_id",
+                "value": "={{ $('When Executed by Another Workflow').item.json.chat_id }}"
+              },
+              {
+                "name": "text",
+                "value": "={{ $('When Executed by Another Workflow').item.json.text }}"
+              },
+              {
+                "name": "reply_markup",
+                "value": "{\"remove_keyboard\": true}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          784,
+          128
+        ],
+        "id": "22b7ccdb-a7d2-49db-bd67-403d72139733",
+        "name": "Send: RemoveReply",
+        "onError": "continueErrorOutput"
       }
     ],
     "connections": {
@@ -1033,6 +1176,13 @@
           [
             {
               "node": "Send: RemoveInline Keyboard",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send: RemoveReply",
               "type": "main",
               "index": 0
             }
@@ -1105,18 +1255,30 @@
           ],
           []
         ]
+      },
+      "Send: RemoveReply": {
+        "main": [
+          [],
+          [
+            {
+              "node": "Telegram 500 Filter",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version 9a8bcec1",
+    "name": "Version 42de3401",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-09T21:44:00.163Z",
-        "id": 121,
+        "createdAt": "2026-03-16T00:05:37.254Z",
+        "id": 259,
         "workflowId": "zZYZA8aKwUckaap4",
-        "versionId": "9a8bcec1-a939-416f-b1df-5c03edb9d683",
+        "versionId": "42de3401-ae0e-47d7-a3f4-78871be92f55",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
