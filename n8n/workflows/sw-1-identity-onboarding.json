@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-09T18:58:01.663Z",
+  "updatedAt": "2026-03-16T00:14:24.801Z",
   "createdAt": "2026-02-22T01:57:39.282Z",
   "id": "GmInc0tYXj4ZR4kM",
   "name": "SW-1: Identity & Onboarding",
@@ -28,6 +28,13 @@
             },
             {
               "name": "contact_phone"
+            },
+            {
+              "name": "context",
+              "type": "object"
+            },
+            {
+              "name": "message_id"
             }
           ]
         }
@@ -35,15 +42,15 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1360,
-        384
+        -1600,
+        256
       ],
       "id": "1503be27-68e3-4d03-afb1-53a30203776d",
       "name": "Strict Entry (Contract)"
     },
     {
       "parameters": {
-        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Contract)').item.json.telegram_id }}&select=id,onboarding_state,telegram_id,phone_number",
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Contract)').item.json.telegram_id }}&&select=id,onboarding_state,telegram_id,phone_number,language",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "httpMultipleHeadersAuth",
         "sendHeaders": true,
@@ -64,8 +71,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        -784,
-        16
+        -528,
+        -160
       ],
       "id": "17e7deeb-e79b-46da-b32f-bf1b3e186e8f",
       "name": "Check DB (START)",
@@ -95,8 +102,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -496,
-        608
+        -528,
+        720
       ],
       "id": "dc77f8d2-f622-4ea0-ab47-6b31f47aa6c0",
       "name": "Extract Code (VINCULATE)"
@@ -114,7 +121,8 @@
           "mappingMode": "defineBelow",
           "value": {
             "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-            "text": "=MindOps \n Your Clarity Companion 🧠💡  Hi {{ $('Strict Entry (Contract)').item.json.first_name }}. I'm your assistant for thinking out loud. I'm here to help you clear the noise from your head so nothing important gets lost.  Sometimes, simply saying things out loud helps us see the way forward. Use me as your 'mental draft pad': 🗣️ Offload what's on your mind: Send a quick audio or text about whatever's pending or draining your energy. 📊 I'll organize it for you: I'll identify what matters most and suggest one small physical step to get started. ☁️ No pressure: We're not chasing perfection — just a little momentum.  To get started right now: \n1️⃣ Create your account at: https://mindops-web-43822856294.us-central1.run.app\n2️⃣ Log in and copy your code. \n3️⃣ Send it here: /vinculate [code]"
+            "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.msg_intro.replace('{name}', $('Strict Entry (Contract)').item.json.first_name) }}",
+            "markup_type": "plain"
           },
           "matchingColumns": [],
           "schema": [
@@ -146,11 +154,31 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string",
+              "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": true
             },
             {
               "id": "keyboard_data",
               "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": true
+            },
+            {
+              "id": "context",
+              "displayName": "context",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -168,8 +196,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        128,
-        -96
+        -48,
+        240
       ],
       "id": "0421f87a-90e7-46ba-beeb-76a82d4c913c",
       "name": "Welcome message"
@@ -186,7 +214,7 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "text": "=Hey {{ $('Strict Entry (Contract)').item.json.first_name }} , your system is fully active.\nJust send me a voice note or text about whatever's on your mind — I'll help you organize it and find the next small step.\nWhat's taking up space in your head right now?",
+            "text": "={{ \n  $('Strict Entry (Contract)').item.json.context.translations.reminder_message.replace('{name}',  $('Strict Entry (Contract)').item.json.first_name.charAt(0).toUpperCase() + $('Strict Entry (Contract)').item.json.first_name.slice(1)) \n}}\n",
             "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}"
           },
           "matchingColumns": [],
@@ -240,8 +268,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        448,
-        320
+        720,
+        -80
       ],
       "id": "4135c30c-de9b-4b52-8e45-e7461075aed6",
       "name": "Reminder message"
@@ -259,7 +287,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-            "text": "❌ Invalid or expired code. Please generate a new one on the web and try again: /vinculate [new code]"
+            "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.invalid_code }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -312,8 +340,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        384,
-        720
+        368,
+        784
       ],
       "id": "1e96b1f5-7a79-485c-92f4-e5b88affb73a",
       "name": "Error code message"
@@ -341,8 +369,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        -272,
-        592
+        -256,
+        672
       ],
       "id": "253c7a10-d47d-4bcb-b3b7-d72fe272151e",
       "name": "Get Code from DB",
@@ -393,7 +421,7 @@
       "typeVersion": 2.3,
       "position": [
         -336,
-        16
+        -320
       ],
       "id": "38bad971-b9f0-4f09-a373-56308dd885d2",
       "name": "If profile empty?"
@@ -458,8 +486,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -80,
-        80
+        112,
+        -224
       ],
       "id": "b67bdc12-c0a1-4b18-a0e0-938824684651",
       "name": "State user"
@@ -491,8 +519,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        0,
-        560
+        16,
+        608
       ],
       "id": "33c26f2d-42a0-4369-a0c7-e3df39f2f01c",
       "name": "Is Code Valid?"
@@ -511,19 +539,20 @@
                 },
                 "conditions": [
                   {
+                    "id": "35ce48ed-2128-4be7-bc94-d5972a23ac1c",
                     "leftValue": "={{ $json.action ? $json.action.toUpperCase() : \"\" }}",
                     "rightValue": "START",
                     "operator": {
                       "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "03d9ce09-3b22-4b97-b216-f4a9d5c61025"
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
                   }
                 ],
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "START"
+              "outputKey": "Start"
             },
             {
               "conditions": {
@@ -535,7 +564,32 @@
                 },
                 "conditions": [
                   {
-                    "id": "6cd2f545-0d18-4fa1-97cc-8afbc301b3f4",
+                    "id": "1640eb64-f117-476c-bd57-b461be532379",
+                    "leftValue": "={{ $json.action ? $json.action.toUpperCase() : \"\" }}",
+                    "rightValue": "SET_LANGUAGE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Set Language"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ceb4e905-4be1-41d0-b599-b832cef6f738",
                     "leftValue": "={{ $json.action ? $json.action.toUpperCase() : \"\" }}",
                     "rightValue": "VINCULATE",
                     "operator": {
@@ -548,7 +602,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "VINCULATE"
+              "outputKey": "Vinculate"
             },
             {
               "conditions": {
@@ -560,7 +614,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "05315f58-b7f1-4384-bdcf-35efd03841f5",
+                    "id": "d326c461-ff2c-45f7-9d10-4d73630cfb82",
                     "leftValue": "={{ $json.action ? $json.action.toUpperCase() : \"\" }}",
                     "rightValue": "CONTACT",
                     "operator": {
@@ -573,7 +627,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "CONTACT"
+              "outputKey": "Contact"
             }
           ]
         },
@@ -582,8 +636,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -1056,
-        304
+        -1216,
+        256
       ],
       "id": "549c14be-c34f-46e3-816b-1640b11dadce",
       "name": "Domain Controller"
@@ -615,8 +669,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -368,
-        944
+        -528,
+        1104
       ],
       "id": "30626dc8-30ad-4b12-a49b-7c4673405f13",
       "name": "Update  Contact",
@@ -627,78 +681,6 @@
         }
       },
       "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "zZYZA8aKwUckaap4",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
-          "cachedResultName": "SW-5:Message telegram"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "text": "⚠️ System Sync Error  I’m unable to process your request right now due to a communication glitch with the Core. Please re-attempt the action or check your connection.",
-            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "chat_id",
-              "displayName": "chat_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "text",
-              "displayName": "text",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "markup_type",
-              "displayName": "markup_type",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": true
-            },
-            {
-              "id": "keyboard_data",
-              "displayName": "keyboard_data",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "object",
-              "removed": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        992,
-        384
-      ],
-      "id": "1fc72d73-025a-470b-bf54-514e89657ecd",
-      "name": "Generic error message3"
     },
     {
       "parameters": {
@@ -727,8 +709,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        240,
-        496
+        256,
+        576
       ],
       "id": "dc1395e1-e7dc-4540-83ea-1ff66ba0faa2",
       "name": "Link Account DB",
@@ -753,8 +735,8 @@
           "mappingMode": "defineBelow",
           "value": {
             "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-            "text": " MindOps \n Setup Incomplete ⚠️  I noticed your Voice Protocol is not active yet.   Without your contact number, the system won't be able to call you and help you break out of a loop if you get stuck (🔴 High Friction).  Please tap the button below to share your contact and fully activate your safety net.\n\n",
-            "markup_type": "replyKeyboard"
+            "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.message_controller }}",
+            "markup_type": "removeReply"
           },
           "matchingColumns": [],
           "schema": [
@@ -797,70 +779,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        400,
-        16
-      ],
-      "id": "b69a70e4-d127-4d4f-ae4b-dd558cee1847",
-      "name": "Contact activate"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "zZYZA8aKwUckaap4",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
-          "cachedResultName": "SW-5:Message telegram"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-            "text": "Voice Protocol Activated! 🛡️📞  Your analog safety net is fully operational. From now on, MindOps will watch over your momentum.  No debts, no guilt. What's on your mind right now? Let it all out (audio or text)."
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "chat_id",
-              "displayName": "chat_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "text",
-              "displayName": "text",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "markup_type",
-              "displayName": "markup_type",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        96,
-        800
+        0,
+        1008
       ],
       "id": "c5e04ec5-04ea-4557-bf66-f089f63bcfe9",
       "name": "Message Domain Controller"
@@ -877,8 +797,8 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "text": "⚠️ System Sync Error  I’m unable to process your request right now due to a communication glitch with the Core. Please re-attempt the action or check your connection.",
-            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}"
+            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+            "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.error_message_onboarding }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -931,8 +851,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        1088,
-        736
+        2064,
+        640
       ],
       "id": "3ae91daf-4639-4e41-ac27-00b8527c43fb",
       "name": "Generic error message"
@@ -949,8 +869,417 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
+            "markup_type": "replyKeyboard",
+            "keyboard_data": "={{ $json.keyboard_data }}\n",
             "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-            "text": "✅ Linking Successful! Your web account and Telegram are now synced.  Final step: To activate your Voice Protocol, please share your contact.  Sometimes we all get stuck. If my telemetry detects that you've entered a state of High Friction (🔴) and you've been silent for hours, I will call your phone to help you break the paralysis and recover your flow.",
+            "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.linking_succesful_message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "markup_type",
+              "displayName": "markup_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "keyboard_data",
+              "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": true,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        544
+      ],
+      "id": "c2a90093-fd6c-4339-ab6c-531d277d6e38",
+      "name": "Linking Successful Message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/telegram_sessions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpMultipleHeadersAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "mindops"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"telegram_id\": \"{{ $('Strict Entry (Contract)').item.json.telegram_id }}\",\n  \"language\": \"{{ ($json.input_text || \"\").replace('lang_', '') }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -624,
+        304
+      ],
+      "id": "475afd36-011a-4340-8553-0c1d99d58c9e",
+      "name": "Save Language to DB",
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "9KY2AHXMXRxyjGim",
+          "name": "Supabase"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zZYZA8aKwUckaap4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+          "cachedResultName": "SW-5:Message telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+            "markup_type": "inlineKeyboard",
+            "text": "={{ $json.msg_welcome.es }} / {{ $json.msg_welcome.en }}",
+            "keyboard_data": "={{ [[\n  { \n    \"text\": $json.btn_select_es.es, \n    \"callback_data\": \"lang_es\" \n  },\n  { \n    \"text\": $json.btn_select_en.en, \n    \"callback_data\": \"lang_en\" \n  }\n]] }}",
+            "context": "={{ $('Strict Entry (Contract)').item.json.context }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "markup_type",
+              "displayName": "markup_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "keyboard_data",
+              "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": false
+            },
+            {
+              "id": "context",
+              "displayName": "context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        784,
+        -448
+      ],
+      "id": "6aa93ea7-648a-4f65-8106-5459df8e403a",
+      "name": "Select Language Message"
+    },
+    {
+      "parameters": {
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/translations?key=in.(msg_welcome,btn_select_es,btn_select_en)&select=key,es,en",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpMultipleHeadersAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "mindops"
+            },
+            {
+              "name": "Accept-Profile",
+              "value": "mindops"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -16,
+        -416
+      ],
+      "id": "7ad2ad4e-2396-4984-a285-da640af774a4",
+      "name": "Get Select Language Text",
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "9KY2AHXMXRxyjGim",
+          "name": "Supabase"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = {};\n// Recorremos las 3 filas y las guardamos por su nombre de llave\n$input.all().forEach(item => {\n  result[item.json.key] = item.json;\n});\n\nreturn result;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        -448
+      ],
+      "id": "23509f62-40c9-4139-8669-6b65f6ae44d2",
+      "name": "Aggregate Translations"
+    },
+    {
+      "parameters": {
+        "content": "## Description\nThis sub-workflow manages the sequential \"Identity Funnel\"—guiding users through detection, language selection, account linking, and profile activation.",
+        "height": 144,
+        "width": 768
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1328,
+        -784
+      ],
+      "typeVersion": 1,
+      "id": "69b07e81-f610-4032-827b-d6bb766cf12c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Strict Entry Protocol\n",
+        "height": 336,
+        "width": 304,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1712,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "268cb9e8-e7bf-46c4-8b23-2523553d0566",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Domain Controller (Main Router)",
+        "height": 448,
+        "width": 352,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1312,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "9457bce3-b8cc-49a2-99a0-79413aa4426e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Initial Handshake",
+        "height": 688,
+        "width": 1920,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -832,
+        -512
+      ],
+      "typeVersion": 1,
+      "id": "837831da-007c-484d-8243-610f541731b9",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## SET_LANGUAGE: Native Localization",
+        "height": 272,
+        "width": 1216,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -816,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "fbbffd7e-0338-4af8-9add-ec2f9e9dbe52",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Digital Identity Sync (The VINCULATE Branch)",
+        "height": 400,
+        "width": 1760,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -736,
+        544
+      ],
+      "typeVersion": 1,
+      "id": "3b894f4f-ea36-4e64-8276-866c1d8a5c4b",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Safety & Voice Activation (The CONTACT Branch)",
+        "height": 384,
+        "width": 1056,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        976
+      ],
+      "typeVersion": 1,
+      "id": "e9186a7b-c77d-4f20-ac53-4ac1d591293b",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## IError Handling & System Resilience",
+        "height": 432,
+        "width": 352,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1968,
+        512
+      ],
+      "typeVersion": 1,
+      "id": "fd40f199-2506-4540-a033-bc5e9c98257e",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * Updates the context object in real-time after language selection.\n * This ensures the subsequent Welcome Message can be localized \n * immediately using the choice we just saved to the database.\n */\n\n// 1. Extract language identifier from the button payload (e.g., 'lang_en' -> 'en')\nconst rawInput = $node[\"Strict Entry (Contract)\"].json.input_text || \"\";\nconst resolvedLanguage = rawInput.replace('lang_', '');\n\n// 2. Retrieve the context passed from the Middleware (SW-0)\nconst context = $node[\"Strict Entry (Contract)\"].json.context || {};\n\n// 3. Patch the identity and state\ncontext.language = resolvedLanguage;\ncontext.is_new_user = false;\n\nreturn {\n  ...$input.item.json,\n  context: context\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        -176
+      ],
+      "id": "78b74bc5-913a-41d3-b7a9-d95a53f573a4",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zZYZA8aKwUckaap4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+          "cachedResultName": "SW-5:Message telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+            "keyboard_data": "={{ [[{ \n  \"text\": $('Strict Entry (Contract)').item.json.context.translations.btn_share_contact, \n  \"request_contact\": true \n}]] }}",
+            "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.contact_inactive }}",
             "markup_type": "replyKeyboard"
           },
           "matchingColumns": [],
@@ -994,6 +1323,16 @@
               "canBeUsedToMatch": true,
               "type": "string",
               "removed": true
+            },
+            {
+              "id": "keyboard_data",
+              "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -1004,11 +1343,35 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        592,
-        464
+        480,
+        -272
       ],
-      "id": "c2a90093-fd6c-4339-ab6c-531d277d6e38",
-      "name": "Linking Successful Message"
+      "id": "58f6ecdc-3ebf-47d2-ba36-359d74187feb",
+      "name": "Contact Inactive"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82934678-57b2-4551-ac1c-37eb140df429",
+              "name": "keyboard_data",
+              "value": "={{ JSON.stringify([[{ \"text\": $('Strict Entry (Contract)').item.json.context.translations.btn_share_contact, \"request_contact\": true }]]) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        496,
+        560
+      ],
+      "id": "146d2ac9-c856-4ce7-9aff-5a185d7b9d64",
+      "name": "Prepare Keyboard: Contact"
     }
   ],
   "connections": {
@@ -1028,6 +1391,11 @@
         [
           {
             "node": "If profile empty?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
           }
@@ -1074,7 +1442,7 @@
       "main": [
         [
           {
-            "node": "Welcome message",
+            "node": "Get Select Language Text",
             "type": "main",
             "index": 0
           }
@@ -1092,7 +1460,7 @@
       "main": [
         [
           {
-            "node": "Contact activate",
+            "node": "Contact Inactive",
             "type": "main",
             "index": 0
           }
@@ -1135,6 +1503,13 @@
         ],
         [
           {
+            "node": "Save Language to DB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Extract Code (VINCULATE)",
             "type": "main",
             "index": 0
@@ -1171,7 +1546,7 @@
       "main": [
         [
           {
-            "node": "Linking Successful Message",
+            "node": "Prepare Keyboard: Contact",
             "type": "main",
             "index": 0
           }
@@ -1189,6 +1564,74 @@
       "main": [
         []
       ]
+    },
+    "Save Language to DB": {
+      "main": [
+        [
+          {
+            "node": "Welcome message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generic error message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Language Message": {
+      "main": [
+        []
+      ]
+    },
+    "Get Select Language Text": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Translations",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generic error message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Translations": {
+      "main": [
+        [
+          {
+            "node": "Select Language Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linking Successful Message": {
+      "main": [
+        []
+      ]
+    },
+    "Prepare Keyboard: Contact": {
+      "main": [
+        [
+          {
+            "node": "Linking Successful Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1205,9 +1648,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "94a515fb-e761-4c9e-9557-a1e6a062c76e",
-  "activeVersionId": "8f04095f-7d23-4ecf-9950-dbebd6c1f5e1",
-  "versionCounter": 1039,
+  "versionId": "25fd5acc-12e3-4e62-8433-3606791f7cac",
+  "activeVersionId": "023ae741-ef22-4d21-8c69-9dd495b37b3c",
+  "versionCounter": 1502,
   "triggerCount": 0,
   "shared": [
     {
@@ -1230,9 +1673,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-09T00:40:23.426Z",
-    "createdAt": "2026-03-09T00:40:08.748Z",
-    "versionId": "8f04095f-7d23-4ecf-9950-dbebd6c1f5e1",
+    "updatedAt": "2026-03-15T21:16:44.807Z",
+    "createdAt": "2026-03-15T21:16:35.040Z",
+    "versionId": "023ae741-ef22-4d21-8c69-9dd495b37b3c",
     "workflowId": "GmInc0tYXj4ZR4kM",
     "nodes": [
       {
@@ -1256,6 +1699,13 @@
               },
               {
                 "name": "contact_phone"
+              },
+              {
+                "name": "context",
+                "type": "object"
+              },
+              {
+                "name": "message_id"
               }
             ]
           }
@@ -1263,15 +1713,15 @@
         "type": "n8n-nodes-base.executeWorkflowTrigger",
         "typeVersion": 1.1,
         "position": [
-          -1360,
-          384
+          -1600,
+          256
         ],
         "id": "1503be27-68e3-4d03-afb1-53a30203776d",
         "name": "Strict Entry (Contract)"
       },
       {
         "parameters": {
-          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Contract)').item.json.telegram_id }}&select=id,onboarding_state,telegram_id,phone_number",
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/profiles?telegram_id=eq.{{ $('Strict Entry (Contract)').item.json.telegram_id }}&&select=id,onboarding_state,telegram_id,phone_number,language",
           "authentication": "predefinedCredentialType",
           "nodeCredentialType": "httpMultipleHeadersAuth",
           "sendHeaders": true,
@@ -1292,8 +1742,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          -784,
-          16
+          -528,
+          -160
         ],
         "id": "17e7deeb-e79b-46da-b32f-bf1b3e186e8f",
         "name": "Check DB (START)",
@@ -1323,8 +1773,8 @@
         "type": "n8n-nodes-base.set",
         "typeVersion": 3.4,
         "position": [
-          -496,
-          608
+          -528,
+          720
         ],
         "id": "dc77f8d2-f622-4ea0-ab47-6b31f47aa6c0",
         "name": "Extract Code (VINCULATE)"
@@ -1342,7 +1792,9 @@
             "mappingMode": "defineBelow",
             "value": {
               "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-              "text": "=MindOps \n Your Clarity Companion 🧠💡  Hi {{ $('Strict Entry (Contract)').item.json.first_name }}. I'm your assistant for thinking out loud. I'm here to help you clear the noise from your head so nothing important gets lost.  Sometimes, simply saying things out loud helps us see the way forward. Use me as your 'mental draft pad': 🗣️ Offload what's on your mind: Send a quick audio or text about whatever's pending or draining your energy. 📊 I'll organize it for you: I'll identify what matters most and suggest one small physical step to get started. ☁️ No pressure: We're not chasing perfection — just a little momentum.  To get started right now: \n1️⃣ Create your account at: https://mindops-web-43822856294.us-central1.run.app\n2️⃣ Log in and copy your code. \n3️⃣ Send it here: /vinculate [code]"
+              "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.msg_intro.replace('{name}', $('Strict Entry (Contract)').item.json.first_name) }}",
+              "markup_type": "removeInline",
+              "message_id": "={{ $('Strict Entry (Contract)').item.json.message_id }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -1374,11 +1826,31 @@
                 "display": true,
                 "canBeUsedToMatch": true,
                 "type": "string",
-                "removed": true
+                "removed": false
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
               },
               {
                 "id": "keyboard_data",
                 "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
+                "removed": true
+              },
+              {
+                "id": "context",
+                "displayName": "context",
                 "required": false,
                 "defaultMatch": false,
                 "display": true,
@@ -1396,8 +1868,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          128,
-          -96
+          -48,
+          240
         ],
         "id": "0421f87a-90e7-46ba-beeb-76a82d4c913c",
         "name": "Welcome message"
@@ -1414,7 +1886,7 @@
           "workflowInputs": {
             "mappingMode": "defineBelow",
             "value": {
-              "text": "=Hey {{ $('Strict Entry (Contract)').item.json.first_name }} , your system is fully active.\nJust send me a voice note or text about whatever's on your mind — I'll help you organize it and find the next small step.\nWhat's taking up space in your head right now?",
+              "text": "={{ \n  $('Strict Entry (Contract)').item.json.context.translations.reminder_message.replace('{name}',  $('Strict Entry (Contract)').item.json.first_name.charAt(0).toUpperCase() + $('Strict Entry (Contract)').item.json.first_name.slice(1)) \n}}\n",
               "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}"
             },
             "matchingColumns": [],
@@ -1468,8 +1940,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          448,
-          320
+          720,
+          -80
         ],
         "id": "4135c30c-de9b-4b52-8e45-e7461075aed6",
         "name": "Reminder message"
@@ -1487,7 +1959,7 @@
             "mappingMode": "defineBelow",
             "value": {
               "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-              "text": "❌ Invalid or expired code. Please generate a new one on the web and try again: /vinculate [new code]"
+              "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.invalid_code }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -1540,8 +2012,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          384,
-          720
+          368,
+          784
         ],
         "id": "1e96b1f5-7a79-485c-92f4-e5b88affb73a",
         "name": "Error code message"
@@ -1569,8 +2041,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          -272,
-          592
+          -256,
+          672
         ],
         "id": "253c7a10-d47d-4bcb-b3b7-d72fe272151e",
         "name": "Get Code from DB",
@@ -1621,7 +2093,7 @@
         "typeVersion": 2.3,
         "position": [
           -336,
-          16
+          -320
         ],
         "id": "38bad971-b9f0-4f09-a373-56308dd885d2",
         "name": "If profile empty?"
@@ -1686,8 +2158,8 @@
         "type": "n8n-nodes-base.switch",
         "typeVersion": 3.4,
         "position": [
-          -80,
-          80
+          112,
+          -224
         ],
         "id": "b67bdc12-c0a1-4b18-a0e0-938824684651",
         "name": "State user"
@@ -1719,8 +2191,8 @@
         "type": "n8n-nodes-base.if",
         "typeVersion": 2.3,
         "position": [
-          0,
-          560
+          16,
+          608
         ],
         "id": "33c26f2d-42a0-4369-a0c7-e3df39f2f01c",
         "name": "Is Code Valid?"
@@ -1739,19 +2211,20 @@
                   },
                   "conditions": [
                     {
+                      "id": "35ce48ed-2128-4be7-bc94-d5972a23ac1c",
                       "leftValue": "={{ $json.action ? $json.action.toUpperCase() : \"\" }}",
                       "rightValue": "START",
                       "operator": {
                         "type": "string",
-                        "operation": "equals"
-                      },
-                      "id": "03d9ce09-3b22-4b97-b216-f4a9d5c61025"
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
                     }
                   ],
                   "combinator": "and"
                 },
                 "renameOutput": true,
-                "outputKey": "START"
+                "outputKey": "Start"
               },
               {
                 "conditions": {
@@ -1763,7 +2236,32 @@
                   },
                   "conditions": [
                     {
-                      "id": "6cd2f545-0d18-4fa1-97cc-8afbc301b3f4",
+                      "id": "1640eb64-f117-476c-bd57-b461be532379",
+                      "leftValue": "={{ $json.action ? $json.action.toUpperCase() : \"\" }}",
+                      "rightValue": "SET_LANGUAGE",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Set Language"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 3
+                  },
+                  "conditions": [
+                    {
+                      "id": "ceb4e905-4be1-41d0-b599-b832cef6f738",
                       "leftValue": "={{ $json.action ? $json.action.toUpperCase() : \"\" }}",
                       "rightValue": "VINCULATE",
                       "operator": {
@@ -1776,7 +2274,7 @@
                   "combinator": "and"
                 },
                 "renameOutput": true,
-                "outputKey": "VINCULATE"
+                "outputKey": "Vinculate"
               },
               {
                 "conditions": {
@@ -1788,7 +2286,7 @@
                   },
                   "conditions": [
                     {
-                      "id": "05315f58-b7f1-4384-bdcf-35efd03841f5",
+                      "id": "d326c461-ff2c-45f7-9d10-4d73630cfb82",
                       "leftValue": "={{ $json.action ? $json.action.toUpperCase() : \"\" }}",
                       "rightValue": "CONTACT",
                       "operator": {
@@ -1801,7 +2299,7 @@
                   "combinator": "and"
                 },
                 "renameOutput": true,
-                "outputKey": "CONTACT"
+                "outputKey": "Contact"
               }
             ]
           },
@@ -1810,8 +2308,8 @@
         "type": "n8n-nodes-base.switch",
         "typeVersion": 3.4,
         "position": [
-          -1056,
-          304
+          -1216,
+          256
         ],
         "id": "549c14be-c34f-46e3-816b-1640b11dadce",
         "name": "Domain Controller"
@@ -1843,8 +2341,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.4,
         "position": [
-          -368,
-          944
+          -528,
+          1104
         ],
         "id": "30626dc8-30ad-4b12-a49b-7c4673405f13",
         "name": "Update  Contact",
@@ -1855,78 +2353,6 @@
           }
         },
         "onError": "continueErrorOutput"
-      },
-      {
-        "parameters": {
-          "workflowId": {
-            "__rl": true,
-            "value": "zZYZA8aKwUckaap4",
-            "mode": "list",
-            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
-            "cachedResultName": "SW-5:Message telegram"
-          },
-          "workflowInputs": {
-            "mappingMode": "defineBelow",
-            "value": {
-              "text": "⚠️ System Sync Error  I’m unable to process your request right now due to a communication glitch with the Core. Please re-attempt the action or check your connection.",
-              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}"
-            },
-            "matchingColumns": [],
-            "schema": [
-              {
-                "id": "chat_id",
-                "displayName": "chat_id",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              },
-              {
-                "id": "text",
-                "displayName": "text",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              },
-              {
-                "id": "markup_type",
-                "displayName": "markup_type",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": true
-              },
-              {
-                "id": "keyboard_data",
-                "displayName": "keyboard_data",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "object",
-                "removed": true
-              }
-            ],
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": true
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.executeWorkflow",
-        "typeVersion": 1.3,
-        "position": [
-          992,
-          384
-        ],
-        "id": "1fc72d73-025a-470b-bf54-514e89657ecd",
-        "name": "Generic error message3"
       },
       {
         "parameters": {
@@ -1955,8 +2381,8 @@
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.1,
         "position": [
-          240,
-          496
+          256,
+          576
         ],
         "id": "dc1395e1-e7dc-4540-83ea-1ff66ba0faa2",
         "name": "Link Account DB",
@@ -1981,8 +2407,8 @@
             "mappingMode": "defineBelow",
             "value": {
               "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-              "text": " MindOps \n Setup Incomplete ⚠️  I noticed your Voice Protocol is not active yet.   Without your contact number, the system won't be able to call you and help you break out of a loop if you get stuck (🔴 High Friction).  Please tap the button below to share your contact and fully activate your safety net.\n\n",
-              "markup_type": "replyKeyboard"
+              "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.message_controller }}",
+              "markup_type": "removeReply"
             },
             "matchingColumns": [],
             "schema": [
@@ -2025,70 +2451,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          400,
-          16
-        ],
-        "id": "b69a70e4-d127-4d4f-ae4b-dd558cee1847",
-        "name": "Contact activate"
-      },
-      {
-        "parameters": {
-          "workflowId": {
-            "__rl": true,
-            "value": "zZYZA8aKwUckaap4",
-            "mode": "list",
-            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
-            "cachedResultName": "SW-5:Message telegram"
-          },
-          "workflowInputs": {
-            "mappingMode": "defineBelow",
-            "value": {
-              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-              "text": "Voice Protocol Activated! 🛡️📞  Your analog safety net is fully operational. From now on, MindOps will watch over your momentum.  No debts, no guilt. What's on your mind right now? Let it all out (audio or text)."
-            },
-            "matchingColumns": [],
-            "schema": [
-              {
-                "id": "chat_id",
-                "displayName": "chat_id",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              },
-              {
-                "id": "text",
-                "displayName": "text",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              },
-              {
-                "id": "markup_type",
-                "displayName": "markup_type",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              }
-            ],
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": true
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.executeWorkflow",
-        "typeVersion": 1.3,
-        "position": [
-          96,
-          800
+          0,
+          1008
         ],
         "id": "c5e04ec5-04ea-4557-bf66-f089f63bcfe9",
         "name": "Message Domain Controller"
@@ -2105,8 +2469,8 @@
           "workflowInputs": {
             "mappingMode": "defineBelow",
             "value": {
-              "text": "⚠️ System Sync Error  I’m unable to process your request right now due to a communication glitch with the Core. Please re-attempt the action or check your connection.",
-              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}"
+              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+              "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.error_message_onboarding }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -2159,8 +2523,8 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          816,
-          944
+          2064,
+          640
         ],
         "id": "3ae91daf-4639-4e41-ac27-00b8527c43fb",
         "name": "Generic error message"
@@ -2177,8 +2541,417 @@
           "workflowInputs": {
             "mappingMode": "defineBelow",
             "value": {
+              "markup_type": "replyKeyboard",
+              "keyboard_data": "={{ $json.keyboard_data }}\n",
               "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-              "text": "✅ Linking Successful! Your web account and Telegram are now synced.  Final step: To activate your Voice Protocol, please share your contact.  Sometimes we all get stuck. If my telemetry detects that you've entered a state of High Friction (🔴) and you've been silent for hours, I will call your phone to help you break the paralysis and recover your flow.",
+              "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.linking_succesful_message }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "keyboard_data",
+                "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": true,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          736,
+          544
+        ],
+        "id": "c2a90093-fd6c-4339-ab6c-531d277d6e38",
+        "name": "Linking Successful Message"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/telegram_sessions",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "httpMultipleHeadersAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Profile",
+                "value": "mindops"
+              },
+              {
+                "name": "Prefer",
+                "value": "resolution=merge-duplicates"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"telegram_id\": \"{{ $('Strict Entry (Contract)').item.json.telegram_id }}\",\n  \"language\": \"{{ ($json.input_text || \"\").replace('lang_', '') }}\"\n}\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          -624,
+          304
+        ],
+        "id": "475afd36-011a-4340-8553-0c1d99d58c9e",
+        "name": "Save Language to DB",
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "9KY2AHXMXRxyjGim",
+            "name": "Supabase"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+              "markup_type": "inlineKeyboard",
+              "text": "={{ $json.msg_welcome.es }} / {{ $json.msg_welcome.en }}",
+              "keyboard_data": "={{ [[\n  { \n    \"text\": $json.btn_select_es.es, \n    \"callback_data\": \"lang_es\" \n  },\n  { \n    \"text\": $json.btn_select_en.en, \n    \"callback_data\": \"lang_en\" \n  }\n]] }}",
+              "context": "={{ $('Strict Entry (Contract)').item.json.context }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "keyboard_data",
+                "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
+                "removed": false
+              },
+              {
+                "id": "context",
+                "displayName": "context",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "object",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          784,
+          -448
+        ],
+        "id": "6aa93ea7-648a-4f65-8106-5459df8e403a",
+        "name": "Select Language Message"
+      },
+      {
+        "parameters": {
+          "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/translations?key=in.(msg_welcome,btn_select_es,btn_select_en)&select=key,es,en",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "httpMultipleHeadersAuth",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Profile",
+                "value": "mindops"
+              },
+              {
+                "name": "Accept-Profile",
+                "value": "mindops"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          -16,
+          -416
+        ],
+        "id": "7ad2ad4e-2396-4984-a285-da640af774a4",
+        "name": "Get Select Language Text",
+        "credentials": {
+          "httpMultipleHeadersAuth": {
+            "id": "9KY2AHXMXRxyjGim",
+            "name": "Supabase"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "jsCode": "const result = {};\n// Recorremos las 3 filas y las guardamos por su nombre de llave\n$input.all().forEach(item => {\n  result[item.json.key] = item.json;\n});\n\nreturn result;\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          416,
+          -448
+        ],
+        "id": "23509f62-40c9-4139-8669-6b65f6ae44d2",
+        "name": "Aggregate Translations"
+      },
+      {
+        "parameters": {
+          "content": "## Description\nThis sub-workflow manages the sequential \"Identity Funnel\"—guiding users through detection, language selection, account linking, and profile activation.",
+          "height": 144,
+          "width": 768
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1328,
+          -784
+        ],
+        "typeVersion": 1,
+        "id": "69b07e81-f610-4032-827b-d6bb766cf12c",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "content": "## Strict Entry Protocol\n",
+          "height": 336,
+          "width": 304,
+          "color": 2
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1712,
+          112
+        ],
+        "typeVersion": 1,
+        "id": "268cb9e8-e7bf-46c4-8b23-2523553d0566",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "## Domain Controller (Main Router)",
+          "height": 448,
+          "width": 352,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -1312,
+          64
+        ],
+        "typeVersion": 1,
+        "id": "9457bce3-b8cc-49a2-99a0-79413aa4426e",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "## Initial Handshake",
+          "height": 688,
+          "width": 1920,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -832,
+          -512
+        ],
+        "typeVersion": 1,
+        "id": "837831da-007c-484d-8243-610f541731b9",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "content": "## SET_LANGUAGE: Native Localization",
+          "height": 272,
+          "width": 1216,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -816,
+          208
+        ],
+        "typeVersion": 1,
+        "id": "fbbffd7e-0338-4af8-9add-ec2f9e9dbe52",
+        "name": "Sticky Note4"
+      },
+      {
+        "parameters": {
+          "content": "## Digital Identity Sync (The VINCULATE Branch)",
+          "height": 400,
+          "width": 1760,
+          "color": 6
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -736,
+          544
+        ],
+        "typeVersion": 1,
+        "id": "3b894f4f-ea36-4e64-8276-866c1d8a5c4b",
+        "name": "Sticky Note5"
+      },
+      {
+        "parameters": {
+          "content": "## Safety & Voice Activation (The CONTACT Branch)",
+          "height": 384,
+          "width": 1056,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -640,
+          976
+        ],
+        "typeVersion": 1,
+        "id": "e9186a7b-c77d-4f20-ac53-4ac1d591293b",
+        "name": "Sticky Note6"
+      },
+      {
+        "parameters": {
+          "content": "## IError Handling & System Resilience",
+          "height": 432,
+          "width": 352,
+          "color": 3
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1968,
+          512
+        ],
+        "typeVersion": 1,
+        "id": "fd40f199-2506-4540-a033-bc5e9c98257e",
+        "name": "Sticky Note7"
+      },
+      {
+        "parameters": {
+          "jsCode": "/**\n * Updates the context object in real-time after language selection.\n * This ensures the subsequent Welcome Message can be localized \n * immediately using the choice we just saved to the database.\n */\n\n// 1. Extract language identifier from the button payload (e.g., 'lang_en' -> 'en')\nconst rawInput = $node[\"Strict Entry (Contract)\"].json.input_text || \"\";\nconst resolvedLanguage = rawInput.replace('lang_', '');\n\n// 2. Retrieve the context passed from the Middleware (SW-0)\nconst context = $node[\"Strict Entry (Contract)\"].json.context || {};\n\n// 3. Patch the identity and state\ncontext.language = resolvedLanguage;\ncontext.is_new_user = false;\n\nreturn {\n  ...$input.item.json,\n  context: context\n};\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -192,
+          -176
+        ],
+        "id": "78b74bc5-913a-41d3-b7a9-d95a53f573a4",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+              "keyboard_data": "={{ [[{ \n  \"text\": $('Strict Entry (Contract)').item.json.context.translations.btn_share_contact, \n  \"request_contact\": true \n}]] }}",
+              "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.contact_inactive }}",
               "markup_type": "replyKeyboard"
             },
             "matchingColumns": [],
@@ -2222,6 +2995,16 @@
                 "canBeUsedToMatch": true,
                 "type": "string",
                 "removed": true
+              },
+              {
+                "id": "keyboard_data",
+                "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
+                "removed": false
               }
             ],
             "attemptToConvertTypes": false,
@@ -2232,11 +3015,35 @@
         "type": "n8n-nodes-base.executeWorkflow",
         "typeVersion": 1.3,
         "position": [
-          592,
-          464
+          480,
+          -272
         ],
-        "id": "c2a90093-fd6c-4339-ab6c-531d277d6e38",
-        "name": "Linking Successful Message"
+        "id": "58f6ecdc-3ebf-47d2-ba36-359d74187feb",
+        "name": "Contact Inactive"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "82934678-57b2-4551-ac1c-37eb140df429",
+                "name": "keyboard_data",
+                "value": "={{ JSON.stringify([[{ \"text\": $('Strict Entry (Contract)').item.json.context.translations.btn_share_contact, \"request_contact\": true }]]) }}",
+                "type": "string"
+              }
+            ]
+          },
+          "includeOtherFields": true,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          496,
+          560
+        ],
+        "id": "146d2ac9-c856-4ce7-9aff-5a185d7b9d64",
+        "name": "Prepare Keyboard: Contact"
       }
     ],
     "connections": {
@@ -2256,6 +3063,11 @@
           [
             {
               "node": "If profile empty?",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Code in JavaScript",
               "type": "main",
               "index": 0
             }
@@ -2302,7 +3114,7 @@
         "main": [
           [
             {
-              "node": "Welcome message",
+              "node": "Get Select Language Text",
               "type": "main",
               "index": 0
             }
@@ -2320,7 +3132,7 @@
         "main": [
           [
             {
-              "node": "Contact activate",
+              "node": "Contact Inactive",
               "type": "main",
               "index": 0
             }
@@ -2363,6 +3175,13 @@
           ],
           [
             {
+              "node": "Save Language to DB",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
               "node": "Extract Code (VINCULATE)",
               "type": "main",
               "index": 0
@@ -2399,7 +3218,7 @@
         "main": [
           [
             {
-              "node": "Linking Successful Message",
+              "node": "Prepare Keyboard: Contact",
               "type": "main",
               "index": 0
             }
@@ -2417,18 +3236,86 @@
         "main": [
           []
         ]
+      },
+      "Save Language to DB": {
+        "main": [
+          [
+            {
+              "node": "Welcome message",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Generic error message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Select Language Message": {
+        "main": [
+          []
+        ]
+      },
+      "Get Select Language Text": {
+        "main": [
+          [
+            {
+              "node": "Aggregate Translations",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Generic error message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Aggregate Translations": {
+        "main": [
+          [
+            {
+              "node": "Select Language Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Linking Successful Message": {
+        "main": [
+          []
+        ]
+      },
+      "Prepare Keyboard: Contact": {
+        "main": [
+          [
+            {
+              "node": "Linking Successful Message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version 8f04095f",
+    "name": "Version 023ae741",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-09T00:40:23.270Z",
-        "id": 98,
+        "createdAt": "2026-03-15T21:16:44.763Z",
+        "id": 237,
         "workflowId": "GmInc0tYXj4ZR4kM",
-        "versionId": "8f04095f-7d23-4ecf-9950-dbebd6c1f5e1",
+        "versionId": "023ae741-ef22-4d21-8c69-9dd495b37b3c",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
