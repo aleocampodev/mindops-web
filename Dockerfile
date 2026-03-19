@@ -1,6 +1,5 @@
 FROM node:20-alpine AS base
 
-# --- ETAPA 1: Dependencias ---
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -13,21 +12,18 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-# --- ETAPA 2: Constructor (AQUÍ ESTÁ EL ARREGLO) ---
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# ⚠️ INYECCIÓN SENIOR: Declaramos que esperamos estas variables del comando gcloud
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-# ⚠️ VITAL: Convertimos los argumentos en variables de entorno de la sesión de build
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-# Desactivamos telemetría para ahorrar tiempo y recursos
+
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN \
@@ -37,7 +33,7 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-# --- ETAPA 3: Ejecución ---
+
 FROM base AS runner
 WORKDIR /app
 
