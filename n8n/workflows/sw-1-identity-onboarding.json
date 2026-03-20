@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-03-16T00:14:24.801Z",
+  "updatedAt": "2026-03-20T19:50:07.965Z",
   "createdAt": "2026-02-22T01:57:39.282Z",
   "id": "GmInc0tYXj4ZR4kM",
   "name": "SW-1: Identity & Onboarding",
-  "description": null,
+  "description": "Handles user registration, account linking (vinculation code), and contact sharing flow.",
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -1127,21 +1127,6 @@
     },
     {
       "parameters": {
-        "content": "## Description\nThis sub-workflow manages the sequential \"Identity Funnel\"—guiding users through detection, language selection, account linking, and profile activation.",
-        "height": 144,
-        "width": 768
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -1328,
-        -784
-      ],
-      "typeVersion": 1,
-      "id": "69b07e81-f610-4032-827b-d6bb766cf12c",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
         "content": "## Strict Entry Protocol\n",
         "height": 336,
         "width": 304,
@@ -1648,9 +1633,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "25fd5acc-12e3-4e62-8433-3606791f7cac",
+  "versionId": "1e53d1bb-988c-43e9-bbfe-7c300591afe3",
   "activeVersionId": "023ae741-ef22-4d21-8c69-9dd495b37b3c",
-  "versionCounter": 1502,
+  "versionCounter": 1505,
   "triggerCount": 0,
   "shared": [
     {

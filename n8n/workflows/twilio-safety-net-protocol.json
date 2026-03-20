@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-03-16T19:27:10.063Z",
+  "updatedAt": "2026-03-20T19:52:26.167Z",
   "createdAt": "2026-02-22T02:35:22.257Z",
   "id": "zDZb0cAxMY5TCjPe",
   "name": "Twilio:  Safety Net Protocol",
-  "description": null,
+  "description": "Monitors for stalled users every 5 min. Generates empathic script via LLM and triggers a Twilio voice call.",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -297,21 +297,6 @@
       ],
       "id": "c3576136-8735-4bd9-9b1c-95ff707424a0",
       "name": "Process Safety Prompt"
-    },
-    {
-      "parameters": {
-        "content": "## Description \nThis autonomous engine runs every 5 minutes to scan the database for users in a 'Stalled' state (high cognitive friction for >5 min). It dynamically generates a personalized, empathic voice script in the user's language and triggers a physical rescue call via Twilio to break the cognitive paralysis.",
-        "height": 192,
-        "width": 672
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -768,
-        -384
-      ],
-      "typeVersion": 1,
-      "id": "fc87f968-9f5a-4d90-aaae-745da985d2f6",
-      "name": "Sticky Note"
     },
     {
       "parameters": {
@@ -627,9 +612,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "59480343-4be0-482c-ab08-b20db0aab2a5",
+  "versionId": "a1a71628-97eb-42e1-83a5-a1d2c0e4ea9a",
   "activeVersionId": null,
-  "versionCounter": 249,
+  "versionCounter": 251,
   "triggerCount": 0,
   "shared": [
     {

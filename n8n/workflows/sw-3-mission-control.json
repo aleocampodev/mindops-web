@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-03-16T00:18:52.989Z",
+  "updatedAt": "2026-03-20T19:51:29.781Z",
   "createdAt": "2026-02-22T02:03:15.790Z",
   "id": "QciYupwAd2AZ6IEf",
   "name": "SW-3: Mission Control",
-  "description": null,
+  "description": "Processes callback button interactions. Activates, recalibrates, or completes proposed missions.",
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -567,21 +567,6 @@
     },
     {
       "parameters": {
-        "content": "## Description\nThis sub-workflow manages the lifecycle of a cognitive mission. It processes user confirmations, synchronizes database states (ACTIVE/IDLE), and delivers localized feedback to lock the user's focus into the execution phase",
-        "height": 144,
-        "width": 480
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -1024,
-        -320
-      ],
-      "typeVersion": 1,
-      "id": "58fb79c8-0ee3-4a2e-9156-fd1ab6e0c4ba",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
         "content": "### RECEIVE & IDENTITY",
         "height": 352,
         "width": 656,
@@ -813,9 +798,9 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "8bcc49a6-0741-46db-9150-23beb44288e4",
+  "versionId": "46b7d7b3-7ced-4ba5-baf0-7cbdf27ee896",
   "activeVersionId": "8bcc49a6-0741-46db-9150-23beb44288e4",
-  "versionCounter": 521,
+  "versionCounter": 525,
   "triggerCount": 0,
   "shared": [
     {

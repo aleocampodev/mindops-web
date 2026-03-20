@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-03-16T19:28:59.674Z",
+  "updatedAt": "2026-03-20T19:47:14.596Z",
   "createdAt": "2026-03-13T19:42:53.898Z",
   "id": "hLp8Ac9eAk2fI5Lt",
   "name": "SW-0:Middleware: Global Context Enricher",
-  "description": null,
+  "description": "Global context enricher. Injects user context (profile, language, state) before sub-workflows execute.",
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -116,21 +116,6 @@
         544,
         -112
       ]
-    },
-    {
-      "parameters": {
-        "content": "### Description\nThis middleware centralizes system-wide intelligence. It resolves user language preferences by cross-referencing profiles and temporary sessions, while pre-fetching the complete translation dictionary from Supabase. \n",
-        "height": 176,
-        "width": 560
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -1120,
-        -944
-      ],
-      "typeVersion": 1,
-      "id": "baf44eb5-5083-4444-b9e5-377e74c09e51",
-      "name": "Sticky Note"
     },
     {
       "parameters": {
@@ -355,9 +340,9 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "b022acf7-5a45-4e40-8ab1-29817b96007a",
+  "versionId": "777690bf-841a-4284-809f-71d234660b57",
   "activeVersionId": "c7b47567-f043-49a4-b082-bf68c28caa93",
-  "versionCounter": 276,
+  "versionCounter": 280,
   "triggerCount": 0,
   "shared": [
     {

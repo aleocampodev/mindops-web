@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-03-16T19:32:57.046Z",
+  "updatedAt": "2026-03-20T19:52:03.054Z",
   "createdAt": "2026-02-22T01:50:52.439Z",
   "id": "zZYZA8aKwUckaap4",
   "name": "SW-5:Message telegram",
-  "description": null,
+  "description": "Centralized messaging utility. All Telegram messages (plain, inline keyboard, reply keyboard) go through here.",
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -386,21 +386,6 @@
     },
     {
       "parameters": {
-        "content": "### Description\nCentralized Telegram dispatcher. Receives message data and formats the correct API request.",
-        "height": 112,
-        "width": 544
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -240,
-        -720
-      ],
-      "id": "515c731b-fbe3-4d72-a78b-fab4a7b68998",
-      "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
         "content": "**Inputs & Authentication**",
         "height": 256,
         "width": 464,
@@ -630,9 +615,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6a877baa-2ec0-4f03-8fc5-bd5ca5e2fb45",
+  "versionId": "c47b08ec-8191-4934-a42b-7f50b714ef66",
   "activeVersionId": "42de3401-ae0e-47d7-a3f4-78871be92f55",
-  "versionCounter": 746,
+  "versionCounter": 750,
   "triggerCount": 0,
   "shared": [
     {
