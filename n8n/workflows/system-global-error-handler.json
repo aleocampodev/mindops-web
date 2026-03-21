@@ -1,0 +1,119 @@
+{
+  "updatedAt": "2026-03-21T00:04:19.731Z",
+  "createdAt": "2026-03-05T02:23:52.998Z",
+  "id": "vRA0aUc4uJrzVHtP",
+  "name": "[System] Global Error Handler",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -16
+      ],
+      "id": "e147316f-44fd-4ded-bfa3-7b2d2e4056c3",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get data directly from the Error Trigger node\nconst errorData = $input.first().json;\n\nconst workflowName = errorData.workflow?.name || 'Unknown Workflow';\nconst workflowId   = errorData.workflow?.id   || 'N/A';\nconst executionId  = errorData.execution?.id  || 'N/A';\nconst errorMessage = errorData.error?.message || 'No error message provided';\nconst errorNode    = errorData.node?.name     || 'Unknown Node';\nconst startedAt    = errorData.execution?.lastUpdatedAt || new Date().toISOString();\nconst mode         = errorData.execution?.mode || 'unknown';\n\n// IMPORTANT: Set your real n8n instance URL here\nconst n8nHost      = 'https://n8n-997501160612.us-central1.run.app'; \nconst executionUrl = `${n8nHost}/execution/${executionId}`;\n\nconst subject = `🚨 n8n Error: ${workflowName}`;\n\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f4; padding: 20px; }\n    .container { background: #ffffff; border-radius: 8px; padding: 30px; max-width: 600px; margin: auto; border-left: 5px solid #e53e3e; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }\n    h2 { color: #e53e3e; margin-top: 0; font-size: 22px; }\n    .badge { display: inline-block; background: #e53e3e; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; }\n    table { width: 100%; border-collapse: collapse; margin-top: 16px; }\n    td { padding: 12px 12px; border-bottom: 1px solid #eee; font-size: 14px; color: #333; }\n    td:first-child { font-weight: bold; color: #666; width: 150px; }\n    .error-box { background: #fff5f5; border: 1px solid #feb2b2; border-radius: 6px; padding: 16px; margin-top: 20px; font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #c53030; word-break: break-all; }\n    .btn { display: inline-block; margin-top: 24px; background: #e53e3e; color: #ffffff !important; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; text-align: center; }\n    .footer { margin-top: 30px; font-size: 11px; color: #999; text-align: center; line-height: 1.5; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h2>🚨 Workflow Error Detected</h2>\n    <span class=\"badge\">Automation Alert</span>\n    <table>\n      <tr><td>Workflow Name</td><td>${workflowName}</td></tr>\n      <tr><td>Workflow ID</td><td>${workflowId}</td></tr>\n      <tr><td>Execution ID</td><td>${executionId}</td></tr>\n      <tr><td>Failed Node</td><td>${errorNode}</td></tr>\n      <tr><td>Execution Mode</td><td>${mode}</td></tr>\n      <tr><td>Timestamp</td><td>${startedAt}</td></tr>\n    </table>\n    <div class=\"error-box\">\n      <strong>Error Message:</strong><br/>${errorMessage}\n    </div>\n    <div style=\"text-align: center;\">\n      <a href=\"${executionUrl}\" class=\"btn\">🔍 View Execution in n8n</a>\n    </div>\n    <div class=\"footer\">\n      This is an automated message sent by your <strong>Global Error Handler</strong>.<br/>\n      Please check the execution logs to resolve the issue.\n    </div>\n  </div>\n</body>\n</html>\n`;\n\nreturn [{\n  json: {\n    subject,\n    html,\n    workflowName,\n    executionId,\n    errorMessage,\n    errorNode\n  }\n}];"
+      },
+      "id": "c163094c-c0a3-4acc-b4c8-2574bc2a1b6f",
+      "name": "Format Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "omaalejaoca@gmail.com",
+        "toEmail": "omaalejaoca@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "html": "={{ $json.html }}",
+        "options": {}
+      },
+      "id": "acc8f205-fc6a-489a-9722-91b3f6242476",
+      "name": "Send Error Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        288,
+        -16
+      ],
+      "webhookId": "20698682-3360-4476-9fc9-acb279d47b95",
+      "credentials": {
+        "smtp": {
+          "id": "QGMSF28652I5JCr8",
+          "name": "SMTP account"
+        }
+      },
+      "notes": "Configura tus credenciales SMTP: Gmail, SendGrid, Outlook, etc."
+    }
+  ],
+  "connections": {
+    "Format Email": {
+      "main": [
+        [
+          {
+            "node": "Send Error Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Format Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c904152c-e551-43b1-9764-35cb538b7d8b",
+  "activeVersionId": null,
+  "versionCounter": 22,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-03-05T02:23:52.998Z",
+      "createdAt": "2026-03-05T02:23:52.998Z",
+      "role": "workflow:owner",
+      "workflowId": "vRA0aUc4uJrzVHtP",
+      "projectId": "uSxWyMEZpzEBFQnV",
+      "project": {
+        "updatedAt": "2026-02-17T23:50:57.643Z",
+        "createdAt": "2026-02-17T21:35:40.605Z",
+        "id": "uSxWyMEZpzEBFQnV",
+        "name": "Alejandra Ocampo <omaaleoca@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
