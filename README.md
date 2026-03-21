@@ -36,18 +36,22 @@ The core automation resides in specialized n8n workflows (`n8n/workflows/`), act
 - **Human in the Loop (HITL):** The system prioritizes human oversight and agency. Users must review, reject, or modify the AI's proposed "Atomic Action" plans before they become active missions.
 - **Closed-Loop Safety Net:** A redundancy automation layer via **Twilio** that actively monitors user execution. If the system detects a state of high cognitive friction and there is no subsequent activity (e.g., clearing a suggested action) for a predefined period, it automatically triggers a physical phone call to the user to break the paralysis loop.
 
-#### 🔄 Orchestration Modules & IaC (Infrastructure as Code)
+**Consolidated GitHub Backup:** I engineered a high-performance, self-referential n8n workflow that exports all production logic into this repository. Unlike basic implementations, it utilizes the **GitHub Git Data API** to compare current workflow states against the repo and performs a **single, atomic consolidated commit** for all changes, maintaining a noise-free and professional git history.
 
-To maintain environment consistency, all core workflows are version-controlled as JSON files within `n8n/workflows/`. 
+### 🛡️ Resilience & Automated Monitoring
 
-**Automated GitHub Sync:** I engineered a dedicated, self-referential n8n workflow designed exclusively to export these project-specific workflow definitions and automatically push commits to this GitHub repository. This ensures the repo always reflects the active production logic inside the n8n orchestrator.
+The infrastructure includes a specialized **Global Error Handler** (SW-ERR) using the `Error Trigger` architecture. This workflow actively monitors the entire orchestration layer and automatically generates real-time alerts via Email (SMTP) or Telegram, providing immediate visibility into execution failures with direct deep-links to the failing node.
+
+#### 🔄 Orchestration Modules (n8n)
 
 
 - **MindOps Orchestrator**: The central nervous system coordinating data flow.
-- **Identity Onboarding (SW-1)**: Manages user lifecycle and state initialization.
+- **Middleware (SW-0)**: Global context enricher (user profile, language, state).
+- **Identity & Onboarding (SW-1)**: Manages user lifecycle and state initialization.
 - **Cognitive Engine (SW-2)**: Processes raw input into actionable mental patterns using RAG memory.
 - **Mission Control (SW-3)**: Handles task prioritization and "Atomic Actions."
-- **Telegram Integrator (SW-5)**: Manages real-time bidirectional communication. Instead of using native n8n nodes, it executes direct **HTTP requests against the Telegram API**, allowing for advanced payload customization (like dynamic inline keyboards) and robust error handling.
+- **Message Telegram (SW-5)**: Centralized messaging utility executing direct **HTTP requests against the Telegram API** for advanced payload customization and robust error handling.
+- **Safety Net Protocol (Twilio)**: Redundancy voice-alert layer for cognitive paralysis.
 
 ## 🌍 Globalization & State Synchronization (i18n)
 
@@ -59,10 +63,18 @@ MindOps is natively bilingual (English and Spanish) and implements a highly robu
 
 ## 🛠️ Engineering Quality & Agent Skills
 
-To maintain enterprise-level code quality, the frontend architecture was audited and refactored using specific intelligent constraints (Agent Skills):
+To maintain enterprise-level code quality and ensure AI agents can reason about this codebase with consistent constraints, the architecture includes dedicated **Local Agent Skills** (`.agent/skills/mindops/`):
 
-- **Performance Optimization (`vercel-react-best-practices`):** Strict adherence to Vercel's engineering guidelines. Heavy UI components, such as the `CognitiveSimulator` containing complex Framer Motion animations, are lazy-loaded via `next/dynamic`. This aggressively reduces the initial JavaScript bundle size, ensuring lightning-fast Time-to-Interactive (TTI) for the landing page.
-- **Accessibility & UI Standards (`web-design-guidelines`):** The interface is fully audited for A11y compliance. Interactive elements, including the `LanguageSwitcher` and dynamic navigation components, utilize correct semantic HTML roles (`role="group"`) and ARIA labels (`aria-hidden`, `aria-pressed`) to guarantee the "Mental Engineering" experience is accessible to screen readers without introducing cognitive noise.
+- **`supabase-patterns`**: Defines the strict `mindops` schema, data-fetching factories, and enum synchronization rules.
+- **`i18n-guide`**: Protocols for the multi-layer locale cascade and translation key management.
+- **`n8n-workflows`**: Visual documentation on hub-and-spoke architecture and node naming conventions.
+- **`deploy-pipeline`**: IaC guidelines for GCP Cloud Run and CI/CD best practices.
+- **`dashboard-widgets`**: Patterns for high-performance React charts using Tremor and Framer Motion.
+- **`auth-middleware`**: Logic for the Telegram-to-Web pairing gate and route protection.
+
+Additionally, the project adheres to:
+- **Performance Optimization (`vercel-react-best-practices`):** Heavy UI components, such as `CognitiveSimulator`, are lazy-loaded via `next/dynamic` to ensure lightning-fast Time-to-Interactive (TTI).
+- **Accessibility & UI Standards (`web-design-guidelines`):** Fully audited for A11y compliance using semantic roles and ARIA labels.
 
 ## 🛠️ Tech Stack & Infrastructure
 
@@ -71,8 +83,11 @@ To maintain enterprise-level code quality, the frontend architecture was audited
 - **Database & Memory:** [Supabase](https://supabase.com/) (PostgreSQL, Auth, SSR) + `pgvector` for Semantic RAG
 - **AI Orchestration:** [n8n](https://n8n.io/) (Workflow Automation) + LLMs
 - **Communications:** Telegram API (Input) + [Twilio](https://www.twilio.com/) (Voice Alerts Redundancy)
-- **UI & Analytics Dashboard:** [Tailwind CSS v4](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/), & [Tremor](https://www.tremor.so/) for cognitive friction charts and data visualization.
-- **Infrastructure:** [Google Cloud Run](https://cloud.google.com/run) & [Docker](https://www.docker.com/) for isolated, scalable container deployment.
+- **UI & Analytics Dashboard:** [Tailwind CSS v4](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/), & [Tremor](https://www.tremor.so/).
+- **Infrastructure & Containerization:** [Google Cloud Run](https://cloud.google.com/run) host. Includes portable IaC definitions:
+    - `n8n/Dockerfile`: Isolated n8n runtime configuration.
+    - `n8n/service.yaml`: Multi-service Cloud Run orchestration template.
+    - `n8n/.env.example`: Standardized environment variable schema.
 
 ## ⚙️ Development & Local Setup
 
