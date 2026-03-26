@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-20T19:52:03.054Z",
+  "updatedAt": "2026-03-26T20:46:51.279Z",
   "createdAt": "2026-02-22T01:50:52.439Z",
   "id": "zZYZA8aKwUckaap4",
   "name": "SW-5:Message telegram",
@@ -297,7 +297,7 @@
             },
             {
               "name": "reply_markup",
-              "value": "={\"inline_keyboard\":[]}"
+              "value": "={{ JSON.stringify({\"inline_keyboard\": []}) }}"
             }
           ]
         },
@@ -615,9 +615,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c47b08ec-8191-4934-a42b-7f50b714ef66",
-  "activeVersionId": "42de3401-ae0e-47d7-a3f4-78871be92f55",
-  "versionCounter": 751,
+  "versionId": "6e1051f4-d2b8-40ce-a542-bceb460190a3",
+  "activeVersionId": "6e1051f4-d2b8-40ce-a542-bceb460190a3",
+  "versionCounter": 756,
   "triggerCount": 0,
   "shared": [
     {
@@ -640,9 +640,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-16T00:05:37.301Z",
-    "createdAt": "2026-03-16T00:05:26.545Z",
-    "versionId": "42de3401-ae0e-47d7-a3f4-78871be92f55",
+    "updatedAt": "2026-03-26T20:47:39.030Z",
+    "createdAt": "2026-03-26T20:46:51.312Z",
+    "versionId": "6e1051f4-d2b8-40ce-a542-bceb460190a3",
     "workflowId": "zZYZA8aKwUckaap4",
     "nodes": [
       {
@@ -672,7 +672,7 @@
         "typeVersion": 1.1,
         "position": [
           -496,
-          -304
+          -320
         ],
         "id": "4264b79d-7899-49f3-a5a3-8a4b117aa2f6",
         "name": "When Executed by Another Workflow"
@@ -694,7 +694,7 @@
         "typeVersion": 1,
         "position": [
           -304,
-          -304
+          -320
         ],
         "id": "83498be0-3736-4bdd-96b5-52175e210b93",
         "name": "Telegram token",
@@ -818,7 +818,7 @@
         "typeVersion": 3.4,
         "position": [
           176,
-          -288
+          -304
         ],
         "id": "a2538e22-8858-4bbb-85dc-cf4618624e7c",
         "name": "Router: Markup Type"
@@ -850,7 +850,7 @@
         "typeVersion": 4.4,
         "position": [
           784,
-          -304
+          -320
         ],
         "id": "10c8e20d-9e55-41ae-8656-fda3556b9ae3",
         "name": "Send: Inline Keyboard",
@@ -883,7 +883,7 @@
         "typeVersion": 4.4,
         "position": [
           784,
-          -480
+          -496
         ],
         "id": "2405b12d-0f32-4504-b47d-bb977c0ef21d",
         "name": "Send: Reply Keyboard",
@@ -912,7 +912,7 @@
         "typeVersion": 4.4,
         "position": [
           784,
-          352
+          336
         ],
         "id": "5fecf0bb-f6ae-47b4-8e12-92bedc1b3579",
         "name": "Send: Plain Message",
@@ -935,7 +935,7 @@
               },
               {
                 "name": "reply_markup",
-                "value": "={\"inline_keyboard\":[]}"
+                "value": "={{ JSON.stringify({\"inline_keyboard\": []}) }}"
               }
             ]
           },
@@ -945,7 +945,7 @@
         "typeVersion": 4.4,
         "position": [
           784,
-          -96
+          -112
         ],
         "id": "28276505-c336-41f6-af9c-025b4857c275",
         "name": "Send: RemoveInline Keyboard",
@@ -961,7 +961,7 @@
         "typeVersion": 1.2,
         "position": [
           1808,
-          -208
+          -224
         ],
         "id": "e9d7df4c-704c-4471-ab5e-618ecfcfd24c",
         "name": "Error Message",
@@ -1001,7 +1001,7 @@
         "typeVersion": 2.3,
         "position": [
           1408,
-          -192
+          -208
         ],
         "id": "b0a658bc-b30c-4d7e-a75d-b8164477d91d",
         "name": "Telegram 500 Filter"
@@ -1016,26 +1016,11 @@
         "type": "n8n-nodes-base.stickyNote",
         "position": [
           1312,
-          -304
+          -320
         ],
         "typeVersion": 1,
         "id": "90cb49a8-b863-455f-a190-af621a5e6652",
         "name": "Sticky Note"
-      },
-      {
-        "parameters": {
-          "content": "### Description\nCentralized Telegram dispatcher. Receives message data and formats the correct API request.",
-          "height": 112,
-          "width": 544
-        },
-        "type": "n8n-nodes-base.stickyNote",
-        "typeVersion": 1,
-        "position": [
-          -240,
-          -704
-        ],
-        "id": "515c731b-fbe3-4d72-a78b-fab4a7b68998",
-        "name": "Sticky Note1"
       },
       {
         "parameters": {
@@ -1048,7 +1033,7 @@
         "typeVersion": 1,
         "position": [
           -560,
-          -384
+          -400
         ],
         "id": "b19e78c0-eee3-480a-911d-2d05117f8c21",
         "name": "Sticky Note2"
@@ -1064,7 +1049,7 @@
         "typeVersion": 1,
         "position": [
           112,
-          -384
+          -400
         ],
         "id": "89d889cc-d0e1-4598-8197-f2e3126f1a1d",
         "name": "Sticky Note3"
@@ -1072,15 +1057,15 @@
       {
         "parameters": {
           "content": "**Telegram API Requests**",
-          "height": 1088,
-          "width": 336,
+          "height": 1184,
+          "width": 384,
           "color": 4
         },
         "type": "n8n-nodes-base.stickyNote",
         "typeVersion": 1,
         "position": [
           672,
-          -576
+          -592
         ],
         "id": "13a51a40-6bd0-4420-aa92-458231cf2c9e",
         "name": "Sticky Note4"
@@ -1112,7 +1097,7 @@
         "typeVersion": 4.4,
         "position": [
           784,
-          128
+          112
         ],
         "id": "22b7ccdb-a7d2-49db-bd67-403d72139733",
         "name": "Send: RemoveReply",
@@ -1255,15 +1240,15 @@
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version 42de3401",
+    "name": "Version 6e1051f4",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-16T00:05:37.254Z",
-        "id": 259,
+        "createdAt": "2026-03-26T20:47:38.984Z",
+        "id": 276,
         "workflowId": "zZYZA8aKwUckaap4",
-        "versionId": "42de3401-ae0e-47d7-a3f4-78871be92f55",
+        "versionId": "6e1051f4-d2b8-40ce-a542-bceb460190a3",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }

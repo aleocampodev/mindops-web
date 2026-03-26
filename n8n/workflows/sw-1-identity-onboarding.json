@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-20T19:50:07.965Z",
+  "updatedAt": "2026-03-26T21:19:51.922Z",
   "createdAt": "2026-02-22T01:57:39.282Z",
   "id": "GmInc0tYXj4ZR4kM",
   "name": "SW-1: Identity & Onboarding",
@@ -107,100 +107,6 @@
       ],
       "id": "dc77f8d2-f622-4ea0-ab47-6b31f47aa6c0",
       "name": "Extract Code (VINCULATE)"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "zZYZA8aKwUckaap4",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
-          "cachedResultName": "SW-5:Message telegram"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-            "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.msg_intro.replace('{name}', $('Strict Entry (Contract)').item.json.first_name) }}",
-            "markup_type": "plain"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "chat_id",
-              "displayName": "chat_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "text",
-              "displayName": "text",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "markup_type",
-              "displayName": "markup_type",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "message_id",
-              "displayName": "message_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": true
-            },
-            {
-              "id": "keyboard_data",
-              "displayName": "keyboard_data",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "array",
-              "removed": true
-            },
-            {
-              "id": "context",
-              "displayName": "context",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "object",
-              "removed": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "mode": "each",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        -48,
-        240
-      ],
-      "id": "0421f87a-90e7-46ba-beeb-76a82d4c913c",
-      "name": "Welcome message"
     },
     {
       "parameters": {
@@ -1239,19 +1145,6 @@
     },
     {
       "parameters": {
-        "jsCode": "/**\n * Updates the context object in real-time after language selection.\n * This ensures the subsequent Welcome Message can be localized \n * immediately using the choice we just saved to the database.\n */\n\n// 1. Extract language identifier from the button payload (e.g., 'lang_en' -> 'en')\nconst rawInput = $node[\"Strict Entry (Contract)\"].json.input_text || \"\";\nconst resolvedLanguage = rawInput.replace('lang_', '');\n\n// 2. Retrieve the context passed from the Middleware (SW-0)\nconst context = $node[\"Strict Entry (Contract)\"].json.context || {};\n\n// 3. Patch the identity and state\ncontext.language = resolvedLanguage;\ncontext.is_new_user = false;\n\nreturn {\n  ...$input.item.json,\n  context: context\n};\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -192,
-        -176
-      ],
-      "id": "78b74bc5-913a-41d3-b7a9-d95a53f573a4",
-      "name": "Code in JavaScript"
-    },
-    {
-      "parameters": {
         "workflowId": {
           "__rl": true,
           "value": "zZYZA8aKwUckaap4",
@@ -1357,6 +1250,183 @@
       ],
       "id": "146d2ac9-c856-4ce7-9aff-5a185d7b9d64",
       "name": "Prepare Keyboard: Contact"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zZYZA8aKwUckaap4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+          "cachedResultName": "SW-5:Message telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+            "markup_type": "removeInline",
+            "message_id": "={{ $('Strict Entry (Contract)').item.json.message_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "markup_type",
+              "displayName": "markup_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "keyboard_data",
+              "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": true
+            },
+            {
+              "id": "context",
+              "displayName": "context",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        240
+      ],
+      "id": "0421f87a-90e7-46ba-beeb-76a82d4c913c",
+      "name": "Remove Buttons"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zZYZA8aKwUckaap4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+          "cachedResultName": "SW-5:Message telegram"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "markup_type": "plain",
+            "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+            "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.msg_intro.replace('{name}', $('Strict Entry (Contract)').item.json.first_name) }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "markup_type",
+              "displayName": "markup_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "keyboard_data",
+              "displayName": "keyboard_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        240
+      ],
+      "id": "db6449e3-c751-4577-9b44-d6728ce89d94",
+      "name": "Welcome message"
     }
   ],
   "connections": {
@@ -1376,11 +1446,6 @@
         [
           {
             "node": "If profile empty?",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
           }
@@ -1554,7 +1619,7 @@
       "main": [
         [
           {
-            "node": "Welcome message",
+            "node": "Remove Buttons",
             "type": "main",
             "index": 0
           }
@@ -1617,6 +1682,17 @@
           }
         ]
       ]
+    },
+    "Remove Buttons": {
+      "main": [
+        [
+          {
+            "node": "Welcome message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1633,9 +1709,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1e53d1bb-988c-43e9-bbfe-7c300591afe3",
-  "activeVersionId": "023ae741-ef22-4d21-8c69-9dd495b37b3c",
-  "versionCounter": 1506,
+  "versionId": "3781771e-aa54-4990-b3d6-69202efe3f27",
+  "activeVersionId": "3781771e-aa54-4990-b3d6-69202efe3f27",
+  "versionCounter": 1540,
   "triggerCount": 0,
   "shared": [
     {
@@ -1658,9 +1734,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-15T21:16:44.807Z",
-    "createdAt": "2026-03-15T21:16:35.040Z",
-    "versionId": "023ae741-ef22-4d21-8c69-9dd495b37b3c",
+    "updatedAt": "2026-03-26T21:21:04.431Z",
+    "createdAt": "2026-03-26T21:19:51.953Z",
+    "versionId": "3781771e-aa54-4990-b3d6-69202efe3f27",
     "workflowId": "GmInc0tYXj4ZR4kM",
     "nodes": [
       {
@@ -1763,101 +1839,6 @@
         ],
         "id": "dc77f8d2-f622-4ea0-ab47-6b31f47aa6c0",
         "name": "Extract Code (VINCULATE)"
-      },
-      {
-        "parameters": {
-          "workflowId": {
-            "__rl": true,
-            "value": "zZYZA8aKwUckaap4",
-            "mode": "list",
-            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
-            "cachedResultName": "SW-5:Message telegram"
-          },
-          "workflowInputs": {
-            "mappingMode": "defineBelow",
-            "value": {
-              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
-              "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.msg_intro.replace('{name}', $('Strict Entry (Contract)').item.json.first_name) }}",
-              "markup_type": "removeInline",
-              "message_id": "={{ $('Strict Entry (Contract)').item.json.message_id }}"
-            },
-            "matchingColumns": [],
-            "schema": [
-              {
-                "id": "chat_id",
-                "displayName": "chat_id",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              },
-              {
-                "id": "text",
-                "displayName": "text",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              },
-              {
-                "id": "markup_type",
-                "displayName": "markup_type",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              },
-              {
-                "id": "message_id",
-                "displayName": "message_id",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "string",
-                "removed": false
-              },
-              {
-                "id": "keyboard_data",
-                "displayName": "keyboard_data",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "array",
-                "removed": true
-              },
-              {
-                "id": "context",
-                "displayName": "context",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "canBeUsedToMatch": true,
-                "type": "object",
-                "removed": true
-              }
-            ],
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": true
-          },
-          "mode": "each",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.executeWorkflow",
-        "typeVersion": 1.3,
-        "position": [
-          -48,
-          240
-        ],
-        "id": "0421f87a-90e7-46ba-beeb-76a82d4c913c",
-        "name": "Welcome message"
       },
       {
         "parameters": {
@@ -2784,21 +2765,6 @@
       },
       {
         "parameters": {
-          "content": "## Description\nThis sub-workflow manages the sequential \"Identity Funnel\"—guiding users through detection, language selection, account linking, and profile activation.",
-          "height": 144,
-          "width": 768
-        },
-        "type": "n8n-nodes-base.stickyNote",
-        "position": [
-          -1328,
-          -784
-        ],
-        "typeVersion": 1,
-        "id": "69b07e81-f610-4032-827b-d6bb766cf12c",
-        "name": "Sticky Note"
-      },
-      {
-        "parameters": {
           "content": "## Strict Entry Protocol\n",
           "height": 336,
           "width": 304,
@@ -2911,19 +2877,6 @@
       },
       {
         "parameters": {
-          "jsCode": "/**\n * Updates the context object in real-time after language selection.\n * This ensures the subsequent Welcome Message can be localized \n * immediately using the choice we just saved to the database.\n */\n\n// 1. Extract language identifier from the button payload (e.g., 'lang_en' -> 'en')\nconst rawInput = $node[\"Strict Entry (Contract)\"].json.input_text || \"\";\nconst resolvedLanguage = rawInput.replace('lang_', '');\n\n// 2. Retrieve the context passed from the Middleware (SW-0)\nconst context = $node[\"Strict Entry (Contract)\"].json.context || {};\n\n// 3. Patch the identity and state\ncontext.language = resolvedLanguage;\ncontext.is_new_user = false;\n\nreturn {\n  ...$input.item.json,\n  context: context\n};\n"
-        },
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          -192,
-          -176
-        ],
-        "id": "78b74bc5-913a-41d3-b7a9-d95a53f573a4",
-        "name": "Code in JavaScript"
-      },
-      {
-        "parameters": {
           "workflowId": {
             "__rl": true,
             "value": "zZYZA8aKwUckaap4",
@@ -3029,6 +2982,183 @@
         ],
         "id": "146d2ac9-c856-4ce7-9aff-5a185d7b9d64",
         "name": "Prepare Keyboard: Contact"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+              "markup_type": "removeInline",
+              "message_id": "={{ $('Strict Entry (Contract)').item.json.message_id }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "keyboard_data",
+                "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
+                "removed": true
+              },
+              {
+                "id": "context",
+                "displayName": "context",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "object",
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "mode": "each",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          -48,
+          240
+        ],
+        "id": "0421f87a-90e7-46ba-beeb-76a82d4c913c",
+        "name": "Remove Buttons"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "zZYZA8aKwUckaap4",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/zZYZA8aKwUckaap4",
+            "cachedResultName": "SW-5:Message telegram"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "markup_type": "plain",
+              "chat_id": "={{ $('Strict Entry (Contract)').item.json.chat_id }}",
+              "text": "={{ $('Strict Entry (Contract)').item.json.context.translations.msg_intro.replace('{name}', $('Strict Entry (Contract)').item.json.first_name) }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "text",
+                "displayName": "text",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "markup_type",
+                "displayName": "markup_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "message_id",
+                "displayName": "message_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "keyboard_data",
+                "displayName": "keyboard_data",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "array",
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          160,
+          240
+        ],
+        "id": "db6449e3-c751-4577-9b44-d6728ce89d94",
+        "name": "Welcome message"
       }
     ],
     "connections": {
@@ -3048,11 +3178,6 @@
           [
             {
               "node": "If profile empty?",
-              "type": "main",
-              "index": 0
-            },
-            {
-              "node": "Code in JavaScript",
               "type": "main",
               "index": 0
             }
@@ -3226,7 +3351,7 @@
         "main": [
           [
             {
-              "node": "Welcome message",
+              "node": "Remove Buttons",
               "type": "main",
               "index": 0
             }
@@ -3289,18 +3414,29 @@
             }
           ]
         ]
+      },
+      "Remove Buttons": {
+        "main": [
+          [
+            {
+              "node": "Welcome message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version 023ae741",
+    "name": "Version 3781771e",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-15T21:16:44.763Z",
-        "id": 237,
+        "createdAt": "2026-03-26T21:21:04.390Z",
+        "id": 282,
         "workflowId": "GmInc0tYXj4ZR4kM",
-        "versionId": "023ae741-ef22-4d21-8c69-9dd495b37b3c",
+        "versionId": "3781771e-aa54-4990-b3d6-69202efe3f27",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }
