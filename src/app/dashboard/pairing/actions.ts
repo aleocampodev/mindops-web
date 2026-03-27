@@ -4,6 +4,9 @@ import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 
 
+import { generatePairingCodeData } from '@/lib/pairing/helpers'
+
+
 export async function generatePairingCode() {
   try {
     const t = await getTranslations('Common')
@@ -12,10 +15,8 @@ export async function generatePairingCode() {
     if (!user) return { success: false, error: t('unauthorized') }
 
 
-    const newCode = Math.floor(100000 + Math.random() * 900000).toString()
+    const { code: newCode, expiresAt } = generatePairingCodeData()
 
-    const date = new Date()
-    date.setMinutes(date.getMinutes() + 10)
 
     const { error } = await supabase
       .schema('mindops')
@@ -23,7 +24,7 @@ export async function generatePairingCode() {
       .upsert({
         id: user.id,
         pairing_code: newCode,
-        pairing_code_expires_at: date.toISOString(),
+        pairing_code_expires_at: expiresAt,
         onboarding_state: 'PENDING_LINK'
       }, { onConflict: 'id' })
 

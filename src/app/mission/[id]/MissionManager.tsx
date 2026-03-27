@@ -34,12 +34,13 @@ export function MissionManager({
   const t = useTranslations('Dashboard');
   const [currentIndex, setCurrentIndex] = useState(initialStep)
 
+  const [error, setError] = useState<string | null>(null)
   const [isLifting, setIsLifting] = useState(false)
   const router = useRouter()
   
   const currentTask = plan[currentIndex]
   const nextTasks = plan.slice(currentIndex + 1, currentIndex + 4)
-  const progress = Math.round(((currentIndex) / plan.length) * 100)
+  const progress = plan.length > 0 ? Math.round(((currentIndex) / plan.length) * 100) : 0
 
   // Cromatismo de Alivio: De Indigo (Enfoque) a Esmeralda (Liberación)
   const progressColor = progress > 80 ? 'from-emerald-500 to-teal-400' : 'from-indigo-600 to-violet-500'
@@ -49,7 +50,13 @@ export function MissionManager({
     setIsLifting(true)
 
     try {
+      setError(null)
       const result = await advanceMissionStep(missionId, currentIndex, plan.length)
+      if (result.error) {
+        setError(result.error)
+        return
+      }
+      
       if (result.completed) {
         router.push('/dashboard')
       } else {
@@ -57,6 +64,7 @@ export function MissionManager({
       }
     } catch (error) {
       console.error('Error liberando carga:', error)
+      setError(t('Common.error'))
     } finally {
       setIsLifting(false)
     }
@@ -178,6 +186,21 @@ export function MissionManager({
 
           </div>
         </div>
+
+        {/* Error Feedback */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="w-full bg-red-50 border border-red-100 text-red-600 px-6 py-4 rounded-3xl text-sm font-bold flex items-center gap-3"
+            >
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* The Actuator Button */}
         <motion.button
