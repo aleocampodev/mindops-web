@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { MissionStatus } from '@/lib/constants/mission-status';
 
-interface Thought {
+export interface Thought {
   id: string;
   friction_tag: string | null;
   friction_score?: number;
