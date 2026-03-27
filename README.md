@@ -1,5 +1,7 @@
 # 🧠 MindOps Web
 
+![MindOps Hero](file:///home/ale/.gemini/antigravity/brain/9745341a-1710-4587-96a6-1e039c1dcc08/mindops_hero_illustration_1774561608338.png)
+
 MindOps is a **Mental Engineering** platform designed to act as an external cognitive processor. It translates unstructured mental noise into deterministic, structured action plans, effectively managing a user's "Cognitive RAM" to maintain peak execution momentum.
 
 ## ⚠️ The Problem: Cognitive Overload
@@ -35,6 +37,14 @@ The core automation resides in specialized n8n workflows (`n8n/workflows/`), act
 - **Deterministic State Machine:** Supabase acts as the strict state machine managing operational states (`PENDING`, `ACTIVE`, `COMPLETED`), guaranteeing the AI agent behaves deterministically rather than hallucinating unpredictable workflows.
 - **Human in the Loop (HITL):** The system prioritizes human oversight and agency. Users must review, reject, or modify the AI's proposed "Atomic Action" plans before they become active missions.
 - **Closed-Loop Safety Net:** A redundancy automation layer via **Twilio** that actively monitors user execution. If the system detects a state of high cognitive friction and there is no subsequent activity (e.g., clearing a suggested action) for a predefined period, it automatically triggers a physical phone call to the user to break the paralysis loop.
+
+## 🤖 AI Agent Classification (n8n)
+
+MindOps is engineered as a **Multi-Agent System** that aligns with the industry-standard agentic patterns defined by [n8n.io](https://n8n.io/ai-agents/):
+
+- **Planning Agents:** The `Cognitive Engine (SW-2)` acts as a primary planner, decomposing abstract mental noise into structured, atomic "Mission Proposals."
+- **Action Agents:** `Mission Control (SW-3)` and `Message Telegram (SW-5)` execute deterministic changes in cross-platform environments (Supabase, Telegram API).
+- **Transactional RAG Agents:** Performs real-time retrieval of user state and **localized translations (Bilingual EN/ES support)** to ensure every interaction is context-aware and linguistically aligned.
 
 **Consolidated GitHub Backup:** I engineered a high-performance, self-referential n8n workflow that exports all production logic into this repository. Unlike basic implementations, it utilizes the **GitHub Git Data API** to compare current workflow states against the repo and performs a **single, atomic consolidated commit** for all changes, maintaining a noise-free and professional git history.
 

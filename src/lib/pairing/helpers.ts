@@ -27,7 +27,7 @@ export function getUserDisplayName(
  */
 export function generatePairingCodeData(): PairingCodeData {
   const code = Math.floor(
-    PAIRING_CODE.MIN + Math.random() * PAIRING_CODE.MAX
+    PAIRING_CODE.MIN + Math.random() * (PAIRING_CODE.MAX - PAIRING_CODE.MIN + 1)
   ).toString();
 
   const expiresAt = new Date();

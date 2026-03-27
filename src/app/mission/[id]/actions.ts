@@ -57,7 +57,7 @@ export async function advanceMissionStep(missionId: string, currentIndex: number
   } catch (err: unknown) {
     const t = await getTranslations('Common')
     const message = err instanceof z.ZodError
-      ? `${t('validationError')}: ${err.issues.map(e => e.message).join(', ')}`
+      ? `${t('validationError')}: ${err.issues.map(e => e.message).join(' | ')}`
       : err instanceof Error ? err.message : t('unknownError')
     return { completed: false, error: message }
   }
