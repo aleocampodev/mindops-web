@@ -1,15 +1,19 @@
 import { createClient } from '@/utils/supabase/server';
 
+// Supported locale columns in mindops.translations table
+const LOCALE_COLUMNS: Record<string, string> = { en: 'en', es: 'es' };
+
 export async function getDbTranslations(locale: string) {
   const supabase = await createClient();
 
-  // Fetch translations from the 'mindops.translations' table
-  // Assuming columns: key, language, value (or similar)
+  // The translations table has columns: key, en, es
+  // We select the column matching the requested locale
+  const col = LOCALE_COLUMNS[locale] ?? 'en';
+
   const { data, error } = await supabase
     .schema('mindops')
     .from('translations')
-    .select('key, value')
-    .eq('language', locale);
+    .select(`key, ${col}`);
 
   if (error || !data) {
     console.error('Error fetching translations from DB:', error);
@@ -18,17 +22,23 @@ export async function getDbTranslations(locale: string) {
 
   // Convert to a next-intl compatible messages object
   // supporting nested keys if stored as 'parent.child'
-  const messages: Record<string, any> = {};
-  data.forEach((item: { key: string, value: string }) => {
-    const parts = item.key.split('.');
+  const messages: Record<string, unknown> = {};
+  data.forEach((item: Record<string, string>) => {
+    const key = item.key;
+    const value = item[col];
+    if (!key || value == null) return;
+
+    const parts = key.split('.');
     let current = messages;
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
       if (i === parts.length - 1) {
-        current[part] = item.value;
+        (current as Record<string, unknown>)[part] = value;
       } else {
-        current[part] = current[part] || {};
-        current = current[part];
+        if (typeof current[part] !== 'object') {
+          (current as Record<string, unknown>)[part] = {};
+        }
+        current = current[part] as Record<string, unknown>;
       }
     }
   });

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 
 export async function setUserLanguage(locale: string) {
   const supabase = await createClient();
@@ -32,6 +33,9 @@ export async function setUserLanguage(locale: string) {
       .update({ language: locale })
       .eq('id', sessionId);
   }
+
+  // Revalidate all pages so middleware re-reads the new NEXT_LOCALE cookie
+  revalidatePath('/', 'layout');
 
   return { success: true };
 }
