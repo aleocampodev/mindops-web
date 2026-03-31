@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Rocket, CheckCircle2, Cpu, Sparkles } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { advanceMissionStep } from './actions'
 import { useRouter } from 'next/navigation'
@@ -32,6 +32,7 @@ export function MissionManager({
   summaryTitle
 }: MissionManagerProps) {
   const t = useTranslations('Dashboard');
+  const tCommon = useTranslations('Common');
   const [currentIndex, setCurrentIndex] = useState(initialStep)
 
   const [error, setError] = useState<string | null>(null)
@@ -62,9 +63,9 @@ export function MissionManager({
       } else {
         setCurrentIndex(prev => prev + 1)
       }
-    } catch (error) {
-      console.error('Error liberando carga:', error)
-      setError(t('Common.error'))
+    } catch (err) {
+      console.error('Error liberando carga:', err)
+      setError(tCommon('error'))
     } finally {
       setIsLifting(false)
     }
@@ -126,8 +127,7 @@ export function MissionManager({
           >
             <p className="text-[8px] font-black text-indigo-400 uppercase tracking-widest mb-2">{t('missions.strategicPerspective')}</p>
             <p className="text-sm font-medium italic text-indigo-900/70 leading-relaxed">
-
-              "{strategicAnalysis}"
+              &ldquo;{strategicAnalysis}&rdquo;
             </p>
           </motion.div>
         )}
@@ -223,7 +223,7 @@ export function MissionManager({
         </motion.button>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes scan {
           0% { transform: translateX(-200%) skewX(45deg); }
           100% { transform: translateX(500%) skewX(45deg); }

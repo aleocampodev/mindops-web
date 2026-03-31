@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { createClient } from '@/utils/supabase/client';
 import { BrainCircuit, ShieldCheck, Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { LanguageSwitcher } from '@/components/dashboard/LanguageSwitcher';
 
 
 // Google logo as inline SVG — avoids external img dependency (CORS, CLS, CSP)
@@ -33,6 +34,11 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-white flex items-center justify-center p-6 overflow-hidden relative">
+
+      {/* Language switcher — top right, visible before login */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSwitcher />
+      </div>
 
       {/* Ambient light orbs — decorative, aria-hidden */}
       <motion.div
