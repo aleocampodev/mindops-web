@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-01T03:47:04.399Z",
+  "updatedAt": "2026-04-06T18:13:08.907Z",
   "createdAt": "2026-02-22T02:00:58.915Z",
   "id": "zc8E5ZfPENEx6Css",
   "name": "SW-2: Cognitive engine",
@@ -322,7 +322,7 @@
           "parameters": [
             {
               "name": "user_id",
-              "value": "={{ $('Get Profile UUID').first().json.id }}"
+              "value": "={{ $('Strict Entry (Brain)').item.json.context.user.id }}"
             },
             {
               "name": "summary_title",
@@ -776,9 +776,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "47fb7551-29a4-4dae-be88-ea5be3234c80",
-  "activeVersionId": "d81881d3-272d-43c8-b012-116810b4e21d",
-  "versionCounter": 1007,
+  "versionId": "352a3f22-1a34-4226-8fd6-d2626383fece",
+  "activeVersionId": "352a3f22-1a34-4226-8fd6-d2626383fece",
+  "versionCounter": 1015,
   "triggerCount": 0,
   "shared": [
     {
@@ -801,9 +801,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-04-01T03:25:30.682Z",
-    "createdAt": "2026-04-01T03:23:22.331Z",
-    "versionId": "d81881d3-272d-43c8-b012-116810b4e21d",
+    "updatedAt": "2026-04-06T18:13:30.162Z",
+    "createdAt": "2026-04-06T18:13:08.948Z",
+    "versionId": "352a3f22-1a34-4226-8fd6-d2626383fece",
     "workflowId": "zc8E5ZfPENEx6Css",
     "nodes": [
       {
@@ -1121,7 +1121,7 @@
             "parameters": [
               {
                 "name": "user_id",
-                "value": "={{ $('Get Profile UUID').first().json.id }}"
+                "value": "={{ $('Strict Entry (Brain)').item.json.context.user.id }}"
               },
               {
                 "name": "summary_title",
@@ -1562,15 +1562,15 @@
       }
     },
     "authors": "Alejandra Ocampo",
-    "name": "Version d81881d3",
+    "name": "Version 352a3f22",
     "description": "",
     "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-04-01T03:25:30.642Z",
-        "id": 745,
+        "createdAt": "2026-04-06T18:13:30.119Z",
+        "id": 750,
         "workflowId": "zc8E5ZfPENEx6Css",
-        "versionId": "d81881d3-272d-43c8-b012-116810b4e21d",
+        "versionId": "352a3f22-1a34-4226-8fd6-d2626383fece",
         "event": "activated",
         "userId": "fae80fe0-db88-411b-b8e7-f61d64004d4e"
       }

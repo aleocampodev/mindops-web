@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-01T03:55:58.139Z",
+  "updatedAt": "2026-04-06T20:18:23.490Z",
   "createdAt": "2026-02-22T02:35:22.257Z",
   "id": "zDZb0cAxMY5TCjPe",
   "name": "Twilio:  Safety Net Protocol",
@@ -9,7 +9,7 @@
   "nodes": [
     {
       "parameters": {
-        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?status=eq.ACTIVE&friction_score=gte.75&select=id,voice_script,strategic_insight,summary_title,raw_content,profiles!inner(phone_number,first_name,language)&created_at=lt.{{ $now.minus({minutes: 5}).toISO() }}",
+        "url": "=https://rncmxbvrxglbdcagiltc.supabase.co/rest/v1/thoughts?status=in.(ACTIVE,STALLED)&friction_score=gte.50&select=id,voice_script,strategic_insight,summary_title,raw_content,profiles(phone_number,first_name,language)&created_at=lt.{{ $now.minus({minutes: 5}).toISO() }}",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "httpMultipleHeadersAuth",
         "sendHeaders": true,
@@ -157,7 +157,7 @@
       ],
       "id": "937acfa8-ccc0-4ad2-8035-09089e2714ad",
       "name": "Mark as STALLED",
-      "alwaysOutputData": true,
+      "alwaysOutputData": false,
       "credentials": {
         "httpMultipleHeadersAuth": {
           "id": "9KY2AHXMXRxyjGim",
@@ -216,7 +216,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const userData = $(\"Find Stalled Users DB\").item.json;\n\nconst lang = userData?.profiles?.language || 'en';\nconst firstName = userData?.profiles?.first_name || 'Usuario';\nconst phone = userData?.profiles?.phone_number || '';\n\nconst promptTemplates = $node[\"Get Safety Prompt\"].json;\nlet selectedPrompt = promptTemplates[lang] || promptTemplates['en'] || \"\";\n\nconst finalPrompt = selectedPrompt\n  .replace(/{{ name }}/g, firstName)\n  .replace(/{{ stall_context }}/g, userData?.raw_content || \"\")\n  .replace(/{{ strategic_insight }}/g, userData?.strategic_insight || \"\")\n  .replace(/{{ title }}/g, userData?.summary_title || \"\");\n\nreturn [{\n  json: {\n    final_prompt: finalPrompt,\n    selected_language: lang,\n    phone_number: phone,\n    first_name: firstName\n  }\n}];"
+        "jsCode": "const userData = $(\"Filter Duplicates\").first().json;\n\nconst lang = userData?.profiles?.language || 'en';\nconst firstName = userData?.profiles?.first_name || 'Usuario';\nconst phone = userData?.profiles?.phone_number || '';\n\nconst promptTemplates = $node[\"Get Safety Prompt\"].json;\nlet selectedPrompt = promptTemplates[lang] || promptTemplates['en'] || \"\";\n\nconst finalPrompt = selectedPrompt\n  .replace(/{{ first_name }}/g, firstName)\n  .replace(/{{ raw_content }}/g, userData?.raw_content || \"\")\n  .replace(/{{ strategic_insight }}/g, userData?.strategic_insight || \"\")\n  .replace(/{{ summary_title }}/g, userData?.summary_title || \"\");\n\nreturn [{\n  json: {\n    final_prompt: finalPrompt,\n    selected_language: lang,\n    phone_number: phone,\n    first_name: firstName\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -490,9 +490,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "9b625eec-2662-46b8-9550-6ab1adea88b7",
+  "versionId": "01713a85-eacc-4db5-a7e2-87656161ad5f",
   "activeVersionId": null,
-  "versionCounter": 255,
+  "versionCounter": 278,
   "triggerCount": 0,
   "shared": [
     {
