@@ -74,6 +74,8 @@ MindOps has been heavily optimized to eliminate N+1 latency issues via a pattern
 
 MindOps is natively bilingual (English and Spanish) and implements a highly robust synchronization pattern to ensure zero UI flickering and cross-platform consistency.
 
+![Bilingual Support](public/assets/bilingue.jpeg)
+
 - **Centralized Middleware Pattern:** Instead of relying solely on client-side state, Next.js `middleware.ts` intercepts every request. It determines the correct locale using a strict priority hierarchy: URL arguments (`?lang=es`) > Database User Profile > Telegram Session > Browser Cookies (`NEXT_LOCALE`) > Accept-Language Header.
 - **Server-Component Injection:** The middleware injects the resolved language into a custom HTTP header (`x-next-intl-locale`). This allows React Server Components to render the exact language immediately on the server, completely eliminating the "flash of wrong language" on initial load.
 - **Orchestrator Inheritance:** This language preference is synced back to Supabase, which the **n8n Brain Workflow** reads dynamically. As a result, when the AI generates action plans or parses "vents", the output logic and Telegram responses are inherently culturally and linguistically aligned with the user.
@@ -145,27 +147,5 @@ Implementing n8n Queue mode requires additional infrastructure (a Redis broker a
     ```bash
     npm run dev
     ```
-
----
-
-## 👨‍💻 About
-
-<div align="right">
-  <img src="https://via.placeholder.com/150" alt="Avatar" width="150" align="right" style="border-radius: 50%; padding-left: 20px; padding-bottom: 20px;" />
-  
-  <h3>Alejandro (Ale)</h3>
-  <p>Software Engineer passionate about Mental Engineering, AI orchestrations, and building systems that make people more resilient and focused.</p>
-  <p>MindOps is my approach to solving the modern crisis of cognitive overload through deterministic, structured action plans.</p>
-  
-  <p>
-    <a href="https://github.com/aleocampodev"><b>GitHub</b></a> &nbsp;&bull;&nbsp; 
-    <a href="#"><b>LinkedIn</b></a> &nbsp;&bull;&nbsp; 
-    <a href="#"><b>Twitter/X</b></a>
-  </p>
-</div>
-
-<br clear="both"/>
-
----
 
 _Designed for efficiency. Built for the mind. ⚡_
