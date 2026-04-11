@@ -23,6 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
     title: t('title'),
     description: t('description'),
     themeColor: "#4f46e5",
+    icons: {
+      icon: '/assets/mindops.jpg',
+    },
     openGraph: {
       title: t('title'),
       description: t('description'),
